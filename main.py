@@ -579,7 +579,7 @@ Respond in JSON format:
             response = client.chat.completions.create(
                 model=judge.model,
                 messages=[
-                    {"role": "system", "content": f"You are an LLM judge for {request.node}."},
+                    {"role": "system", "content": judge.system_prompt},
                     {"role": "user", "content": evaluation_prompt}
                 ],
                 response_format={"type": "json_object"},
@@ -796,7 +796,7 @@ Respond in JSON format:
                     response = client.chat.completions.create(
                         model=evaluator_judge.model,
                         messages=[
-                            {"role": "system", "content": f"You are an LLM judge for {request.node}."},
+                            {"role": "system", "content": evaluator_judge.system_prompt},
                             {"role": "user", "content": evaluation_prompt}
                         ],
                         response_format={"type": "json_object"},
