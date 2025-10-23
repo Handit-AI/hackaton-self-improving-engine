@@ -68,26 +68,27 @@ Agent Reasoning: {agent_reasoning}
 Input Context (for reference only):
 {query[:500]}...
 
-TASK: Generate ONE generalized, actionable heuristic/bullet for the {node} that addresses the pattern behind this issue.
+TASK: Generate ONE generalized heuristic/bullet for the {node} that addresses the pattern behind this issue.
 
-CRITICAL CONTEXT: This bullet will be used as INSTRUCTION/HEURISTIC in prompts to guide the LLM. It must be written as an instruction that tells the LLM how to behave, not as code or programmatic logic.
+CRITICAL CONTEXT: This bullet will be used as HEURISTIC/CONTEXT in prompts to guide the LLM's behavior. It must be written as a practical rule or instruction that tells the LLM how to behave when generating outputs.
 
 CRITICAL REQUIREMENTS:
-- The bullet MUST be written as an INSTRUCTION for the LLM agent
+- The bullet MUST be written as a HEURISTIC/INSTRUCTION for the LLM agent
 - The bullet MUST address the GENERAL PATTERN behind the judge's specific concern
 - The bullet MUST be generalized to catch similar variations (not hardcoded to one example)
 - The bullet MUST be a clear directive: "When X, do Y" or "Ensure that X" or "Check if X"
 - The bullet MUST help prevent this type of error pattern from happening again
+- The bullet will be inserted into prompts as context, so it must be actionable guidance
 - Focus on the JUDGE's feedback, not the transaction details
 
 Output JSON:
 {{
-  "new_bullet": "Generalized instruction/heuristic that addresses the pattern behind the judge's concern",
+  "new_bullet": "Generalized heuristic/instruction that addresses the pattern behind the judge's concern",
   "problem_types": ["type1", "type2"],
   "confidence": 0.0-1.0
 }}
 
-Examples based on judge feedback:
+Examples based on judge feedback (write as heuristics for prompt context):
 If judge says "format issue - final_decision is 'approve' instead of 'APPROVE'":
 ✓ "When outputting final_decision field, ensure it uses EXACTLY uppercase versions ('APPROVE', 'REVIEW', 'DECLINE'), not lowercase or mixed case variants"
 ✓ "Normalize final_decision values to uppercase before outputting: convert any case variation to the exact uppercase version"
