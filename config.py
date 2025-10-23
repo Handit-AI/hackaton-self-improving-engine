@@ -1,6 +1,7 @@
 """
 Application configuration using Pydantic settings.
 """
+from typing import Optional
 from pydantic_settings import BaseSettings
 
 
@@ -8,7 +9,7 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
     
     # Database
-    database_url: str
+    database_url: Optional[str] = None
     
     # Application
     debug: bool = False

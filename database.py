@@ -9,6 +9,13 @@ from typing import AsyncGenerator
 from config import settings
 
 
+# Check if database URL is configured
+if settings.database_url is None:
+    raise ValueError(
+        "DATABASE_URL environment variable is required. "
+        "Please set it in your .env file or environment."
+    )
+
 # Create async engine
 async_engine = create_async_engine(
     settings.database_url.replace("postgresql://", "postgresql+asyncpg://"),

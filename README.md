@@ -45,6 +45,8 @@ cp env.example .env
 # Edit .env with your database credentials
 ```
 
+**Important**: Make sure to create a `.env` file with your database URL before running the application.
+
 ## Configuration
 
 Edit the `.env` file with your database configuration:
