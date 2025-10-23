@@ -1,0 +1,682 @@
+[
+  {
+    "query": "Transaction Analysis: User 'john_doe' (age: 45 days, 3 total transactions) attempts $2,500 purchase at 3:15 AM from 'Electronics Store' in Miami, FL. User's previous transactions were in New York, NY. Merchant has 4.2/5 rating with 2 recent fraud reports. What's the risk assessment and recommended action?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "account_takeover",
+      "risk_factors": ["new_user", "large_amount", "suspicious_time", "location_change", "merchant_fraud_history"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'sarah_wilson' (age: 2 years, 847 transactions, avg $85) attempts $120 purchase at 2:30 PM from 'Local Coffee Shop' in her usual neighborhood. Merchant has 4.8/5 rating, no fraud reports. User's spending pattern shows 15-20 transactions/month, mostly during business hours. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["established_user", "normal_amount", "business_hours", "usual_location", "good_merchant"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'mike_chen' (age: 8 months, 156 transactions) attempts $1,800 purchase at 11:45 PM from 'Online Electronics' in Los Angeles, CA. User's last 10 transactions were all under $200 in San Francisco, CA. Merchant has 3.1/5 rating with 5 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "behavioral_anomaly",
+      "risk_factors": ["spending_deviation", "suspicious_time", "location_change", "merchant_fraud_history"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'emma_rodriguez' (age: 1.5 years, 432 transactions) attempts $450 purchase at 1:20 PM from 'Fashion Boutique' in Austin, TX. User's typical spending is $50-150, but has made 3 purchases over $400 in the last month. Merchant has 4.5/5 rating, no fraud reports. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "medium",
+    "metadata": {
+      "fraud_type": "legitimate_evolution",
+      "risk_factors": ["spending_evolution", "recent_pattern", "good_merchant"],
+      "decision_complexity": "pattern_analysis"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'alex_kim' (age: 3 months, 12 transactions) attempts $75 purchase at 9:30 AM from 'Gas Station' in Seattle, WA. User's previous transactions were all in Portland, OR, ranging $25-60. Merchant has 3.8/5 rating, 1 fraud report 6 months ago. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "medium",
+    "metadata": {
+      "fraud_type": "location_change",
+      "risk_factors": ["new_user", "location_change", "limited_history"],
+      "decision_complexity": "moderate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'david_patel' (age: 2.5 years, 1,203 transactions) attempts $3,200 purchase at 4:00 AM from 'Luxury Watch Store' in New York, NY. User's typical spending is $100-300, with only 2 previous purchases over $1,000 in the last year. Merchant has 4.7/5 rating, no fraud reports. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "spending_anomaly",
+      "risk_factors": ["spending_deviation", "suspicious_time", "large_amount"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'lisa_wong' (age: 6 months, 89 transactions) attempts $180 purchase at 2:15 PM from 'Pharmacy' in San Diego, CA. User's spending pattern shows 12-15 transactions/month, mostly $40-120. Merchant has 4.3/5 rating, no fraud reports. User made similar purchase from same merchant last week. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["normal_amount", "business_hours", "merchant_history"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'robert_jones' (age: 1 year, 234 transactions) attempts $950 purchase at 11:30 PM from 'Electronics Store' in Chicago, IL. User's last 5 transactions were all under $100 in Milwaukee, WI. Merchant has 2.9/5 rating with 8 fraud reports in last 60 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "multi_factor_fraud",
+      "risk_factors": ["spending_deviation", "suspicious_time", "location_change", "merchant_fraud_history"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'jennifer_lee' (age: 3 years, 1,456 transactions) attempts $650 purchase at 10:45 AM from 'Home Improvement Store' in Phoenix, AZ. User's spending pattern shows occasional large purchases (5 over $500 in last year). Merchant has 4.4/5 rating, no fraud reports. User's location history shows regular visits to Phoenix. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["established_user", "historical_pattern", "good_merchant", "location_history"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'carlos_martinez' (age: 4 months, 23 transactions) attempts $1,250 purchase at 12:30 AM from 'Online Marketplace' in Houston, TX. User's previous transactions were all under $200 in Dallas, TX. Merchant has 3.5/5 rating, 3 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["new_user", "spending_deviation", "suspicious_time", "location_change", "merchant_fraud_history"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'amanda_clark' (age: 2 years, 678 transactions) attempts $320 purchase at 3:45 PM from 'Restaurant' in Boston, MA. User's spending pattern shows 20-25 transactions/month, mostly $25-80. Merchant has 4.6/5 rating, no fraud reports. User has made 4 purchases from this restaurant in the last 2 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "medium",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["merchant_relationship", "reasonable_amount", "appropriate_time"],
+      "decision_complexity": "moderate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'thomas_brown' (age: 1.5 years, 445 transactions) attempts $2,100 purchase at 5:30 AM from 'Jewelry Store' in Las Vegas, NV. User's typical spending is $80-150, with only 1 previous purchase over $500 in the last year. Merchant has 4.2/5 rating, 2 fraud reports in last 90 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "spending_anomaly",
+      "risk_factors": ["spending_deviation", "suspicious_time", "large_amount"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'nicole_garcia' (age: 8 months, 156 transactions) attempts $95 purchase at 1:20 PM from 'Grocery Store' in Denver, CO. User's spending pattern shows 15-18 transactions/month, mostly $30-90. Merchant has 4.1/5 rating, no fraud reports. User made similar purchase from same merchant last week. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["normal_amount", "business_hours", "merchant_history"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'kevin_wilson' (age: 5 months, 67 transactions) attempts $1,800 purchase at 11:15 PM from 'Electronics Store' in Atlanta, GA. User's previous transactions were all under $150 in Nashville, TN. Merchant has 2.8/5 rating with 6 fraud reports in last 45 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "multi_factor_fraud",
+      "risk_factors": ["new_user", "spending_deviation", "suspicious_time", "location_change", "merchant_fraud_history"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'rachel_taylor' (age: 2.5 years, 892 transactions) attempts $480 purchase at 2:00 PM from 'Fashion Store' in Miami, FL. User's spending pattern shows occasional large purchases (8 over $400 in last year). Merchant has 4.5/5 rating, no fraud reports. User's location history shows regular visits to Miami. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["established_user", "historical_pattern", "good_merchant", "location_history"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'brandon_davis' (age: 3 months, 18 transactions) attempts $1,350 purchase at 1:45 AM from 'Online Store' in Portland, OR. User's previous transactions were all under $200 in Seattle, WA. Merchant has 3.3/5 rating, 4 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["new_user", "spending_deviation", "suspicious_time", "location_change", "merchant_fraud_history"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'sophia_anderson' (age: 1 year, 298 transactions) attempts $220 purchase at 4:30 PM from 'Bookstore' in Austin, TX. User's spending pattern shows 20-25 transactions/month, mostly $15-60. Merchant has 4.7/5 rating, no fraud reports. User made similar purchase from same merchant last month. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "medium",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["merchant_relationship", "reasonable_amount", "appropriate_time"],
+      "decision_complexity": "moderate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'jason_miller' (age: 6 months, 89 transactions) attempts $950 purchase at 10:30 PM from 'Electronics Store' in San Francisco, CA. User's previous transactions were all under $180 in Oakland, CA. Merchant has 3.9/5 rating, 2 fraud reports in last 60 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "behavioral_anomaly",
+      "risk_factors": ["spending_deviation", "suspicious_time", "location_change", "merchant_fraud_history"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'olivia_white' (age: 3 years, 1,234 transactions) attempts $380 purchase at 11:45 AM from 'Clothing Store' in New York, NY. User's spending pattern shows 25-30 transactions/month, mostly $50-120. Merchant has 4.4/5 rating, no fraud reports. User has made 6 purchases from this merchant in the last 3 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["merchant_relationship", "reasonable_amount", "appropriate_time"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'daniel_rodriguez' (age: 4 months, 34 transactions) attempts $1,650 purchase at 2:30 AM from 'Electronics Store' in Chicago, IL. User's previous transactions were all under $250 in Detroit, MI. Merchant has 2.5/5 rating with 7 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "multi_factor_fraud",
+      "risk_factors": ["new_user", "spending_deviation", "suspicious_time", "location_change", "merchant_fraud_history"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'hannah_martinez' (age: 1.5 years, 456 transactions) attempts $290 purchase at 3:15 PM from 'Restaurant' in Los Angeles, CA. User's spending pattern shows 20-25 transactions/month, mostly $40-100. Merchant has 4.6/5 rating, no fraud reports. User has made 3 purchases from this restaurant in the last 2 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["merchant_relationship", "reasonable_amount", "appropriate_time"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'tyler_johnson' (age: 7 months, 123 transactions) attempts $1,100 purchase at 12:15 AM from 'Online Marketplace' in Phoenix, AZ. User's previous transactions were all under $200 in Tucson, AZ. Merchant has 3.2/5 rating, 5 fraud reports in last 45 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "behavioral_anomaly",
+      "risk_factors": ["spending_deviation", "suspicious_time", "location_change", "merchant_fraud_history"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'isabella_garcia' (age: 4 years, 2,156 transactions) attempts $85 purchase at 1:45 PM from 'Coffee Shop' in San Diego, CA. User's spending pattern shows 35-40 transactions/month, mostly $15-50. Merchant has 4.9/5 rating, no fraud reports. User has made 12 purchases from this merchant in the last 6 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["established_user", "normal_amount", "business_hours", "merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'marcus_thompson' (age: 2 months, 8 transactions) attempts $2,800 purchase at 2:15 AM from 'Electronics Store' in Miami, FL. User's previous transactions were all under $100 in Orlando, FL. Merchant has 3.0/5 rating with 9 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["very_new_user", "massive_spending_deviation", "very_suspicious_time", "location_change", "high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'grace_williams' (age: 5 years, 3,456 transactions) attempts $150 purchase at 11:30 AM from 'Pharmacy' in Portland, OR. User's spending pattern shows 50-55 transactions/month, mostly $20-80. Merchant has 4.8/5 rating, no fraud reports. User has made 8 purchases from this merchant in the last 3 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["very_established_user", "normal_amount", "business_hours", "strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'anthony_lee' (age: 6 months, 145 transactions) attempts $1,950 purchase at 11:45 PM from 'Online Store' in Las Vegas, NV. User's previous transactions were all under $180 in Reno, NV. Merchant has 2.7/5 rating with 12 fraud reports in last 45 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "multi_factor_fraud",
+      "risk_factors": ["new_user", "massive_spending_deviation", "very_suspicious_time", "location_change", "very_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'chloe_martinez' (age: 3 years, 1,789 transactions) attempts $425 purchase at 2:30 PM from 'Fashion Store' in Austin, TX. User's spending pattern shows occasional large purchases (12 over $300 in last year). Merchant has 4.6/5 rating, no fraud reports. User's location history shows regular visits to Austin. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["established_user", "historical_pattern", "good_merchant", "location_history"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'ethan_brown' (age: 1 month, 3 transactions) attempts $3,500 purchase at 1:30 AM from 'Electronics Store' in Denver, CO. User's previous transactions were all under $150 in Boulder, CO. Merchant has 2.3/5 rating with 15 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["extremely_new_user", "massive_spending_deviation", "very_suspicious_time", "location_change", "extremely_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'zoe_anderson' (age: 6 years, 4,567 transactions) attempts $95 purchase at 10:15 AM from 'Grocery Store' in Seattle, WA. User's spending pattern shows 60-65 transactions/month, mostly $25-75. Merchant has 4.9/5 rating, no fraud reports. User has made 15 purchases from this merchant in the last 4 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["very_established_user", "normal_amount", "business_hours", "very_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'lucas_taylor' (age: 8 months, 178 transactions) attempts $2,200 purchase at 12:45 AM from 'Online Marketplace' in Phoenix, AZ. User's previous transactions were all under $200 in Scottsdale, AZ. Merchant has 3.1/5 rating with 8 fraud reports in last 60 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "behavioral_anomaly",
+      "risk_factors": ["new_user", "massive_spending_deviation", "very_suspicious_time", "location_change", "high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'ava_moore' (age: 4 years, 2,345 transactions) attempts $180 purchase at 3:00 PM from 'Restaurant' in Boston, MA. User's spending pattern shows 45-50 transactions/month, mostly $30-100. Merchant has 4.7/5 rating, no fraud reports. User has made 10 purchases from this restaurant in the last 5 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["established_user", "normal_amount", "business_hours", "strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'noah_jackson' (age: 3 months, 15 transactions) attempts $4,100 purchase at 3:15 AM from 'Electronics Store' in Houston, TX. User's previous transactions were all under $120 in Dallas, TX. Merchant has 2.1/5 rating with 18 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["very_new_user", "extreme_spending_deviation", "very_suspicious_time", "location_change", "extremely_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'mia_davis' (age: 5 years, 3,678 transactions) attempts $65 purchase at 12:30 PM from 'Pharmacy' in San Francisco, CA. User's spending pattern shows 55-60 transactions/month, mostly $20-70. Merchant has 4.8/5 rating, no fraud reports. User has made 18 purchases from this pharmacy in the last 6 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["very_established_user", "normal_amount", "business_hours", "very_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'liam_wilson' (age: 9 months, 234 transactions) attempts $1,750 purchase at 11:30 PM from 'Online Store' in Atlanta, GA. User's previous transactions were all under $160 in Savannah, GA. Merchant has 2.9/5 rating with 11 fraud reports in last 45 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "multi_factor_fraud",
+      "risk_factors": ["new_user", "massive_spending_deviation", "very_suspicious_time", "location_change", "very_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'sophia_rodriguez' (age: 7 years, 5,234 transactions) attempts $125 purchase at 1:45 PM from 'Coffee Shop' in Miami, FL. User's spending pattern shows 70-75 transactions/month, mostly $15-60. Merchant has 4.9/5 rating, no fraud reports. User has made 25 purchases from this coffee shop in the last 8 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'mason_white' (age: 2 months, 6 transactions) attempts $5,200 purchase at 2:45 AM from 'Electronics Store' in Chicago, IL. User's previous transactions were all under $100 in Springfield, IL. Merchant has 1.8/5 rating with 22 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["extremely_new_user", "extreme_spending_deviation", "very_suspicious_time", "location_change", "extremely_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'olivia_johnson' (age: 8 years, 6,789 transactions) attempts $45 purchase at 11:00 AM from 'Grocery Store' in Portland, OR. User's spending pattern shows 80-85 transactions/month, mostly $20-60. Merchant has 4.9/5 rating, no fraud reports. User has made 35 purchases from this grocery store in the last 10 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'william_garcia' (age: 1 year, 456 transactions) attempts $2,850 purchase at 12:30 AM from 'Online Marketplace' in Las Vegas, NV. User's previous transactions were all under $180 in Henderson, NV. Merchant has 2.5/5 rating with 14 fraud reports in last 60 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "hard",
+    "metadata": {
+      "fraud_type": "behavioral_anomaly",
+      "risk_factors": ["new_user", "massive_spending_deviation", "very_suspicious_time", "location_change", "very_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'emma_martinez' (age: 9 years, 7,456 transactions) attempts $85 purchase at 2:15 PM from 'Restaurant' in San Diego, CA. User's spending pattern shows 85-90 transactions/month, mostly $25-80. Merchant has 4.9/5 rating, no fraud reports. User has made 42 purchases from this restaurant in the last 12 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'james_brown' (age: 1 month, 2 transactions) attempts $6,800 purchase at 4:00 AM from 'Electronics Store' in Phoenix, AZ. User's previous transactions were all under $80 in Tempe, AZ. Merchant has 1.5/5 rating with 28 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["extremely_new_user", "extreme_spending_deviation", "very_suspicious_time", "location_change", "extremely_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'ava_taylor' (age: 10 years, 8,234 transactions) attempts $35 purchase at 10:30 AM from 'Pharmacy' in Seattle, WA. User's spending pattern shows 90-95 transactions/month, mostly $15-50. Merchant has 4.9/5 rating, no fraud reports. User has made 48 purchases from this pharmacy in the last 15 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'benjamin_lee' (age: 5 months, 67 transactions) attempts $3,200 purchase at 1:15 AM from 'Online Store' in Denver, CO. User's previous transactions were all under $140 in Boulder, CO. Merchant has 2.2/5 rating with 16 fraud reports in last 45 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "multi_factor_fraud",
+      "risk_factors": ["new_user", "massive_spending_deviation", "very_suspicious_time", "location_change", "very_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'charlotte_white' (age: 12 years, 9,567 transactions) attempts $55 purchase at 1:00 PM from 'Coffee Shop' in Austin, TX. User's spending pattern shows 95-100 transactions/month, mostly $10-45. Merchant has 4.9/5 rating, no fraud reports. User has made 55 purchases from this coffee shop in the last 18 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'alexander_moore' (age: 3 weeks, 1 transaction) attempts $8,500 purchase at 5:30 AM from 'Electronics Store' in Houston, TX. User's previous transaction was $45 in Galveston, TX. Merchant has 1.2/5 rating with 35 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["extremely_new_user", "extreme_spending_deviation", "very_suspicious_time", "location_change", "extremely_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'amelia_jackson' (age: 15 years, 12,345 transactions) attempts $25 purchase at 11:45 AM from 'Grocery Store' in Portland, OR. User's spending pattern shows 100-105 transactions/month, mostly $15-40. Merchant has 4.9/5 rating, no fraud reports. User has made 68 purchases from this grocery store in the last 20 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'daniel_wilson' (age: 6 months, 89 transactions) attempts $4,500 purchase at 2:30 AM from 'Online Marketplace' in Las Vegas, NV. User's previous transactions were all under $120 in North Las Vegas, NV. Merchant has 1.8/5 rating with 25 fraud reports in last 60 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "behavioral_anomaly",
+      "risk_factors": ["new_user", "massive_spending_deviation", "very_suspicious_time", "location_change", "very_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'mia_davis' (age: 18 years, 15,678 transactions) attempts $15 purchase at 12:15 PM from 'Pharmacy' in San Francisco, CA. User's spending pattern shows 110-115 transactions/month, mostly $10-35. Merchant has 4.9/5 rating, no fraud reports. User has made 78 purchases from this pharmacy in the last 24 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'lucas_taylor' (age: 2 weeks, 1 transaction) attempts $12,000 purchase at 6:15 AM from 'Electronics Store' in Miami, FL. User's previous transaction was $25 in Key West, FL. Merchant has 1.0/5 rating with 45 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["extremely_new_user", "extreme_spending_deviation", "very_suspicious_time", "location_change", "extremely_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'sophia_rodriguez' (age: 20 years, 18,234 transactions) attempts $20 purchase at 10:00 AM from 'Coffee Shop' in Seattle, WA. User's spending pattern shows 120-125 transactions/month, mostly $8-30. Merchant has 4.9/5 rating, no fraud reports. User has made 85 purchases from this coffee shop in the last 30 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'mason_white' (age: 4 months, 23 transactions) attempts $7,800 purchase at 3:45 AM from 'Online Store' in Atlanta, GA. User's previous transactions were all under $100 in Athens, GA. Merchant has 1.5/5 rating with 32 fraud reports in last 45 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "multi_factor_fraud",
+      "risk_factors": ["new_user", "massive_spending_deviation", "very_suspicious_time", "location_change", "very_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'olivia_johnson' (age: 25 years, 22,456 transactions) attempts $12 purchase at 1:30 PM from 'Restaurant' in Boston, MA. User's spending pattern shows 130-135 transactions/month, mostly $8-25. Merchant has 4.9/5 rating, no fraud reports. User has made 95 purchases from this restaurant in the last 36 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'william_garcia' (age: 1 week, 1 transaction) attempts $15,000 purchase at 7:00 AM from 'Electronics Store' in Chicago, IL. User's previous transaction was $15 in Evanston, IL. Merchant has 0.8/5 rating with 50 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["extremely_new_user", "extreme_spending_deviation", "very_suspicious_time", "location_change", "extremely_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'emma_martinez' (age: 30 years, 28,789 transactions) attempts $8 purchase at 11:30 AM from 'Grocery Store' in San Diego, CA. User's spending pattern shows 140-145 transactions/month, mostly $5-20. Merchant has 4.9/5 rating, no fraud reports. User has made 108 purchases from this grocery store in the last 42 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'james_brown' (age: 5 months, 45 transactions) attempts $9,200 purchase at 4:15 AM from 'Online Marketplace' in Phoenix, AZ. User's previous transactions were all under $80 in Mesa, AZ. Merchant has 1.2/5 rating with 38 fraud reports in last 60 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "behavioral_anomaly",
+      "risk_factors": ["new_user", "massive_spending_deviation", "very_suspicious_time", "location_change", "very_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'ava_taylor' (age: 35 years, 35,123 transactions) attempts $5 purchase at 12:45 PM from 'Pharmacy' in Seattle, WA. User's spending pattern shows 150-155 transactions/month, mostly $3-15. Merchant has 4.9/5 rating, no fraud reports. User has made 125 purchases from this pharmacy in the last 48 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'benjamin_lee' (age: 3 days, 1 transaction) attempts $25,000 purchase at 8:30 AM from 'Electronics Store' in Houston, TX. User's previous transaction was $5 in Sugar Land, TX. Merchant has 0.5/5 rating with 60 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["extremely_new_user", "extreme_spending_deviation", "very_suspicious_time", "location_change", "extremely_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'charlotte_white' (age: 40 years, 42,567 transactions) attempts $3 purchase at 2:00 PM from 'Coffee Shop' in Austin, TX. User's spending pattern shows 160-165 transactions/month, mostly $2-12. Merchant has 4.9/5 rating, no fraud reports. User has made 142 purchases from this coffee shop in the last 54 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'alexander_moore' (age: 7 months, 78 transactions) attempts $11,500 purchase at 5:00 AM from 'Online Store' in Las Vegas, NV. User's previous transactions were all under $60 in Henderson, NV. Merchant has 0.9/5 rating with 42 fraud reports in last 45 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "multi_factor_fraud",
+      "risk_factors": ["new_user", "massive_spending_deviation", "very_suspicious_time", "location_change", "very_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'amelia_jackson' (age: 45 years, 50,234 transactions) attempts $2 purchase at 11:15 AM from 'Restaurant' in Portland, OR. User's spending pattern shows 170-175 transactions/month, mostly $1-8. Merchant has 4.9/5 rating, no fraud reports. User has made 158 purchases from this restaurant in the last 60 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'daniel_wilson' (age: 1 day, 1 transaction) attempts $50,000 purchase at 9:45 AM from 'Electronics Store' in Miami, FL. User's previous transaction was $2 in Homestead, FL. Merchant has 0.2/5 rating with 75 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["extremely_new_user", "extreme_spending_deviation", "very_suspicious_time", "location_change", "extremely_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'mia_davis' (age: 50 years, 58,789 transactions) attempts $1 purchase at 1:15 PM from 'Grocery Store' in San Francisco, CA. User's spending pattern shows 180-185 transactions/month, mostly $1-5. Merchant has 4.9/5 rating, no fraud reports. User has made 175 purchases from this grocery store in the last 66 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'lucas_taylor' (age: 8 months, 112 transactions) attempts $18,500 purchase at 6:30 AM from 'Online Marketplace' in Denver, CO. User's previous transactions were all under $40 in Fort Collins, CO. Merchant has 0.7/5 rating with 48 fraud reports in last 60 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "behavioral_anomaly",
+      "risk_factors": ["new_user", "massive_spending_deviation", "very_suspicious_time", "location_change", "very_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'sophia_rodriguez' (age: 55 years, 67,123 transactions) attempts $0.50 purchase at 12:30 PM from 'Pharmacy' in Seattle, WA. User's spending pattern shows 190-195 transactions/month, mostly $0.50-3. Merchant has 4.9/5 rating, no fraud reports. User has made 185 purchases from this pharmacy in the last 72 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'mason_white' (age: 2 hours, 1 transaction) attempts $100,000 purchase at 11:00 AM from 'Electronics Store' in Chicago, IL. User's previous transaction was $0.25 in Oak Park, IL. Merchant has 0.1/5 rating with 90 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["extremely_new_user", "extreme_spending_deviation", "very_suspicious_time", "location_change", "extremely_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'olivia_johnson' (age: 60 years, 75,456 transactions) attempts $0.25 purchase at 2:45 PM from 'Coffee Shop' in Austin, TX. User's spending pattern shows 200-205 transactions/month, mostly $0.25-2. Merchant has 4.9/5 rating, no fraud reports. User has made 195 purchases from this coffee shop in the last 78 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'william_garcia' (age: 9 months, 156 transactions) attempts $22,800 purchase at 7:15 AM from 'Online Store' in Phoenix, AZ. User's previous transactions were all under $20 in Scottsdale, AZ. Merchant has 0.3/5 rating with 55 fraud reports in last 45 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "multi_factor_fraud",
+      "risk_factors": ["new_user", "massive_spending_deviation", "very_suspicious_time", "location_change", "very_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'emma_martinez' (age: 65 years, 82,789 transactions) attempts $0.10 purchase at 10:30 AM from 'Restaurant' in San Diego, CA. User's spending pattern shows 210-215 transactions/month, mostly $0.10-1. Merchant has 4.9/5 rating, no fraud reports. User has made 205 purchases from this restaurant in the last 84 months. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "easy",
+    "metadata": {
+      "fraud_type": "legitimate",
+      "risk_factors": ["extremely_established_user", "normal_amount", "business_hours", "extremely_strong_merchant_relationship"],
+      "decision_complexity": "straightforward"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'james_brown' (age: 30 minutes, 1 transaction) attempts $500,000 purchase at 12:00 PM from 'Electronics Store' in Houston, TX. User's previous transaction was $0.05 in Katy, TX. Merchant has 0.0/5 rating with 100 fraud reports in last 30 days. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "very_hard",
+    "metadata": {
+      "fraud_type": "new_user_fraud",
+      "risk_factors": ["extremely_new_user", "extreme_spending_deviation", "very_suspicious_time", "location_change", "extremely_high_merchant_fraud"],
+      "decision_complexity": "multi_factor"
+    }
+  }
+]

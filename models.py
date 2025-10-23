@@ -134,3 +134,67 @@ class BulletSelection(Base):
     # Timestamps
     selected_at = Column(TIMESTAMP, server_default=func.current_timestamp())
 
+
+class LLMJudge(Base):
+    """Configure LLM judges per node with customizable prompts."""
+    
+    __tablename__ = "llm_judges"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    
+    # Configuration
+    node = Column(String(100), nullable=False, unique=True)  # Which agent node
+    model = Column(String(50), nullable=False, default='gpt-4o-mini')  # Model to use
+    temperature = Column(Float, default=0.0)  # Temperature for judging
+    
+    # Prompt configuration
+    system_prompt = Column(Text, nullable=False)  # System prompt for judge
+    evaluation_criteria = Column(JSONB, nullable=True)  # Specific criteria to evaluate
+    
+    # Domain context
+    domain = Column(String(100), default='fraud detection')
+    
+    # Performance tracking
+    total_evaluations = Column(Integer, default=0)
+    accuracy = Column(Float, default=0.0)  # Accuracy of judge when ground truth available
+    
+    # Metadata
+    is_active = Column(Boolean, default=True)
+    created_at = Column(TIMESTAMP, server_default=func.current_timestamp())
+    updated_at = Column(TIMESTAMP, server_default=func.current_timestamp(), onupdate=func.current_timestamp())
+    
+    # Constraints
+    __table_args__ = (
+        CheckConstraint('temperature >= 0 AND temperature <= 2', name='valid_temperature'),
+        CheckConstraint('accuracy >= 0 AND accuracy <= 1', name='valid_accuracy'),
+    )
+
+
+class JudgeEvaluation(Base):
+    """Audit trail for judge evaluations."""
+    
+    __tablename__ = "judge_evaluations"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    
+    # Links
+    judge_id = Column(Integer, ForeignKey("llm_judges.id", ondelete="CASCADE"), nullable=False)
+    transaction_id = Column(Integer, ForeignKey("transactions.id", ondelete="CASCADE"), nullable=False)
+    
+    # Evaluation data
+    input_text = Column(Text, nullable=False)
+    output_text = Column(Text, nullable=False)
+    ground_truth = Column(Text, nullable=True)
+    
+    # Judge results
+    is_correct = Column(Boolean, nullable=False)
+    confidence = Column(Float, nullable=False)
+    reasoning = Column(Text, nullable=True)
+    
+    # Judge accuracy (if ground truth available)
+    judge_was_correct = Column(Boolean, nullable=True)
+    
+    # Timestamps
+    evaluated_at = Column(TIMESTAMP, server_default=func.current_timestamp())
+
+

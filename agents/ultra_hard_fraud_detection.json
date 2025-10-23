@@ -1,0 +1,592 @@
+[
+  {
+    "query": "Transaction Analysis: User 'shadow_user_001' (age: 2 hours, 1 transaction) attempts $15,000 purchase at 3:47 AM from 'Cryptocurrency Exchange' in Singapore. User's previous transaction was $0.01 in Nigeria. Merchant has 0.8/5 rating with 45 fraud reports in last 7 days. Transaction includes multiple failed attempts with different cards in the last hour. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "synthetic_identity",
+      "risk_factors": ["extremely_new_user", "massive_spending_deviation", "very_suspicious_time", "extreme_location_change", "very_high_merchant_fraud", "multiple_failed_attempts"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'phantom_buyer_002' (age: 1 day, 2 transactions) attempts $8,500 purchase at 11:23 PM from 'Online Electronics Store' in Dubai, UAE. User's previous transactions were $12 and $8 in Mumbai, India. Merchant has 1.2/5 rating with 38 fraud reports in last 14 days. User's IP geolocation shows VPN usage and device fingerprinting indicates emulator. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "account_takeover",
+      "risk_factors": ["extremely_new_user", "massive_spending_deviation", "suspicious_time", "extreme_location_change", "very_high_merchant_fraud", "vpn_usage", "emulator_detection"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'ghost_customer_003' (age: 3 days, 4 transactions) attempts $12,000 purchase at 2:15 AM from 'Luxury Watch Store' in Monaco. User's previous transactions were all under $50 in Lagos, Nigeria. Merchant has 0.9/5 rating with 52 fraud reports in last 21 days. Transaction shows velocity spike: 4 attempts in 30 minutes with declining amounts. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "velocity_fraud",
+      "risk_factors": ["extremely_new_user", "massive_spending_deviation", "very_suspicious_time", "extreme_location_change", "very_high_merchant_fraud", "velocity_spike"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'mirage_shopper_004' (age: 6 hours, 1 transaction) attempts $25,000 purchase at 4:30 AM from 'Cryptocurrency Exchange' in Cayman Islands. User's previous transaction was $0.50 in Venezuela. Merchant has 0.5/5 rating with 67 fraud reports in last 30 days. Transaction shows suspicious patterns: same-day account creation, no KYC completion, and blockchain analysis shows connection to known money laundering addresses. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "money_laundering",
+      "risk_factors": ["extremely_new_user", "massive_spending_deviation", "very_suspicious_time", "extreme_location_change", "very_high_merchant_fraud", "no_kyc", "blockchain_risk"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'stealth_buyer_005' (age: 12 hours, 3 transactions) attempts $18,500 purchase at 1:45 AM from 'Online Marketplace' in Panama. User's previous transactions were $15, $23, and $31 in Bogotá, Colombia. Merchant has 1.1/5 rating with 41 fraud reports in last 45 days. Device shows jailbroken iOS with suspicious app installations and transaction occurs during known fraud window (1-4 AM local time). What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "device_compromise",
+      "risk_factors": ["extremely_new_user", "massive_spending_deviation", "very_suspicious_time", "extreme_location_change", "very_high_merchant_fraud", "jailbroken_device", "fraud_window"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'elite_customer_006' (age: 8 years, 2,847 transactions) attempts $2,800 purchase at 2:30 PM from 'High-End Jewelry Store' in Geneva, Switzerland. User's typical spending is $150-400, with 12 previous purchases over $2,000 in the last 2 years. Merchant has 4.9/5 rating, no fraud reports. User's location history shows regular visits to Geneva for business. Transaction is for anniversary gift with detailed product specifications. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_high_value",
+      "risk_factors": ["established_user", "high_amount", "business_hours", "usual_location", "excellent_merchant", "historical_pattern", "legitimate_context"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'corporate_client_007' (age: 5 years, 1,456 transactions) attempts $5,200 purchase at 10:15 AM from 'Business Equipment Store' in Frankfurt, Germany. User's spending pattern shows quarterly large purchases ($3,000-6,000) for office supplies. Merchant has 4.7/5 rating, no fraud reports. User's transaction history shows consistent B2B purchases with corporate billing addresses. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_business",
+      "risk_factors": ["established_user", "high_amount", "business_hours", "usual_location", "excellent_merchant", "business_pattern", "corporate_context"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'vip_member_008' (age: 10 years, 4,567 transactions) attempts $3,500 purchase at 11:45 AM from 'Luxury Fashion Store' in Paris, France. User's spending pattern shows monthly luxury purchases ($2,000-4,000) with VIP status. Merchant has 4.8/5 rating, no fraud reports. User's location history shows regular visits to Paris for shopping. Transaction includes VIP discount and personal styling consultation. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_luxury",
+      "risk_factors": ["very_established_user", "high_amount", "business_hours", "usual_location", "excellent_merchant", "luxury_pattern", "vip_context"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'crypto_trader_009' (age: 1 month, 23 transactions) attempts $7,800 purchase at 9:30 PM from 'Cryptocurrency Exchange' in Malta. User's previous transactions were all $500-1,200 in cryptocurrency purchases. Merchant has 4.2/5 rating with 3 fraud reports in last 90 days. User's transaction pattern shows consistent crypto trading activity with verified KYC. Transaction is for Bitcoin purchase during market volatility. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_crypto",
+      "risk_factors": ["new_user", "high_amount", "evening_time", "location_change", "moderate_merchant_risk", "crypto_pattern", "verified_kyc"],
+      "decision_complexity": "multi_factor_ambiguous"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'night_owl_010' (age: 3 months, 67 transactions) attempts $1,200 purchase at 11:30 PM from 'Online Gaming Store' in Tokyo, Japan. User's spending pattern shows 15-20 transactions/month, mostly $50-200 during late hours. Merchant has 4.1/5 rating with 2 fraud reports in last 6 months. User's transaction history shows consistent gaming purchases and late-night activity pattern. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_gaming",
+      "risk_factors": ["new_user", "moderate_amount", "late_time", "usual_location", "good_merchant", "gaming_pattern", "consistent_behavior"],
+      "decision_complexity": "multi_factor_ambiguous"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'borderline_case_011' (age: 2 months, 8 transactions) attempts $950 purchase at 12:45 AM from 'Electronics Store' in Mexico City, Mexico. User's previous transactions were all under $200 in Guadalajara, Mexico. Merchant has 3.8/5 rating with 5 fraud reports in last 60 days. Transaction shows moderate risk: new user, late night, location change, but reasonable amount and familiar country. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "borderline_fraud",
+      "risk_factors": ["new_user", "moderate_amount", "very_suspicious_time", "location_change", "moderate_merchant_risk", "limited_history"],
+      "decision_complexity": "multi_factor_ambiguous"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'suspicious_pattern_012' (age: 1 week, 5 transactions) attempts $4,200 purchase at 3:20 AM from 'Online Marketplace' in Istanbul, Turkey. User's previous transactions were $25, $45, $120, $380, $650 showing rapid escalation. Merchant has 2.9/5 rating with 12 fraud reports in last 30 days. Transaction pattern suggests testing card limits before large purchase. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "limit_testing",
+      "risk_factors": ["very_new_user", "high_amount", "very_suspicious_time", "location_change", "high_merchant_risk", "escalation_pattern"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'legitimate_traveler_013' (age: 2 years, 456 transactions) attempts $1,800 purchase at 2:15 PM from 'Electronics Store' in Bangkok, Thailand. User's spending pattern shows occasional large purchases during business trips. Merchant has 4.3/5 rating with 1 fraud report in last 6 months. User's location history shows regular international travel for work. Transaction is for business equipment with corporate receipt. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_travel",
+      "risk_factors": ["established_user", "high_amount", "business_hours", "location_change", "good_merchant", "travel_pattern", "business_context"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'red_flag_user_014' (age: 4 days, 2 transactions) attempts $22,000 purchase at 5:15 AM from 'Cryptocurrency Exchange' in Seychelles. User's previous transaction was $0.25 in Somalia. Merchant has 0.3/5 rating with 78 fraud reports in last 30 days. Transaction shows multiple red flags: offshore jurisdiction, extreme amount, suspicious time, and connection to high-risk country. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "extreme_fraud",
+      "risk_factors": ["very_new_user", "extreme_amount", "very_suspicious_time", "extreme_location_change", "extremely_high_merchant_fraud", "offshore_jurisdiction"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'family_account_015' (age: 6 years, 3,234 transactions) attempts $650 purchase at 7:30 PM from 'Grocery Store' in Sydney, Australia. User's spending pattern shows weekly grocery purchases $400-800. Merchant has 4.6/5 rating, no fraud reports. User's location history shows consistent shopping at this store. Transaction includes family items and matches typical purchase pattern. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_family",
+      "risk_factors": ["very_established_user", "normal_amount", "evening_time", "usual_location", "excellent_merchant", "family_pattern", "consistent_behavior"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'merchant_test_016' (age: 1 day, 1 transaction) attempts $0.01 purchase at 8:00 AM from 'Test Merchant' in San Francisco, CA. User's previous transaction was $0.01 in San Francisco, CA. Merchant has 5.0/5 rating, no fraud reports. Transaction appears to be a merchant testing transaction with minimal amount and same location. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "merchant_test",
+      "risk_factors": ["very_new_user", "minimal_amount", "business_hours", "same_location", "excellent_merchant", "test_pattern"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'fraud_ring_017' (age: 2 hours, 1 transaction) attempts $35,000 purchase at 2:30 AM from 'Luxury Store' in Monaco. User's previous transaction was $0.01 in North Korea. Merchant has 0.1/5 rating with 95 fraud reports in last 7 days. Transaction shows extreme fraud indicators: sanctioned country connection, massive amount, suspicious time, and merchant with highest fraud rate. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "sanctions_violation",
+      "risk_factors": ["extremely_new_user", "extreme_amount", "very_suspicious_time", "extreme_location_change", "extremely_high_merchant_fraud", "sanctions_risk"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'legitimate_emergency_018' (age: 4 years, 1,789 transactions) attempts $3,200 purchase at 11:45 PM from 'Emergency Services' in London, UK. User's spending pattern shows occasional emergency purchases during off-hours. Merchant has 4.9/5 rating, no fraud reports. User's location history shows consistent London residence. Transaction is for emergency medical equipment with valid prescription. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_emergency",
+      "risk_factors": ["established_user", "high_amount", "late_time", "usual_location", "excellent_merchant", "emergency_context", "medical_necessity"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'synthetic_identity_019' (age: 30 minutes, 1 transaction) attempts $50,000 purchase at 4:00 AM from 'Cryptocurrency Exchange' in Bahamas. User's previous transaction was $0.01 in Iran. Merchant has 0.2/5 rating with 89 fraud reports in last 14 days. Transaction shows synthetic identity fraud: brand new account, extreme amount, suspicious time, offshore jurisdiction, and connection to sanctioned country. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "synthetic_identity_extreme",
+      "risk_factors": ["extremely_new_user", "extreme_amount", "very_suspicious_time", "extreme_location_change", "extremely_high_merchant_fraud", "offshore_jurisdiction", "sanctions_risk"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'whale_customer_020' (age: 8 years, 5,678 transactions) attempts $15,000 purchase at 1:00 PM from 'Luxury Car Dealership' in Monaco. User's spending pattern shows quarterly luxury purchases ($10,000-20,000) with VIP status. Merchant has 4.9/5 rating, no fraud reports. User's location history shows regular visits to Monaco for luxury shopping. Transaction includes VIP treatment and personal consultation. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_whale",
+      "risk_factors": ["very_established_user", "very_high_amount", "business_hours", "usual_location", "excellent_merchant", "whale_pattern", "vip_context"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'phantom_buyer_002' (age: 1 day, 2 transactions) attempts $8,500 purchase at 11:23 PM from 'Online Electronics Store' in Dubai, UAE. User's previous transactions were $12 and $8 in Mumbai, India. Merchant has 1.2/5 rating with 38 fraud reports in last 14 days. User's IP geolocation shows VPN usage and device fingerprinting indicates emulator. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "account_takeover",
+      "risk_factors": ["extremely_new_user", "massive_spending_deviation", "suspicious_time", "extreme_location_change", "very_high_merchant_fraud", "vpn_usage", "emulator_detection"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'ghost_customer_003' (age: 3 days, 4 transactions) attempts $12,000 purchase at 2:15 AM from 'Luxury Watch Store' in Monaco. User's previous transactions were all under $50 in Lagos, Nigeria. Merchant has 0.9/5 rating with 52 fraud reports in last 21 days. Transaction shows velocity spike: 4 attempts in 30 minutes with declining amounts. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "velocity_fraud",
+      "risk_factors": ["extremely_new_user", "massive_spending_deviation", "very_suspicious_time", "extreme_location_change", "very_high_merchant_fraud", "velocity_spike"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'mirage_shopper_004' (age: 6 hours, 1 transaction) attempts $25,000 purchase at 4:30 AM from 'Cryptocurrency Exchange' in Cayman Islands. User's previous transaction was $0.50 in Venezuela. Merchant has 0.5/5 rating with 67 fraud reports in last 30 days. Transaction shows suspicious patterns: same-day account creation, no KYC completion, and blockchain analysis shows connection to known money laundering addresses. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "money_laundering",
+      "risk_factors": ["extremely_new_user", "massive_spending_deviation", "very_suspicious_time", "extreme_location_change", "very_high_merchant_fraud", "no_kyc", "blockchain_risk"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'stealth_buyer_005' (age: 12 hours, 3 transactions) attempts $18,500 purchase at 1:45 AM from 'Online Marketplace' in Panama. User's previous transactions were $15, $23, and $31 in Bogotá, Colombia. Merchant has 1.1/5 rating with 41 fraud reports in last 45 days. Device shows jailbroken iOS with suspicious app installations and transaction occurs during known fraud window (1-4 AM local time). What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "device_compromise",
+      "risk_factors": ["extremely_new_user", "massive_spending_deviation", "very_suspicious_time", "extreme_location_change", "very_high_merchant_fraud", "jailbroken_device", "fraud_window"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'elite_customer_006' (age: 8 years, 2,847 transactions) attempts $2,800 purchase at 2:30 PM from 'High-End Jewelry Store' in Geneva, Switzerland. User's typical spending is $150-400, with 12 previous purchases over $2,000 in the last 2 years. Merchant has 4.9/5 rating, no fraud reports. User's location history shows regular visits to Geneva for business. Transaction is for anniversary gift with detailed product specifications. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_high_value",
+      "risk_factors": ["established_user", "high_amount", "business_hours", "usual_location", "excellent_merchant", "historical_pattern", "legitimate_context"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'corporate_client_007' (age: 5 years, 1,456 transactions) attempts $5,200 purchase at 10:15 AM from 'Business Equipment Store' in Frankfurt, Germany. User's spending pattern shows quarterly large purchases ($3,000-6,000) for office supplies. Merchant has 4.7/5 rating, no fraud reports. User's transaction history shows consistent B2B purchases with corporate billing addresses. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_business",
+      "risk_factors": ["established_user", "high_amount", "business_hours", "usual_location", "excellent_merchant", "business_pattern", "corporate_context"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'vip_member_008' (age: 10 years, 4,567 transactions) attempts $3,500 purchase at 11:45 AM from 'Luxury Fashion Store' in Paris, France. User's spending pattern shows monthly luxury purchases ($2,000-4,000) with VIP status. Merchant has 4.8/5 rating, no fraud reports. User's location history shows regular visits to Paris for shopping. Transaction includes VIP discount and personal styling consultation. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_luxury",
+      "risk_factors": ["very_established_user", "high_amount", "business_hours", "usual_location", "excellent_merchant", "luxury_pattern", "vip_context"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'crypto_trader_009' (age: 1 month, 23 transactions) attempts $7,800 purchase at 9:30 PM from 'Cryptocurrency Exchange' in Malta. User's previous transactions were all $500-1,200 in cryptocurrency purchases. Merchant has 4.2/5 rating with 3 fraud reports in last 90 days. User's transaction pattern shows consistent crypto trading activity with verified KYC. Transaction is for Bitcoin purchase during market volatility. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_crypto",
+      "risk_factors": ["new_user", "high_amount", "evening_time", "location_change", "moderate_merchant_risk", "crypto_pattern", "verified_kyc"],
+      "decision_complexity": "multi_factor_ambiguous"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'night_owl_010' (age: 3 months, 67 transactions) attempts $1,200 purchase at 11:30 PM from 'Online Gaming Store' in Tokyo, Japan. User's spending pattern shows 15-20 transactions/month, mostly $50-200 during late hours. Merchant has 4.1/5 rating with 2 fraud reports in last 6 months. User's transaction history shows consistent gaming purchases and late-night activity pattern. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_gaming",
+      "risk_factors": ["new_user", "moderate_amount", "late_time", "usual_location", "good_merchant", "gaming_pattern", "consistent_behavior"],
+      "decision_complexity": "multi_factor_ambiguous"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'borderline_case_011' (age: 2 months, 8 transactions) attempts $950 purchase at 12:45 AM from 'Electronics Store' in Mexico City, Mexico. User's previous transactions were all under $200 in Guadalajara, Mexico. Merchant has 3.8/5 rating with 5 fraud reports in last 60 days. Transaction shows moderate risk: new user, late night, location change, but reasonable amount and familiar country. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "borderline_fraud",
+      "risk_factors": ["new_user", "moderate_amount", "very_suspicious_time", "location_change", "moderate_merchant_risk", "limited_history"],
+      "decision_complexity": "multi_factor_ambiguous"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'suspicious_pattern_012' (age: 1 week, 5 transactions) attempts $4,200 purchase at 3:20 AM from 'Online Marketplace' in Istanbul, Turkey. User's previous transactions were $25, $45, $120, $380, $650 showing rapid escalation. Merchant has 2.9/5 rating with 12 fraud reports in last 30 days. Transaction pattern suggests testing card limits before large purchase. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "limit_testing",
+      "risk_factors": ["very_new_user", "high_amount", "very_suspicious_time", "location_change", "high_merchant_risk", "escalation_pattern"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'legitimate_traveler_013' (age: 2 years, 456 transactions) attempts $1,800 purchase at 2:15 PM from 'Electronics Store' in Bangkok, Thailand. User's spending pattern shows occasional large purchases during business trips. Merchant has 4.3/5 rating with 1 fraud report in last 6 months. User's location history shows regular international travel for work. Transaction is for business equipment with corporate receipt. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_travel",
+      "risk_factors": ["established_user", "high_amount", "business_hours", "location_change", "good_merchant", "travel_pattern", "business_context"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'red_flag_user_014' (age: 4 days, 2 transactions) attempts $22,000 purchase at 5:15 AM from 'Cryptocurrency Exchange' in Seychelles. User's previous transaction was $0.25 in Somalia. Merchant has 0.3/5 rating with 78 fraud reports in last 30 days. Transaction shows multiple red flags: offshore jurisdiction, extreme amount, suspicious time, and connection to high-risk country. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "extreme_fraud",
+      "risk_factors": ["very_new_user", "extreme_amount", "very_suspicious_time", "extreme_location_change", "extremely_high_merchant_fraud", "offshore_jurisdiction"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'family_account_015' (age: 6 years, 3,234 transactions) attempts $650 purchase at 7:30 PM from 'Grocery Store' in Sydney, Australia. User's spending pattern shows weekly grocery purchases $400-800. Merchant has 4.6/5 rating, no fraud reports. User's location history shows consistent shopping at this store. Transaction includes family items and matches typical purchase pattern. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_family",
+      "risk_factors": ["very_established_user", "normal_amount", "evening_time", "usual_location", "excellent_merchant", "family_pattern", "consistent_behavior"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'merchant_test_016' (age: 1 day, 1 transaction) attempts $0.01 purchase at 8:00 AM from 'Test Merchant' in San Francisco, CA. User's previous transaction was $0.01 in San Francisco, CA. Merchant has 5.0/5 rating, no fraud reports. Transaction appears to be a merchant testing transaction with minimal amount and same location. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "merchant_test",
+      "risk_factors": ["very_new_user", "minimal_amount", "business_hours", "same_location", "excellent_merchant", "test_pattern"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'fraud_ring_017' (age: 2 hours, 1 transaction) attempts $35,000 purchase at 2:30 AM from 'Luxury Store' in Monaco. User's previous transaction was $0.01 in North Korea. Merchant has 0.1/5 rating with 95 fraud reports in last 7 days. Transaction shows extreme fraud indicators: sanctioned country connection, massive amount, suspicious time, and merchant with highest fraud rate. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "sanctions_violation",
+      "risk_factors": ["extremely_new_user", "extreme_amount", "very_suspicious_time", "extreme_location_change", "extremely_high_merchant_fraud", "sanctions_risk"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'legitimate_emergency_018' (age: 4 years, 1,789 transactions) attempts $3,200 purchase at 11:45 PM from 'Emergency Services' in London, UK. User's spending pattern shows occasional emergency purchases during off-hours. Merchant has 4.9/5 rating, no fraud reports. User's location history shows consistent London residence. Transaction is for emergency medical equipment with valid prescription. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_emergency",
+      "risk_factors": ["established_user", "high_amount", "late_time", "usual_location", "excellent_merchant", "emergency_context", "medical_necessity"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'synthetic_identity_019' (age: 30 minutes, 1 transaction) attempts $50,000 purchase at 4:00 AM from 'Cryptocurrency Exchange' in Bahamas. User's previous transaction was $0.01 in Iran. Merchant has 0.2/5 rating with 89 fraud reports in last 14 days. Transaction shows synthetic identity fraud: brand new account, extreme amount, suspicious time, offshore jurisdiction, and connection to sanctioned country. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "synthetic_identity_extreme",
+      "risk_factors": ["extremely_new_user", "extreme_amount", "very_suspicious_time", "extreme_location_change", "extremely_high_merchant_fraud", "offshore_jurisdiction", "sanctions_risk"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'whale_customer_020' (age: 8 years, 5,678 transactions) attempts $15,000 purchase at 1:00 PM from 'Luxury Car Dealership' in Monaco. User's spending pattern shows quarterly luxury purchases ($10,000-20,000) with VIP status. Merchant has 4.9/5 rating, no fraud reports. User's location history shows regular visits to Monaco for luxury shopping. Transaction includes VIP treatment and personal consultation. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_whale",
+      "risk_factors": ["very_established_user", "very_high_amount", "business_hours", "usual_location", "excellent_merchant", "whale_pattern", "vip_context"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'dark_web_user_021' (age: 45 minutes, 1 transaction) attempts $28,000 purchase at 1:15 AM from 'Cryptocurrency Exchange' in Estonia. User's previous transaction was $0.01 in Russia. Merchant has 0.4/5 rating with 72 fraud reports in last 21 days. Transaction shows dark web patterns: Tor browser usage, multiple failed attempts, and connection to known cybercriminal infrastructure. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "dark_web_fraud",
+      "risk_factors": ["extremely_new_user", "extreme_amount", "very_suspicious_time", "extreme_location_change", "extremely_high_merchant_fraud", "tor_usage", "cybercriminal_infrastructure"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'legitimate_investor_022' (age: 3 years, 1,234 transactions) attempts $12,500 purchase at 9:30 AM from 'Investment Platform' in Zurich, Switzerland. User's spending pattern shows monthly large investments ($8,000-15,000) with verified accreditation. Merchant has 4.8/5 rating, no fraud reports. User's transaction history shows consistent investment activity with proper documentation. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_investment",
+      "risk_factors": ["established_user", "very_high_amount", "business_hours", "usual_location", "excellent_merchant", "investment_pattern", "verified_accreditation"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'card_testing_023' (age: 6 hours, 7 transactions) attempts $1,500 purchase at 4:45 AM from 'Online Store' in Romania. User's previous transactions were $0.99, $1.00, $1.01, $1.50, $2.00, $1.25 showing card testing pattern. Merchant has 2.1/5 rating with 23 fraud reports in last 45 days. Transaction shows systematic card testing behavior with escalating amounts. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "card_testing",
+      "risk_factors": ["very_new_user", "moderate_amount", "very_suspicious_time", "location_change", "high_merchant_risk", "card_testing_pattern"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'medical_emergency_024' (age: 2 years, 567 transactions) attempts $8,900 purchase at 10:30 PM from 'Medical Equipment Store' in Toronto, Canada. User's spending pattern shows occasional medical purchases during emergencies. Merchant has 4.7/5 rating with 1 fraud report in last 12 months. User's location history shows consistent Toronto residence. Transaction is for emergency medical device with valid prescription and insurance pre-authorization. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_medical_emergency",
+      "risk_factors": ["established_user", "high_amount", "late_time", "usual_location", "excellent_merchant", "medical_emergency", "insurance_authorization"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'money_laundering_025' (age: 3 days, 2 transactions) attempts $45,000 purchase at 3:30 AM from 'Art Gallery' in Liechtenstein. User's previous transaction was $0.01 in Myanmar. Merchant has 0.6/5 rating with 56 fraud reports in last 30 days. Transaction shows money laundering indicators: offshore jurisdiction, extreme amount, suspicious time, and connection to high-risk country. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "money_laundering_extreme",
+      "risk_factors": ["very_new_user", "extreme_amount", "very_suspicious_time", "extreme_location_change", "very_high_merchant_fraud", "offshore_jurisdiction", "high_risk_country"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'luxury_regular_026' (age: 7 years, 3,456 transactions) attempts $4,200 purchase at 3:15 PM from 'Luxury Handbag Store' in Milan, Italy. User's spending pattern shows monthly luxury purchases ($2,000-5,000) with VIP status. Merchant has 4.9/5 rating, no fraud reports. User's location history shows regular visits to Milan for luxury shopping. Transaction includes VIP discount and personal shopping assistant. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_luxury_regular",
+      "risk_factors": ["very_established_user", "high_amount", "business_hours", "usual_location", "excellent_merchant", "luxury_pattern", "vip_status"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'identity_theft_027' (age: 1 hour, 1 transaction) attempts $32,000 purchase at 5:00 AM from 'Electronics Store' in Prague, Czech Republic. User's previous transaction was $0.01 in North Korea. Merchant has 0.2/5 rating with 91 fraud reports in last 14 days. Transaction shows identity theft indicators: brand new account, extreme amount, suspicious time, and connection to sanctioned country. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "identity_theft_extreme",
+      "risk_factors": ["extremely_new_user", "extreme_amount", "very_suspicious_time", "extreme_location_change", "extremely_high_merchant_fraud", "sanctions_risk"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'business_traveler_028' (age: 4 years, 2,123 transactions) attempts $2,100 purchase at 11:20 AM from 'Business Hotel' in Singapore. User's spending pattern shows regular business travel expenses ($1,500-3,000) for corporate trips. Merchant has 4.5/5 rating with 2 fraud reports in last 18 months. User's location history shows consistent business travel to Singapore. Transaction is for corporate hotel booking with business justification. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_business_travel",
+      "risk_factors": ["established_user", "high_amount", "business_hours", "location_change", "good_merchant", "business_travel_pattern", "corporate_context"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'crypto_mining_029' (age: 2 weeks, 8 transactions) attempts $15,500 purchase at 8:45 PM from 'Cryptocurrency Exchange' in Malta. User's previous transactions were all $1,000-2,000 in cryptocurrency purchases. Merchant has 4.1/5 rating with 4 fraud reports in last 6 months. User's transaction pattern shows consistent crypto mining equipment purchases with verified business registration. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_crypto_mining",
+      "risk_factors": ["new_user", "high_amount", "evening_time", "location_change", "good_merchant", "crypto_mining_pattern", "business_registration"],
+      "decision_complexity": "multi_factor_ambiguous"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'phishing_victim_030' (age: 5 days, 3 transactions) attempts $6,800 purchase at 2:15 AM from 'Online Store' in Bulgaria. User's previous transactions were $15, $23, $45 showing gradual increase. Merchant has 1.8/5 rating with 34 fraud reports in last 60 days. Transaction shows phishing victim indicators: new user, escalating amounts, suspicious time, and high-risk merchant. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "phishing_victim",
+      "risk_factors": ["very_new_user", "high_amount", "very_suspicious_time", "location_change", "very_high_merchant_risk", "escalation_pattern"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'real_estate_investor_031' (age: 6 years, 4,567 transactions) attempts $25,000 purchase at 10:00 AM from 'Real Estate Platform' in London, UK. User's spending pattern shows quarterly large investments ($20,000-30,000) in real estate. Merchant has 4.9/5 rating, no fraud reports. User's transaction history shows consistent real estate investments with proper documentation and verified identity. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_real_estate",
+      "risk_factors": ["very_established_user", "very_high_amount", "business_hours", "usual_location", "excellent_merchant", "real_estate_pattern", "verified_identity"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'bot_network_032' (age: 30 minutes, 1 transaction) attempts $18,000 purchase at 4:30 AM from 'Online Marketplace' in Latvia. User's previous transaction was $0.01 in Iran. Merchant has 0.3/5 rating with 87 fraud reports in last 21 days. Transaction shows bot network indicators: brand new account, extreme amount, suspicious time, and connection to sanctioned country. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "bot_network",
+      "risk_factors": ["extremely_new_user", "extreme_amount", "very_suspicious_time", "extreme_location_change", "extremely_high_merchant_fraud", "sanctions_risk"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'charity_donor_033' (age: 5 years, 1,789 transactions) attempts $5,000 purchase at 2:00 PM from 'Charity Platform' in Geneva, Switzerland. User's spending pattern shows annual large donations ($3,000-8,000) to various charities. Merchant has 4.8/5 rating, no fraud reports. User's transaction history shows consistent charitable giving with tax-deductible receipts. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_charity",
+      "risk_factors": ["established_user", "high_amount", "business_hours", "usual_location", "excellent_merchant", "charity_pattern", "tax_deductible"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'account_takeover_034' (age: 2 days, 4 transactions) attempts $9,500 purchase at 1:30 AM from 'Electronics Store' in Poland. User's previous transactions were $12, $18, $25, $45 showing rapid escalation. Merchant has 2.3/5 rating with 28 fraud reports in last 45 days. Transaction shows account takeover indicators: new user, escalating amounts, suspicious time, and high-risk merchant. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "account_takeover_extreme",
+      "risk_factors": ["very_new_user", "high_amount", "very_suspicious_time", "location_change", "high_merchant_risk", "escalation_pattern"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'education_investor_035' (age: 3 years, 2,345 transactions) attempts $7,200 purchase at 9:15 AM from 'Online Education Platform' in Boston, MA. User's spending pattern shows quarterly education investments ($5,000-10,000) for professional development. Merchant has 4.6/5 rating with 1 fraud report in last 24 months. User's transaction history shows consistent education investments with verified credentials. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_education",
+      "risk_factors": ["established_user", "high_amount", "business_hours", "usual_location", "excellent_merchant", "education_pattern", "verified_credentials"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'synthetic_identity_036' (age: 15 minutes, 1 transaction) attempts $65,000 purchase at 3:45 AM from 'Cryptocurrency Exchange' in Bermuda. User's previous transaction was $0.01 in Syria. Merchant has 0.1/5 rating with 94 fraud reports in last 7 days. Transaction shows synthetic identity fraud: brand new account, extreme amount, suspicious time, offshore jurisdiction, and connection to sanctioned country. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "synthetic_identity_extreme",
+      "risk_factors": ["extremely_new_user", "extreme_amount", "very_suspicious_time", "extreme_location_change", "extremely_high_merchant_fraud", "offshore_jurisdiction", "sanctions_risk"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'healthcare_professional_037' (age: 4 years, 1,567 transactions) attempts $3,800 purchase at 11:30 AM from 'Medical Equipment Store' in Zurich, Switzerland. User's spending pattern shows quarterly medical equipment purchases ($2,000-5,000) for practice. Merchant has 4.7/5 rating, no fraud reports. User's transaction history shows consistent medical equipment purchases with professional licensing verification. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_healthcare",
+      "risk_factors": ["established_user", "high_amount", "business_hours", "usual_location", "excellent_merchant", "healthcare_pattern", "professional_licensing"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'fraud_ring_038' (age: 1 hour, 1 transaction) attempts $42,000 purchase at 2:45 AM from 'Luxury Store' in Monaco. User's previous transaction was $0.01 in North Korea. Merchant has 0.1/5 rating with 96 fraud reports in last 7 days. Transaction shows fraud ring indicators: brand new account, extreme amount, suspicious time, and connection to sanctioned country. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "fraud_ring_extreme",
+      "risk_factors": ["extremely_new_user", "extreme_amount", "very_suspicious_time", "extreme_location_change", "extremely_high_merchant_fraud", "sanctions_risk"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'tech_startup_039' (age: 2 months, 34 transactions) attempts $12,800 purchase at 10:45 AM from 'Cloud Computing Platform' in San Francisco, CA. User's spending pattern shows monthly cloud infrastructure purchases ($8,000-15,000) for startup. Merchant has 4.8/5 rating, no fraud reports. User's transaction history shows consistent cloud computing purchases with business verification. What's the risk assessment?",
+    "answer": "APPROVE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "legitimate_tech_startup",
+      "risk_factors": ["new_user", "high_amount", "business_hours", "usual_location", "excellent_merchant", "tech_startup_pattern", "business_verification"],
+      "decision_complexity": "multi_factor_legitimate"
+    }
+  },
+  {
+    "query": "Transaction Analysis: User 'money_laundering_040' (age: 4 hours, 2 transactions) attempts $38,000 purchase at 5:15 AM from 'Art Gallery' in Luxembourg. User's previous transaction was $0.01 in Iran. Merchant has 0.4/5 rating with 73 fraud reports in last 30 days. Transaction shows money laundering indicators: brand new account, extreme amount, suspicious time, offshore jurisdiction, and connection to sanctioned country. What's the risk assessment?",
+    "answer": "DECLINE",
+    "difficulty": "ultra_hard",
+    "metadata": {
+      "fraud_type": "money_laundering_extreme",
+      "risk_factors": ["extremely_new_user", "extreme_amount", "very_suspicious_time", "extreme_location_change", "extremely_high_merchant_fraud", "offshore_jurisdiction", "sanctions_risk"],
+      "decision_complexity": "multi_factor_extreme"
+    }
+  }
+]

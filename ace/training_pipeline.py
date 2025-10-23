@@ -102,7 +102,8 @@ class TrainingPipeline:
                             predicted=agent_result['decision'],
                             correct=problem['answer'],
                             node=node_name,
-                            agent_reasoning=agent_result.get('reasoning', '')
+                            agent_reasoning=agent_result.get('reasoning', ''),
+                            judge_reasoning=""  # No judge reasoning in offline training
                         )
                         
                         if reflection and reflection.get('new_bullet'):
@@ -206,7 +207,8 @@ class TrainingPipeline:
         node: str,
         agent_reasoning: str,
         playbook: BulletPlaybook,
-        source: str = "online"
+        source: str = "online",
+        judge_reasoning: str = ""
     ) -> Optional[str]:
         """
         Add a new bullet from reflection.
@@ -219,6 +221,7 @@ class TrainingPipeline:
             agent_reasoning: Agent's reasoning
             playbook: BulletPlaybook to update
             source: 'offline' or 'online'
+            judge_reasoning: Judge's reasoning/insight (optional)
         
         Returns:
             Bullet ID if added, None if duplicate
@@ -228,7 +231,8 @@ class TrainingPipeline:
             predicted=predicted,
             correct=correct,
             node=node,
-            agent_reasoning=agent_reasoning
+            agent_reasoning=agent_reasoning,
+            judge_reasoning=judge_reasoning
         )
         
         if not reflection or not reflection.get('new_bullet'):

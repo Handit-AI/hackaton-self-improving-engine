@@ -31,7 +31,8 @@ class Reflector:
         predicted: str,
         correct: str,
         node: str,
-        agent_reasoning: str = ""
+        agent_reasoning: str = "",
+        judge_reasoning: str = ""
     ) -> Optional[Dict[str, Any]]:
         """
         Generate new bullet from analysis result.
@@ -42,11 +43,17 @@ class Reflector:
             correct: Correct decision
             node: Agent node name
             agent_reasoning: Agent's reasoning
+            judge_reasoning: Judge's reasoning/insight (optional)
         
         Returns:
             Dict with new_bullet, problem_types, confidence or None
         """
         is_correct = (predicted == correct)
+        
+        # Include judge reasoning if provided
+        judge_context = ""
+        if judge_reasoning:
+            judge_context = f"\n\nJudge's Insight:\n{judge_reasoning}"
         
         prompt = f"""You are a fraud detection expert learning from {'success' if is_correct else 'failure'}.
 
@@ -55,7 +62,7 @@ Transaction: {query}
 Agent ({node}) Analysis:
 Predicted: {predicted}
 Correct: {correct}
-Reasoning: {agent_reasoning}
+Agent Reasoning: {agent_reasoning}{judge_context}
 
 Extract ONE specific, actionable fraud detection heuristic for the {node}.
 
@@ -74,7 +81,7 @@ Examples:
         
         try:
             response = self.client.chat.completions.create(
-                model="gpt-4o",
+                model="gpt-4o-mini",  # Use 4o-mini for improvements
                 messages=[
                     {"role": "system", "content": f"You are learning fraud detection patterns for {node}."},
                     {"role": "user", "content": prompt}

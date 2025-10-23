@@ -28,7 +28,8 @@ class Curator:
         content: str,
         node: str,
         playbook: BulletPlaybook,
-        bullet_id: Optional[str] = None
+        bullet_id: Optional[str] = None,
+        source: str = "online"
     ) -> Optional[str]:
         """
         Add bullet if not duplicate.
@@ -38,6 +39,7 @@ class Curator:
             node: Agent node name
             playbook: BulletPlaybook instance
             bullet_id: Optional bullet ID
+            source: Source of bullet ('offline' or 'online')
         
         Returns:
             Bullet ID if added, None if duplicate
@@ -55,10 +57,11 @@ class Curator:
         bullet_id = playbook.add_bullet(
             content=content,
             node=node,
-            bullet_id=bullet_id
+            bullet_id=bullet_id,
+            source=source
         )
         
-        logger.info(f"Added bullet [{bullet_id}] to {node}: {content[:50]}...")
+        logger.info(f"Added bullet [{bullet_id}] to {node} (source: {source}): {content[:50]}...")
         return bullet_id
     
     def _text_similarity(self, text1: str, text2: str) -> float:
