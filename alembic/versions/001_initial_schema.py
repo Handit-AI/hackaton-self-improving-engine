@@ -47,6 +47,7 @@ def upgrade() -> None:
         sa.Column('times_selected', sa.Integer(), nullable=True, server_default='0'),
         sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=True),
         sa.Column('last_used', sa.TIMESTAMP(), nullable=True),
+        sa.Column('source', sa.String(length=20), nullable=True, server_default='online'),  # 'offline' or 'online'
         sa.CheckConstraint('helpful_count >= 0 AND harmful_count >= 0', name='valid_performance'),
         sa.PrimaryKeyConstraint('id')
     )

@@ -54,6 +54,7 @@ class Bullet(Base):
     # Metadata
     created_at = Column(TIMESTAMP, server_default=func.current_timestamp())
     last_used = Column(TIMESTAMP, nullable=True)
+    source = Column(String(20), nullable=True, default='online')  # 'offline' or 'online'
     
     # Constraints
     __table_args__ = (
