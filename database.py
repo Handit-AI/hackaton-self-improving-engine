@@ -16,9 +16,20 @@ if settings.database_url is None:
         "Please set it in your .env file or environment."
     )
 
+# Ensure database URL uses asyncpg driver
+async_database_url = settings.database_url
+if async_database_url.startswith("postgresql://"):
+    async_database_url = async_database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+elif async_database_url.startswith("postgres://"):
+    async_database_url = async_database_url.replace("postgres://", "postgres+asyncpg://", 1)
+elif not async_database_url.startswith("postgresql+asyncpg://") and not async_database_url.startswith("postgres+asyncpg://"):
+    # If URL doesn't have a driver, add asyncpg
+    async_database_url = async_database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    async_database_url = async_database_url.replace("postgres://", "postgres+asyncpg://", 1)
+
 # Create async engine
 async_engine = create_async_engine(
-    settings.database_url.replace("postgresql://", "postgresql+asyncpg://"),
+    async_database_url,
     echo=settings.debug,
     pool_pre_ping=True,
     pool_size=10,
