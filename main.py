@@ -667,11 +667,50 @@ Respond in JSON format:
                 evaluator_judge_reasoning = result.get("reasoning", "")
                 evaluator_is_correct = result.get("is_correct", False)
                 evaluator_confidence = result.get("confidence", 0.5)
+            elif request.ground_truth:
+                # If no judge but ground truth exists, compare
+                evaluator_is_correct = (request.output == request.ground_truth)
+            else:
+                # If no judge and no ground truth, default to True
+                evaluator_is_correct = True
+            
+            # Cache the result
+            evaluator_results[evaluator_name] = evaluator_is_correct
+            
+            # Save metrics immediately after evaluation (if session_id and run_id provided)
+            if request.session_id and request.run_id:
+                from models import SessionRunMetrics
                 
-                # Cache the result for reuse in Step 8
-                evaluator_results[evaluator_name] = evaluator_is_correct
+                metrics = db.query(SessionRunMetrics).filter(
+                    SessionRunMetrics.session_id == request.session_id,
+                    SessionRunMetrics.run_id == request.run_id,
+                    SessionRunMetrics.node == request.node,
+                    SessionRunMetrics.evaluator == evaluator_name,
+                    SessionRunMetrics.mode == mode
+                ).first()
                 
-                # Save judge evaluation for this evaluator
+                if not metrics:
+                    metrics = SessionRunMetrics(
+                        session_id=request.session_id,
+                        run_id=request.run_id,
+                        node=request.node,
+                        evaluator=evaluator_name,
+                        mode=mode,
+                        correct_count=0,
+                        total_count=0,
+                        accuracy=0.0
+                    )
+                    db.add(metrics)
+                
+                metrics.total_count += 1
+                if evaluator_is_correct:
+                    metrics.correct_count += 1
+                metrics.accuracy = metrics.correct_count / metrics.total_count if metrics.total_count > 0 else 0.0
+                
+                logger.info(f"Updated metrics for evaluator {evaluator_name}: is_correct={evaluator_is_correct}, accuracy={metrics.accuracy:.3f}")
+            
+            # Save judge evaluation for this evaluator
+            if evaluator_judge:
                 from models import JudgeEvaluation
                 judge_was_correct = None
                 if request.ground_truth:
@@ -691,14 +730,6 @@ Respond in JSON format:
                 )
                 db.add(judge_eval)
                 logger.info(f"Saved judge evaluation for {evaluator_name} (decision: {evaluator_is_correct}, was_correct: {judge_was_correct})")
-            elif request.ground_truth:
-                # If no judge but ground truth exists, compare
-                evaluator_is_correct = (request.output == request.ground_truth)
-                evaluator_results[evaluator_name] = evaluator_is_correct
-            else:
-                # If no judge and no ground truth, default to True
-                evaluator_is_correct = True
-                evaluator_results[evaluator_name] = evaluator_is_correct
             
             # Step 6b: Generate bullet ONLY if not vanilla mode
             if mode != "vanilla":
@@ -753,114 +784,6 @@ Respond in JSON format:
                             is_helpful=is_correct
                         )
             
-        # Step 8: Update session run metrics (only if session_id and run_id provided)
-        if request.session_id and request.run_id:
-            from models import SessionRunMetrics
-            
-            # Track metrics for each evaluator
-            for evaluator_name in evaluator_names:
-                # Use cached result from Step 6 if available, otherwise evaluate
-                evaluator_is_correct = evaluator_results.get(evaluator_name)
-                
-                if evaluator_is_correct is None:
-                    # Fallback: evaluate if not cached (shouldn't happen in normal flow)
-                    evaluator_judge = db.query(LLMJudge).filter(
-                        LLMJudge.node == request.node,
-                        LLMJudge.evaluator == evaluator_name,
-                        LLMJudge.is_active == True
-                    ).first()
-                    
-                    if evaluator_judge:
-                        client = OpenAI()
-                        
-                        if request.ground_truth:
-                            evaluation_prompt = f"""{evaluator_judge.system_prompt}
-
-Input: {request.input_text}
-
-Output: {request.output}
-
-Ground Truth: {request.ground_truth}
-
-Evaluate the output based on these criteria:
-{json.dumps(evaluator_judge.evaluation_criteria, indent=2) if evaluator_judge.evaluation_criteria else "Use your best judgment"}
-
-Respond in JSON format:
-{{
-    "is_correct": true/false,
-    "confidence": 0.0-1.0,
-    "reasoning": "brief explanation"
-}}"""
-                        else:
-                            evaluation_prompt = f"""{evaluator_judge.system_prompt}
-
-Input: {request.input_text}
-
-Output: {request.output}
-
-Evaluate the output based on these criteria:
-{json.dumps(evaluator_judge.evaluation_criteria, indent=2) if evaluator_judge.evaluation_criteria else "Use your best judgment"}
-
-Respond in JSON format:
-{{
-    "is_correct": true/false,
-    "confidence": 0.0-1.0,
-    "reasoning": "brief explanation"
-}}"""
-                        
-                        response = client.chat.completions.create(
-                            model=evaluator_judge.model,
-                            messages=[
-                                {"role": "system", "content": evaluator_judge.system_prompt},
-                                {"role": "user", "content": evaluation_prompt}
-                            ],
-                            response_format={"type": "json_object"},
-                            temperature=evaluator_judge.temperature
-                        )
-                        
-                        result = json.loads(response.choices[0].message.content)
-                        evaluator_is_correct = result.get("is_correct", False)
-                        logger.info(f"Evaluator {evaluator_name} judge decision: {evaluator_is_correct}")
-                    elif request.ground_truth:
-                        # If no judge for this evaluator but ground truth exists, compare
-                        evaluator_is_correct = (request.output == request.ground_truth)
-                    else:
-                        # If no judge and no ground truth, default to True
-                        evaluator_is_correct = True
-                else:
-                    logger.info(f"Using cached evaluator result for {evaluator_name}: {evaluator_is_correct}")
-                
-                metrics = db.query(SessionRunMetrics).filter(
-                    SessionRunMetrics.session_id == request.session_id,
-                    SessionRunMetrics.run_id == request.run_id,
-                    SessionRunMetrics.node == request.node,
-                    SessionRunMetrics.evaluator == evaluator_name,
-                    SessionRunMetrics.mode == mode
-                ).first()
-                
-                if not metrics:
-                    metrics = SessionRunMetrics(
-                        session_id=request.session_id,
-                        run_id=request.run_id,
-                        node=request.node,
-                        evaluator=evaluator_name,
-                        mode=mode,
-                        correct_count=0,
-                        total_count=0,
-                        accuracy=0.0
-                    )
-                    db.add(metrics)
-                
-                metrics.total_count += 1
-                if evaluator_is_correct:
-                    metrics.correct_count += 1
-                metrics.accuracy = metrics.correct_count / metrics.total_count if metrics.total_count > 0 else 0.0
-                
-                logger.info(f"Updated metrics for evaluator {evaluator_name}: is_correct={evaluator_is_correct}, accuracy={metrics.accuracy:.3f}")
-            
-            db.commit()
-            logger.info(f"Updated metrics for {len(evaluator_names)} evaluators (mode={mode})")
-        
         logger.info(f"Trace processing completed for transaction {txn.id}")
         
         # Get bullet details for all generated bullets
