@@ -1,7 +1,7 @@
 """add_offline_bullets_for_evaluators
 
 Revision ID: a1b2c3d4e5f6
-Revises: e4c5279f5d8b
+Revises: 9cd7757aea6d
 Create Date: 2025-10-23 16:00:00.000000
 
 """
@@ -13,7 +13,7 @@ import uuid
 
 # revision identifiers, used by Alembic.
 revision: str = 'a1b2c3d4e5f6'
-down_revision: Union[str, None] = 'e4c5279f5d8b'
+down_revision: Union[str, None] = '9cd7757aea6d'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -26,7 +26,7 @@ def upgrade() -> None:
         # Decision Aggregator - FORMAT_COMPLIANCE (3 bullets)
         {
             'id': f"decision_aggregator_format_{str(uuid.uuid4())[:8]}",
-            'content': 'When final_decision field is present, ensure it uses EXACTLY one of: "APPROVE", "REVIEW", or "DECLINE" in uppercase. Never use variations like "approve", "Approve", "APPROVED", "OK", or "YES".',
+            'content': "When determining the final_decision field, ensure it strictly matches the required values of 'APPROVE', 'REVIEW', or 'DECLINE', and avoid using any variations or invalid terms.",
             'node': 'decision_aggregator',
             'evaluator': 'format_compliance',
             'source': 'offline',
