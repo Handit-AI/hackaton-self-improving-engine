@@ -681,6 +681,7 @@ Respond in JSON format:
                 "transaction_id": txn.id,
                 "pattern_id": pattern_id,
                 "is_correct": is_correct,
+                "generated_bullets": [],
                 "message": "Transaction saved, but no LLM judges found for this node"
             }
         
@@ -705,19 +706,88 @@ Respond in JSON format:
         training_pipeline = TrainingPipeline(DummyAgent(), selector, reflector, curator, darwin_evolver=darwin_evolver)
         playbook = BulletPlaybook(db_session=db)
         
-        # Step 6: Online learning - Generate bullet
-        bullet_id = await training_pipeline.add_bullet_from_reflection(
-            query=request.input_text,
-            predicted=request.output,
-            correct=request.ground_truth or request.output,
-            node=request.node,
-            agent_reasoning=request.agent_reasoning or "",
-            playbook=playbook,
-            source="online",
-            evaluator=evaluator_names[0]
-        )
+        # Step 6: Online learning - Generate bullet for EACH evaluator
+        generated_bullets = []
+        for evaluator_name in evaluator_names:
+            # Get the specific judge for this evaluator to get its reasoning
+            evaluator_judge = db.query(LLMJudge).filter(
+                LLMJudge.node == request.node,
+                LLMJudge.evaluator == evaluator_name,
+                LLMJudge.is_active == True
+            ).first()
+            
+            # Get judge reasoning for this specific evaluator
+            evaluator_judge_reasoning = ""
+            if evaluator_judge:
+                client = OpenAI()
+                
+                if request.ground_truth:
+                    evaluation_prompt = f"""{evaluator_judge.system_prompt}
+
+Input: {request.input_text}
+
+Output: {request.output}
+
+Ground Truth: {request.ground_truth}
+
+Evaluate the output based on these criteria:
+{json.dumps(evaluator_judge.evaluation_criteria, indent=2) if evaluator_judge.evaluation_criteria else "Use your best judgment"}
+
+Respond in JSON format:
+{{
+    "is_correct": true/false,
+    "confidence": 0.0-1.0,
+    "reasoning": "brief explanation"
+}}"""
+                else:
+                    evaluation_prompt = f"""{evaluator_judge.system_prompt}
+
+Input: {request.input_text}
+
+Output: {request.output}
+
+Evaluate the output based on these criteria:
+{json.dumps(evaluator_judge.evaluation_criteria, indent=2) if evaluator_judge.evaluation_criteria else "Use your best judgment"}
+
+Respond in JSON format:
+{{
+    "is_correct": true/false,
+    "confidence": 0.0-1.0,
+    "reasoning": "brief explanation"
+}}"""
+                
+                response = client.chat.completions.create(
+                    model=evaluator_judge.model,
+                    messages=[
+                        {"role": "system", "content": evaluator_judge.system_prompt},
+                        {"role": "user", "content": evaluation_prompt}
+                    ],
+                    response_format={"type": "json_object"},
+                    temperature=evaluator_judge.temperature
+                )
+                
+                result = json.loads(response.choices[0].message.content)
+                evaluator_judge_reasoning = result.get("reasoning", "")
+            
+            bullet_id = await training_pipeline.add_bullet_from_reflection(
+                query=request.input_text,
+                predicted=request.output,
+                correct=request.ground_truth or request.output,
+                node=request.node,
+                agent_reasoning=request.agent_reasoning or "",
+                playbook=playbook,
+                source="online",
+                evaluator=evaluator_name,
+                judge_reasoning=evaluator_judge_reasoning
+            )
+            
+            if bullet_id:
+                logger.info(f"Generated bullet for evaluator {evaluator_name}: {bullet_id}")
+                generated_bullets.append(bullet_id)
+            else:
+                logger.info(f"No bullet generated for evaluator {evaluator_name} (likely duplicate)")
         
-        logger.info(f"Generated bullet: {bullet_id}")
+        logger.info(f"Generated {len(generated_bullets)} bullets out of {len(evaluator_names)} evaluators")
         
         # Step 7: Record bullet effectiveness
         if request.bullet_ids and pattern_id:
@@ -846,12 +916,27 @@ Respond in JSON format:
         
         logger.info(f"Trace processing completed for transaction {txn.id}")
         
+        # Get bullet details for all generated bullets
+        bullet_infos = []
+        if generated_bullets:
+            from models import Bullet as BulletModel
+            for bullet_id in generated_bullets:
+                bullet = db.query(BulletModel).filter(BulletModel.id == bullet_id).first()
+                if bullet:
+                    bullet_infos.append({
+                        "bullet_id": bullet.id,
+                        "content": bullet.content,
+                        "evaluator": bullet.evaluator,
+                        "source": bullet.source
+                    })
+        
         return {
             "status": "success",
             "node": request.node,
             "transaction_id": txn.id,
             "pattern_id": pattern_id,
             "is_correct": is_correct,
+            "generated_bullets": bullet_infos,
             "message": "Processing completed"
         }
     

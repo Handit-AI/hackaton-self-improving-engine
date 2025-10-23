@@ -1,0 +1,1107 @@
+{
+  "use_cases": [
+    {
+      "name": "Teenage Child First Solo Purchase",
+      "description": "Parent's card used by authorized teenage child for first independent purchase - unusual pattern but legitimate",
+      "expected_difficulty": "HIGH",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "REVIEW",
+      "why_challenging": "System sees: new device, different location, unusual time, typing pattern change. Human sees: authorized user pattern matching teenage behavior",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-TEEN-8A3F92",
+          "transaction_type": "ECOMMERCE",
+          "transaction_datetime": "2024-01-20T15:42:13.234Z"
+        },
+        "financial": {
+          "amount": 67.99,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************4829",
+          "bin": "414720",
+          "card_brand": "VISA",
+          "card_type": "CREDIT",
+          "card_subtype": "FAMILY",
+          "card_present": false,
+          "entry_mode": "MANUAL"
+        },
+        "merchant": {
+          "merchant_id": "MID-STEAM-GAMES",
+          "merchant_name": "Steam Store",
+          "merchant_category_code": "5816",
+          "merchant_category": "Digital Goods - Games",
+          "merchant_website": "store.steampowered.com"
+        },
+        "customer": {
+          "customer_id": "CUST-2012-8F3A92",
+          "customer_since": "2012-02-10",
+          "age_of_account_days": 4351,
+          "authorized_users": 2,
+          "primary_cardholder_age": 45
+        },
+        "device": {
+          "device_id": "DEV-GAMING-PC-NEW",
+          "device_type": "DESKTOP",
+          "device_os": "Windows",
+          "browser": "Discord Browser",
+          "days_since_device_first_seen": 0
+        },
+        "location": {
+          "ip_address": "73.92.123.45",
+          "ip_city": "Same as billing",
+          "distance_from_primary_cardholder": 0
+        },
+        "velocity_counters": {
+          "gaming_purchases_lifetime": 0,
+          "authorized_user_transactions_30d": 0,
+          "new_merchant_categories_today": 1
+        },
+        "behavioral_profile": {
+          "primary_user_gaming_history": "NEVER",
+          "authorized_user_age": 16,
+          "school_hours_transaction": true,
+          "typing_speed_wpm": 85,
+          "mouse_movement_pattern": "GAMING_STYLE"
+        }
+      }
+    },
+    {
+      "name": "Deathbed Gift Distribution",
+      "description": "Terminally ill person making final gift purchases - massive spending spike but legitimate",
+      "expected_difficulty": "EXTREME",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "DECLINE",
+      "why_challenging": "System sees: huge spike, multiple high-value transactions, unusual recipients. Human sees: end-of-life gift giving pattern",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-GIFT-9B2C47",
+          "transaction_type": "PURCHASE",
+          "transaction_datetime": "2024-01-20T10:30:45.678Z"
+        },
+        "financial": {
+          "amount": 4999.00,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************7234",
+          "bin": "533948",
+          "card_brand": "MASTERCARD",
+          "card_type": "DEBIT",
+          "card_present": false
+        },
+        "merchant": {
+          "merchant_id": "MID-GIFT-CARDS-BULK",
+          "merchant_name": "GiftCards.com",
+          "merchant_category_code": "5999",
+          "merchant_category": "Miscellaneous Retail"
+        },
+        "customer": {
+          "customer_id": "CUST-1985-3D8E71",
+          "customer_since": "1985-11-23",
+          "age_of_account_days": 13935,
+          "customer_age": 78
+        },
+        "location": {
+          "transaction_location": "Hospice facility WiFi",
+          "ip_type": "MEDICAL_FACILITY",
+          "distance_from_home_miles": 8.2
+        },
+        "velocity_counters": {
+          "gift_purchases_today": 12,
+          "total_gifts_amount_today": 47899.00,
+          "unique_recipients": 12,
+          "lifetime_gift_purchases": 3
+        },
+        "behavioral_profile": {
+          "typical_monthly_spend": 1200.00,
+          "savings_account_liquidated_yesterday": true,
+          "recent_medical_facility_admission": true,
+          "power_of_attorney_activated": false,
+          "purchase_notes": "For my grandchildren"
+        }
+      }
+    },
+    {
+      "name": "Amish Community First Online Purchase",
+      "description": "Amish person's first ever online transaction during Rumspringa - no digital history",
+      "expected_difficulty": "VERY_HIGH",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "DECLINE",
+      "why_challenging": "System sees: no digital footprint, cash-only history, suspicious first transaction. Human sees: cultural context",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-AMISH-5E9A13",
+          "transaction_type": "ECOMMERCE",
+          "transaction_datetime": "2024-01-20T19:15:22.456Z"
+        },
+        "financial": {
+          "amount": 156.78,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************9012",
+          "bin": "421783",
+          "card_brand": "VISA",
+          "card_type": "DEBIT",
+          "card_present": false,
+          "entry_mode": "MANUAL"
+        },
+        "merchant": {
+          "merchant_id": "MID-CLOTHING-MODERN",
+          "merchant_name": "Urban Outfitters",
+          "merchant_category_code": "5651",
+          "merchant_category": "Family Clothing Stores"
+        },
+        "customer": {
+          "customer_id": "CUST-2024-6B4F88",
+          "customer_since": "2024-01-15",
+          "age_of_account_days": 5,
+          "occupation": "Farming"
+        },
+        "device": {
+          "device_id": "DEV-PUBLIC-LIBRARY",
+          "device_type": "PUBLIC_COMPUTER",
+          "browser": "Internet Explorer",
+          "typing_pattern": "HUNT_AND_PECK",
+          "session_behavior": "EXTREMELY_CAUTIOUS"
+        },
+        "location": {
+          "ip_location": "Lancaster County, PA",
+          "public_wifi": true,
+          "library_network": true
+        },
+        "velocity_counters": {
+          "online_transactions_lifetime": 0,
+          "cash_transactions_lifetime": 2847,
+          "check_transactions_lifetime": 423
+        },
+        "behavioral_profile": {
+          "digital_literacy_score": 0.1,
+          "community": "AMISH",
+          "rumspringa_age_range": true,
+          "advisor_assistance_detected": true,
+          "cultural_transition_pattern": true
+        }
+      }
+    },
+    {
+      "name": "Divorce Lawyer Retainer Payment",
+      "description": "Secret divorce lawyer payment - spouse hiding legitimate transaction",
+      "expected_difficulty": "HIGH",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "REVIEW",
+      "why_challenging": "System sees: hidden transaction, unusual merchant, secretive behavior. Human sees: legitimate legal service",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-LEGAL-8C3D92",
+          "transaction_type": "PAYMENT",
+          "transaction_datetime": "2024-01-20T12:15:30.789Z"
+        },
+        "financial": {
+          "amount": 5000.00,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************3456",
+          "bin": "445062",
+          "card_brand": "VISA",
+          "card_type": "CREDIT",
+          "card_present": false
+        },
+        "merchant": {
+          "merchant_id": "MID-LAW-FIRM-8923",
+          "merchant_name": "Smith & Associates",
+          "merchant_category_code": "8111",
+          "merchant_category": "Legal Services"
+        },
+        "customer": {
+          "customer_id": "CUST-2015-7A9C24",
+          "customer_since": "2015-09-14",
+          "age_of_account_days": 3056,
+          "joint_account": true
+        },
+        "device": {
+          "device_id": "DEV-WORK-COMPUTER",
+          "device_type": "DESKTOP",
+          "incognito_mode": true,
+          "vpn_detected": true,
+          "cache_cleared_after": true
+        },
+        "location": {
+          "transaction_location": "Office building",
+          "lunch_hour_transaction": true,
+          "different_from_home": true
+        },
+        "velocity_counters": {
+          "legal_payments_lifetime": 0,
+          "large_payments_hidden_from_statement": 1,
+          "incognito_transactions_30d": 3
+        },
+        "behavioral_profile": {
+          "typical_transparency": "HIGH",
+          "recent_behavior_change": true,
+          "separate_credit_card_opened_recently": true,
+          "statement_delivery_changed_to_digital": true,
+          "relationship_counseling_searches": true
+        }
+      }
+    },
+    {
+      "name": "Immigrant Hawala Transfer Pattern",
+      "description": "Legal informal value transfer system - looks like money laundering but legitimate",
+      "expected_difficulty": "EXTREME",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "DECLINE",
+      "why_challenging": "System sees: structured deposits, international pattern, cash intensive. Human sees: cultural banking practice",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-HAWALA-2B8F56",
+          "transaction_type": "CASH_DEPOSIT",
+          "transaction_datetime": "2024-01-20T18:45:33.123Z"
+        },
+        "financial": {
+          "amount": 4900.00,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************8901",
+          "bin": "490501",
+          "card_brand": "VISA",
+          "card_type": "DEBIT",
+          "card_present": false
+        },
+        "merchant": {
+          "merchant_id": "ATM-DEPOSIT-7823",
+          "merchant_name": "Chase ATM Deposit",
+          "merchant_category_code": "6011",
+          "merchant_category": "Financial Institutions"
+        },
+        "customer": {
+          "customer_id": "CUST-2022-5C7E93",
+          "customer_since": "2022-03-28",
+          "age_of_account_days": 663,
+          "country_of_origin": "Somalia"
+        },
+        "location": {
+          "deposit_location": "Minneapolis, MN",
+          "large_somali_community": true,
+          "remittance_corridor": true
+        },
+        "velocity_counters": {
+          "cash_deposits_7d": 3,
+          "total_deposited_7d": 14700.00,
+          "matching_withdrawals_overseas": 3,
+          "structured_appearance": true
+        },
+        "behavioral_profile": {
+          "remittance_pattern": "REGULAR",
+          "hawala_network_participant": true,
+          "legitimate_cultural_practice": true,
+          "family_support_documented": true,
+          "tax_compliant": true
+        }
+      }
+    },
+    {
+      "name": "Victim Willingly Paying Romance Scammer",
+      "description": "Romance scam victim who refuses to believe it's fraud - technically authorized",
+      "expected_difficulty": "EXTREME",
+      "expected_decision": "DECLINE",
+      "likely_system_decision": "APPROVE",
+      "why_challenging": "System sees: authorized transaction, consistent pattern, willing participant. Human sees: obvious scam",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-ROMANCE-9D4A67",
+          "transaction_type": "WIRE_TRANSFER",
+          "transaction_datetime": "2024-01-20T14:30:45.567Z"
+        },
+        "financial": {
+          "amount": 8500.00,
+          "currency": "USD",
+          "wire_type": "INTERNATIONAL"
+        },
+        "card": {
+          "masked_pan": "************2345",
+          "bin": "522981",
+          "card_brand": "MASTERCARD",
+          "card_type": "DEBIT",
+          "card_present": false
+        },
+        "merchant": {
+          "merchant_id": "WIRE-TRANSFER-INTL",
+          "merchant_name": "Wire Transfer to Nigeria",
+          "merchant_category_code": "6536",
+          "merchant_category": "Money Transfer"
+        },
+        "customer": {
+          "customer_id": "CUST-2010-8B2C45",
+          "customer_since": "2010-06-18",
+          "age_of_account_days": 4953,
+          "customer_age": 67,
+          "marital_status": "WIDOWED"
+        },
+        "device": {
+          "device_id": "DEV-HOME-TRUSTED",
+          "device_type": "MOBILE",
+          "device_os": "iOS",
+          "days_since_device_first_seen": 892
+        },
+        "location": {
+          "wire_destination": "Lagos, Nigeria",
+          "recipient_name": "Prince Michael",
+          "never_met_recipient": true
+        },
+        "velocity_counters": {
+          "wires_to_recipient_30d": 4,
+          "total_sent_to_recipient": 34500.00,
+          "declined_transactions_override": 2
+        },
+        "behavioral_profile": {
+          "online_dating_active": true,
+          "emotional_keywords_in_memo": ["love", "emergency", "hospital"],
+          "family_warnings_ignored": true,
+          "bank_fraud_alerts_dismissed": 3,
+          "insists_not_fraud": true
+        }
+      }
+    },
+    {
+      "name": "Midnight Diaper Run Emergency",
+      "description": "New parent desperate 3am purchase at only open store - legitimate emergency",
+      "expected_difficulty": "MEDIUM",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "REVIEW",
+      "why_challenging": "System sees: unusual hour, unusual merchant, stressed behavior. Human sees: new parent emergency",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-BABY-6A9C47",
+          "transaction_type": "PURCHASE",
+          "transaction_datetime": "2024-01-20T03:23:12.345Z"
+        },
+        "financial": {
+          "amount": 84.32,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************5678",
+          "bin": "554213",
+          "card_brand": "MASTERCARD",
+          "card_type": "CREDIT",
+          "card_present": true,
+          "entry_mode": "CHIP"
+        },
+        "merchant": {
+          "merchant_id": "MID-24HR-CVS-8934",
+          "merchant_name": "CVS Pharmacy #8934",
+          "merchant_category_code": "5912",
+          "merchant_category": "Drug Stores and Pharmacies"
+        },
+        "customer": {
+          "customer_id": "CUST-2020-3B8D92",
+          "customer_since": "2020-04-12",
+          "age_of_account_days": 1379,
+          "recent_life_event": "NEW_BABY"
+        },
+        "location": {
+          "store_location": "Not usual pharmacy",
+          "distance_from_home_miles": 7.8,
+          "only_24hr_store_nearby": true
+        },
+        "velocity_counters": {
+          "middle_of_night_transactions_lifetime": 1,
+          "pharmacy_transactions_7d": 5,
+          "baby_related_purchases_30d": 23
+        },
+        "behavioral_profile": {
+          "typical_sleep_hours": "22:00-06:00",
+          "sleep_pattern_disrupted_14d": true,
+          "purchase_categories": ["diapers", "formula", "infant_medicine"],
+          "panic_purchase_pattern": true,
+          "new_parent_indicators": true
+        }
+      }
+    },
+    {
+      "name": "Day Trader Tax Loss Harvesting",
+      "description": "Rapid buy/sell pattern for tax optimization - looks like laundering",
+      "expected_difficulty": "HIGH",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "DECLINE",
+      "why_challenging": "System sees: rapid cycling, losses, complex pattern. Human sees: legitimate tax strategy",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-TRADE-8C4F91",
+          "transaction_type": "INVESTMENT",
+          "transaction_datetime": "2024-12-30T15:45:33.789Z"
+        },
+        "financial": {
+          "amount": 48750.00,
+          "currency": "USD",
+          "transaction_subtype": "STOCK_SALE"
+        },
+        "card": {
+          "masked_pan": "************9023",
+          "bin": "403628",
+          "card_brand": "VISA",
+          "card_type": "DEBIT",
+          "card_present": false
+        },
+        "merchant": {
+          "merchant_id": "MID-ETRADE",
+          "merchant_name": "E*TRADE",
+          "merchant_category_code": "6211",
+          "merchant_category": "Securities Brokers"
+        },
+        "customer": {
+          "customer_id": "CUST-2018-TRADER-8A",
+          "customer_since": "2018-07-15",
+          "age_of_account_days": 2015,
+          "tax_optimization_enabled": true
+        },
+        "location": {
+          "ip_location": "Home address",
+          "trading_from_home": true
+        },
+        "velocity_counters": {
+          "trades_today": 47,
+          "buy_sell_pairs": 23,
+          "realized_losses_today": 12847.00,
+          "december_trading_volume": 2850000.00
+        },
+        "behavioral_profile": {
+          "year_end_tax_trading": true,
+          "wash_sale_avoidance": true,
+          "cpa_consultation_recent": true,
+          "trading_strategy": "TAX_LOSS_HARVESTING",
+          "legitimate_tax_planning": true
+        }
+      }
+    },
+    {
+      "name": "Disabled Person Helper Shopping",
+      "description": "Caregiver using disabled person's card with verbal permission - different physical pattern",
+      "expected_difficulty": "HIGH",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "REVIEW",
+      "why_challenging": "System sees: different location, different behavior, helper pattern. Human sees: authorized assistance",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-ASSIST-2B8C56",
+          "transaction_type": "PURCHASE",
+          "transaction_datetime": "2024-01-20T10:30:00.000Z"
+        },
+        "financial": {
+          "amount": 156.43,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************3456",
+          "bin": "485932",
+          "card_brand": "VISA",
+          "card_type": "DEBIT",
+          "card_present": true,
+          "entry_mode": "CHIP",
+          "pin_verified": true
+        },
+        "merchant": {
+          "merchant_id": "MID-WALMART-2341",
+          "merchant_name": "Walmart #2341",
+          "merchant_category_code": "5411",
+          "merchant_category": "Grocery Stores"
+        },
+        "customer": {
+          "customer_id": "CUST-2008-9A3D78",
+          "customer_since": "2008-01-15",
+          "age_of_account_days": 5847,
+          "disability_status": "MOBILITY_IMPAIRED"
+        },
+        "location": {
+          "transaction_location": "Different neighborhood",
+          "distance_from_account_holder": 4.2,
+          "caregiver_address_nearby": true
+        },
+        "velocity_counters": {
+          "helper_pattern_transactions_30d": 8,
+          "consistent_helper_pattern": true
+        },
+        "behavioral_profile": {
+          "authorized_helpers": ["Home health aide"],
+          "helper_shopping_pattern": "WEEKLY",
+          "purchase_categories_consistent": true,
+          "verbal_authorization_given": true,
+          "social_services_involved": true
+        }
+      }
+    },
+    {
+      "name": "Musician Buying Unusual Expensive Equipment",
+      "description": "Professional musician buying rare vintage equipment - unusual but legitimate purchase",
+      "expected_difficulty": "MEDIUM",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "REVIEW",
+      "why_challenging": "System sees: huge amount, unusual merchant, rare purchase. Human sees: professional equipment purchase",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-MUSIC-7C9F83",
+          "transaction_type": "PURCHASE",
+          "transaction_datetime": "2024-01-20T14:20:45.234Z"
+        },
+        "financial": {
+          "amount": 28750.00,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************7823",
+          "bin": "524901",
+          "card_brand": "MASTERCARD",
+          "card_type": "CREDIT",
+          "card_present": false
+        },
+        "merchant": {
+          "merchant_id": "MID-REVERB-VINTAGE",
+          "merchant_name": "Reverb.com - Vintage Guitars",
+          "merchant_category_code": "5733",
+          "merchant_category": "Music Stores"
+        },
+        "customer": {
+          "customer_id": "CUST-2016-MUSIC-8D",
+          "customer_since": "2016-09-08",
+          "age_of_account_days": 2690,
+          "occupation": "Session Musician"
+        },
+        "location": {
+          "seller_location": "Nashville, TN",
+          "buyer_location": "Los Angeles, CA",
+          "escrow_service_used": true
+        },
+        "velocity_counters": {
+          "music_equipment_purchases_lifetime": 34,
+          "largest_music_purchase_ever": 28750.00,
+          "previous_largest": 4500.00
+        },
+        "behavioral_profile": {
+          "professional_musician": true,
+          "recording_contract_recent": true,
+          "item_description": "1959 Gibson Les Paul",
+          "market_value_verified": true,
+          "insurance_quote_obtained": true
+        }
+      }
+    },
+    {
+      "name": "Sovereign Citizen Unusual Banking",
+      "description": "Sovereign citizen with bizarre but legal transaction patterns",
+      "expected_difficulty": "HIGH",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "DECLINE",
+      "why_challenging": "System sees: weird amounts, strange references, anti-pattern. Human sees: eccentric but legal",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-SOVEREIGN-4B8A92",
+          "transaction_type": "PAYMENT",
+          "transaction_datetime": "2024-01-20T11:11:11.111Z"
+        },
+        "financial": {
+          "amount": 1776.76,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************1776",
+          "bin": "476173",
+          "card_brand": "VISA",
+          "card_type": "DEBIT",
+          "card_present": false
+        },
+        "merchant": {
+          "merchant_id": "MID-UTILITY-WATER",
+          "merchant_name": "City Water Department",
+          "merchant_category_code": "4900",
+          "merchant_category": "Utilities"
+        },
+        "customer": {
+          "customer_id": "CUST-2019-SOV-3A9C",
+          "customer_since": "2019-07-04",
+          "age_of_account_days": 1666,
+          "unusual_beliefs": "SOVEREIGN_CITIZEN"
+        },
+        "location": {
+          "payment_location": "Home",
+          "refuses_zip_code": true,
+          "uses_land_description": true
+        },
+        "velocity_counters": {
+          "symbolic_amount_payments": 23,
+          "constitutional_references": 45,
+          "legal_document_attachments": 12
+        },
+        "behavioral_profile": {
+          "payment_amounts_symbolic": true,
+          "memo_field_manifestos": true,
+          "eccentric_but_pays": true,
+          "never_missed_payment": true,
+          "legally_compliant": true
+        }
+      }
+    },
+    {
+      "name": "Foster Parent Multiple Children Shopping",
+      "description": "Foster parent shopping for multiple new foster children - unusual spike but legitimate",
+      "expected_difficulty": "MEDIUM",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "REVIEW",
+      "why_challenging": "System sees: massive spending spike, children's items, multiple sizes. Human sees: new foster placement",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-FOSTER-6D8E23",
+          "transaction_type": "PURCHASE",
+          "transaction_datetime": "2024-01-20T16:45:18.567Z"
+        },
+        "financial": {
+          "amount": 1234.56,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************8912",
+          "bin": "414709",
+          "card_brand": "VISA",
+          "card_type": "DEBIT",
+          "card_present": true,
+          "entry_mode": "CHIP"
+        },
+        "merchant": {
+          "merchant_id": "MID-TARGET-8234",
+          "merchant_name": "Target #8234",
+          "merchant_category_code": "5311",
+          "merchant_category": "Department Stores"
+        },
+        "customer": {
+          "customer_id": "CUST-2017-FOSTER-8B",
+          "customer_since": "2017-03-20",
+          "age_of_account_days": 2497,
+          "licensed_foster_parent": true
+        },
+        "location": {
+          "store_location": "Local Target",
+          "distance_from_home_miles": 3.2
+        },
+        "velocity_counters": {
+          "children_items_today": 47,
+          "different_sizes_purchased": 5,
+          "total_spent_children_items_today": 3456.78
+        },
+        "behavioral_profile": {
+          "foster_care_licensed": true,
+          "emergency_placement_today": true,
+          "sibling_group_placement": true,
+          "state_reimbursement_pending": true,
+          "purchase_categories": ["clothes", "shoes", "school_supplies", "bedding"]
+        }
+      }
+    },
+    {
+      "name": "Witness Protection Program Relocation",
+      "description": "Person in witness protection making first purchases in new location",
+      "expected_difficulty": "EXTREME",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "DECLINE",
+      "why_challenging": "System sees: location jump, identity inconsistency, suspicious pattern. Human sees: protected witness",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-WITSEC-8A7C34",
+          "transaction_type": "PURCHASE",
+          "transaction_datetime": "2024-01-20T09:15:00.000Z"
+        },
+        "financial": {
+          "amount": 342.18,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************4521",
+          "bin": "489234",
+          "card_brand": "VISA",
+          "card_type": "DEBIT",
+          "card_present": true,
+          "entry_mode": "CHIP"
+        },
+        "merchant": {
+          "merchant_id": "MID-GROCERY-LOCAL",
+          "merchant_name": "Safeway #4521",
+          "merchant_category_code": "5411",
+          "merchant_category": "Grocery Stores"
+        },
+        "customer": {
+          "customer_id": "CUST-2024-NEW-9C4A",
+          "customer_since": "2024-01-18",
+          "age_of_account_days": 2,
+          "previous_history": "SEALED"
+        },
+        "location": {
+          "transaction_city": "Omaha, NE",
+          "previous_city": "[REDACTED]",
+          "distance_from_previous": 1500,
+          "sudden_relocation": true
+        },
+        "velocity_counters": {
+          "location_change_overnight": true,
+          "no_moving_expenses": true,
+          "no_travel_pattern": true
+        },
+        "behavioral_profile": {
+          "government_issued_documents": true,
+          "federal_marshal_contact": true,
+          "identity_verification": "SPECIAL_CIRCUMSTANCES",
+          "legitimate_protection": true,
+          "establishing_new_pattern": true
+        }
+      }
+    },
+    {
+      "name": "Compulsive Gambler in Recovery Making Amends",
+      "description": "Recovering gambling addict paying back debts - unusual pattern but legitimate recovery",
+      "expected_difficulty": "HIGH",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "REVIEW",
+      "why_challenging": "System sees: multiple payees, emotional transactions, debt payments. Human sees: recovery program",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-RECOVERY-3B9D45",
+          "transaction_type": "TRANSFER",
+          "transaction_datetime": "2024-01-20T20:00:00.000Z"
+        },
+        "financial": {
+          "amount": 500.00,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************6734",
+          "bin": "445821",
+          "card_brand": "VISA",
+          "card_type": "DEBIT",
+          "card_present": false
+        },
+        "merchant": {
+          "merchant_id": "P2P-VENMO",
+          "merchant_name": "Venmo Transfer",
+          "merchant_category_code": "6536",
+          "merchant_category": "Money Transfer"
+        },
+        "customer": {
+          "customer_id": "CUST-2018-RECOV-7A8B",
+          "customer_since": "2018-11-30",
+          "age_of_account_days": 1878,
+          "self_exclusion_gambling": true
+        },
+        "location": {
+          "transaction_location": "Home",
+          "ga_meeting_earlier": true
+        },
+        "velocity_counters": {
+          "personal_transfers_today": 8,
+          "different_recipients": 8,
+          "total_transferred_today": 4000.00,
+          "memo_contains_sorry": 8
+        },
+        "behavioral_profile": {
+          "gambling_transactions_90d": 0,
+          "recovery_program_enrolled": true,
+          "making_amends_step": true,
+          "debt_repayment_plan": true,
+          "sponsor_aware": true
+        }
+      }
+    },
+    {
+      "name": "Autistic Adult Routine Disruption Panic Buy",
+      "description": "Autistic person panic buying due to product discontinuation - extreme but legitimate",
+      "expected_difficulty": "MEDIUM",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "REVIEW",
+      "why_challenging": "System sees: hoarding behavior, panic buying, obsessive pattern. Human sees: neurodivergent coping",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-AUTISM-5C8A92",
+          "transaction_type": "PURCHASE",
+          "transaction_datetime": "2024-01-20T22:47:33.123Z"
+        },
+        "financial": {
+          "amount": 847.92,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************2341",
+          "bin": "517823",
+          "card_brand": "MASTERCARD",
+          "card_type": "CREDIT",
+          "card_present": false
+        },
+        "merchant": {
+          "merchant_id": "MID-AMAZON-BULK",
+          "merchant_name": "Amazon.com",
+          "merchant_category_code": "5399",
+          "merchant_category": "General Merchandise"
+        },
+        "customer": {
+          "customer_id": "CUST-2019-AUT-4B7C",
+          "customer_since": "2019-02-14",
+          "age_of_account_days": 1802,
+          "medical_profile": "ASD_DOCUMENTED"
+        },
+        "location": {
+          "delivery_address": "Same as always",
+          "ordering_time": "Disrupted routine"
+        },
+        "velocity_counters": {
+          "identical_item_quantity": 48,
+          "bulk_purchase_lifetime": 1,
+          "panic_search_pattern": true
+        },
+        "behavioral_profile": {
+          "routine_dependent": true,
+          "specific_brand_only": true,
+          "product_discontinued_anxiety": true,
+          "samefood_texture_requirement": true,
+          "legitimate_nd_behavior": true
+        }
+      }
+    },
+    {
+      "name": "Veterinary Emergency After Hours",
+      "description": "Pet emergency at exotic vet - massive unexpected expense but legitimate",
+      "expected_difficulty": "MEDIUM",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "REVIEW",
+      "why_challenging": "System sees: huge vet bill, emergency hours, unusual merchant. Human sees: pet emergency",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-VET-9D3A78",
+          "transaction_type": "PAYMENT",
+          "transaction_datetime": "2024-01-21T02:30:45.678Z"
+        },
+        "financial": {
+          "amount": 6789.43,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************8234",
+          "bin": "403891",
+          "card_brand": "VISA",
+          "card_type": "CREDIT",
+          "card_present": true,
+          "entry_mode": "CHIP"
+        },
+        "merchant": {
+          "merchant_id": "MID-EMERGENCY-VET",
+          "merchant_name": "24hr Emergency Animal Hospital",
+          "merchant_category_code": "0742",
+          "merchant_category": "Veterinary Services"
+        },
+        "customer": {
+          "customer_id": "CUST-2020-PET-6A9B",
+          "customer_since": "2020-07-22",
+          "age_of_account_days": 1278,
+          "pet_insurance": "NONE"
+        },
+        "location": {
+          "emergency_clinic": true,
+          "distance_from_home_miles": 23.4,
+          "only_24hr_exotic_vet": true
+        },
+        "velocity_counters": {
+          "vet_expenses_lifetime": 450.00,
+          "emergency_vet_visits": 0,
+          "largest_vet_bill_ever": 6789.43
+        },
+        "behavioral_profile": {
+          "pet_owner": true,
+          "exotic_pet": "Parrot",
+          "emergency_surgery": true,
+          "payment_plan_declined": true,
+          "emotional_distress_detected": true
+        }
+      }
+    },
+    {
+      "name": "Doomsday Prepper Supply Run",
+      "description": "Prepper bulk buying due to news event - extreme but legal purchases",
+      "expected_difficulty": "MEDIUM",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "REVIEW",
+      "why_challenging": "System sees: bulk purchases, survival items, panic pattern. Human sees: prepper behavior",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-PREP-7B8C92",
+          "transaction_type": "PURCHASE",
+          "transaction_datetime": "2024-01-20T05:30:00.000Z"
+        },
+        "financial": {
+          "amount": 3456.78,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************9234",
+          "bin": "548231",
+          "card_brand": "MASTERCARD",
+          "card_type": "DEBIT",
+          "card_present": false
+        },
+        "merchant": {
+          "merchant_id": "MID-SURVIVAL-GEAR",
+          "merchant_name": "ReadyMadeResources.com",
+          "merchant_category_code": "5999",
+          "merchant_category": "Miscellaneous Retail"
+        },
+        "customer": {
+          "customer_id": "CUST-2015-PREP-8C4D",
+          "customer_since": "2015-12-21",
+          "age_of_account_days": 2951,
+          "purchase_triggers": "NEWS_EVENT"
+        },
+        "location": {
+          "shipping_to_rural_property": true,
+          "multiple_storage_locations": true
+        },
+        "velocity_counters": {
+          "survival_purchases_24h": 5,
+          "total_prep_spending_24h": 8923.45,
+          "bulk_food_purchases": 3
+        },
+        "behavioral_profile": {
+          "prepper_community_member": true,
+          "triggered_by": "Solar_flare_news",
+          "panic_buying_pattern": true,
+          "legitimate_hobby": true,
+          "tax_compliant": true
+        }
+      }
+    },
+    {
+      "name": "Transgender Person Name Change Shopping",
+      "description": "Trans person buying new wardrobe after coming out - complete shopping pattern change",
+      "expected_difficulty": "HIGH",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "REVIEW",
+      "why_challenging": "System sees: gender category switch, name change, behavior change. Human sees: life transition",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-TRANS-4A9B83",
+          "transaction_type": "PURCHASE",
+          "transaction_datetime": "2024-01-20T13:20:15.432Z"
+        },
+        "financial": {
+          "amount": 423.67,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************7823",
+          "bin": "421093",
+          "card_brand": "VISA",
+          "card_type": "CREDIT",
+          "card_present": false
+        },
+        "merchant": {
+          "merchant_id": "MID-CLOTHING-WOMENS",
+          "merchant_name": "Nordstrom",
+          "merchant_category_code": "5311",
+          "merchant_category": "Department Stores"
+        },
+        "customer": {
+          "customer_id": "CUST-2018-TRANS-9B3A",
+          "customer_since": "2018-08-30",
+          "age_of_account_days": 1969,
+          "recent_name_change": true,
+          "legal_name_updated": true
+        },
+        "location": {
+          "shopping_location": "Online",
+          "shipping_name_different": true
+        },
+        "velocity_counters": {
+          "clothing_purchases_30d": 23,
+          "opposite_gender_clothing": 23,
+          "complete_wardrobe_replacement": true
+        },
+        "behavioral_profile": {
+          "gender_marker_change_pending": true,
+          "shopping_category_shift": "COMPLETE",
+          "identity_transition": true,
+          "legitimate_life_change": true,
+          "support_group_member": true
+        }
+      }
+    },
+    {
+      "name": "Refugee First World Transaction",
+      "description": "Recently arrived refugee making first purchase - no history but legitimate",
+      "expected_difficulty": "HIGH",
+      "expected_decision": "APPROVE",
+      "likely_system_decision": "DECLINE",
+      "why_challenging": "System sees: no history, refugee camp IP, government card. Human sees: legitimate refugee",
+      "input": {
+        "transaction": {
+          "transaction_id": "TXN-20240120-REFUGEE-6C8D92",
+          "transaction_type": "PURCHASE",
+          "transaction_datetime": "2024-01-20T11:45:30.234Z"
+        },
+        "financial": {
+          "amount": 127.34,
+          "currency": "USD"
+        },
+        "card": {
+          "masked_pan": "************3421",
+          "bin": "486732",
+          "card_brand": "VISA",
+          "card_type": "DEBIT",
+          "card_present": true,
+          "entry_mode": "CHIP"
+        },
+        "merchant": {
+          "merchant_id": "MID-WALMART-7823",
+          "merchant_name": "Walmart #7823",
+          "merchant_category_code": "5411",
+          "merchant_category": "Grocery Stores"
+        },
+        "customer": {
+          "customer_id": "CUST-2024-REF-8A9C",
+          "customer_since": "2024-01-19",
+          "age_of_account_days": 1,
+          "refugee_status": true,
+          "unhcr_number": true
+        },
+        "location": {
+          "transaction_location": "Resettlement city",
+          "case_worker_present": true,
+          "refugee_services_nearby": true
+        },
+        "velocity_counters": {
+          "first_transaction_ever": true,
+          "no_credit_history": true,
+          "government_assistance_card": true
+        },
+        "behavioral_profile": {
+          "language_barrier": true,
+          "cultural_adjustment": true,
+          "legitimate_refugee": true,
+          "state_department_verified": true,
+          "establishing_life": true
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "purpose": "Challenge fraud detection system with edge cases",
+    "expected_failure_rate": "60-80%",
+    "improvement_focus": "These failures should guide model fine-tuning",
+    "human_accuracy_expected": "85-95%",
+    "categories": [
+      "life_transitions",
+      "cultural_differences",
+      "emergency_situations",
+      "neurodivergent_patterns",
+      "legitimate_unusual",
+      "sophisticated_fraud",
+      "authorized_but_wrong",
+      "edge_populations"
+    ]
+  }
+}
