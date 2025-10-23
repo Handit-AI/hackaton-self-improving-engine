@@ -745,6 +745,74 @@ Respond in JSON format:
             
             # Track metrics for each evaluator
             for evaluator_name in evaluator_names:
+                # Get the specific judge for this evaluator
+                evaluator_judge = db.query(LLMJudge).filter(
+                    LLMJudge.node == request.node,
+                    LLMJudge.evaluator == evaluator_name,
+                    LLMJudge.is_active == True
+                ).first()
+                
+                # Determine if this evaluator was correct
+                evaluator_is_correct = False
+                if evaluator_judge:
+                    # Evaluate with THIS specific evaluator's judge
+                    client = OpenAI()
+                    
+                    if request.ground_truth:
+                        evaluation_prompt = f"""{evaluator_judge.system_prompt}
+
+Input: {request.input_text}
+
+Output: {request.output}
+
+Ground Truth: {request.ground_truth}
+
+Evaluate the output based on these criteria:
+{json.dumps(evaluator_judge.evaluation_criteria, indent=2) if evaluator_judge.evaluation_criteria else "Use your best judgment"}
+
+Respond in JSON format:
+{{
+    "is_correct": true/false,
+    "confidence": 0.0-1.0,
+    "reasoning": "brief explanation"
+}}"""
+                    else:
+                        evaluation_prompt = f"""{evaluator_judge.system_prompt}
+
+Input: {request.input_text}
+
+Output: {request.output}
+
+Evaluate the output based on these criteria:
+{json.dumps(evaluator_judge.evaluation_criteria, indent=2) if evaluator_judge.evaluation_criteria else "Use your best judgment"}
+
+Respond in JSON format:
+{{
+    "is_correct": true/false,
+    "confidence": 0.0-1.0,
+    "reasoning": "brief explanation"
+}}"""
+                    
+                    response = client.chat.completions.create(
+                        model=evaluator_judge.model,
+                        messages=[
+                            {"role": "system", "content": f"You are an LLM judge for {request.node}."},
+                            {"role": "user", "content": evaluation_prompt}
+                        ],
+                        response_format={"type": "json_object"},
+                        temperature=evaluator_judge.temperature
+                    )
+                    
+                    result = json.loads(response.choices[0].message.content)
+                    evaluator_is_correct = result.get("is_correct", False)
+                    logger.info(f"Evaluator {evaluator_name} judge decision: {evaluator_is_correct}")
+                elif request.ground_truth:
+                    # If no judge for this evaluator but ground truth exists, compare
+                    evaluator_is_correct = (request.output == request.ground_truth)
+                else:
+                    # If no judge and no ground truth, default to True
+                    evaluator_is_correct = True
+                
                 metrics = db.query(SessionRunMetrics).filter(
                     SessionRunMetrics.session_id == request.session_id,
                     SessionRunMetrics.run_id == request.run_id,
@@ -767,9 +835,11 @@ Respond in JSON format:
                     db.add(metrics)
                 
                 metrics.total_count += 1
-                if is_correct:
+                if evaluator_is_correct:
                     metrics.correct_count += 1
                 metrics.accuracy = metrics.correct_count / metrics.total_count if metrics.total_count > 0 else 0.0
+                
+                logger.info(f"Updated metrics for evaluator {evaluator_name}: is_correct={evaluator_is_correct}, accuracy={metrics.accuracy:.3f}")
             
             db.commit()
             logger.info(f"Updated metrics for {len(evaluator_names)} evaluators (mode={mode})")
