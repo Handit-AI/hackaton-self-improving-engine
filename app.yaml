@@ -1,0 +1,25 @@
+runtime: python313
+service: default
+
+env_variables:
+  DEBUG: 'False'
+  LOG_LEVEL: 'INFO'
+  PORT: '8080'
+
+# Cloud SQL connection (if using Cloud SQL)
+# beta_settings:
+#   cloud_sql_instances: 'PROJECT_ID:REGION:INSTANCE_NAME'
+
+resources:
+  cpu: 1
+  memory_gb: 1
+  min_instances: 0
+  max_instances: 10
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 10
+  target_cpu_utilization: 0.6
+
+entrypoint: uvicorn main:app --host 0.0.0.0 --port 8080
+
