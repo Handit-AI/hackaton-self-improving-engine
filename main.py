@@ -248,11 +248,34 @@ async def get_playbook_stats():
 
 
 @app.get("/api/v1/playbook/{node}")
-async def get_node_playbook(node: str):
-    """Get all bullets for a specific node."""
+async def get_node_playbook(node: str, limit: int = 10, query: Optional[str] = None):
+    """
+    Get bullets for a specific node.
+    
+    If query is provided, uses intelligent selection to return top bullets.
+    Otherwise, returns all bullets up to limit.
+    
+    Args:
+        node: Agent node name
+        limit: Maximum number of bullets to return (default: 10)
+        query: Optional query text for intelligent bullet selection
+    """
     init_ace_components()
-    bullets = playbook.get_bullets_for_node(node)
-    return {"node": node, "bullets": bullets}
+    
+    if query:
+        # Use intelligent selection
+        bullets, _ = selector.select_bullets(
+            query=query,
+            node=node,
+            playbook=playbook,
+            n_bullets=limit,
+            iteration=0
+        )
+        return {"node": node, "bullets": bullets, "selection_method": "intelligent"}
+    else:
+        # Return all bullets up to limit
+        bullets = playbook.get_bullets_for_node(node)[:limit]
+        return {"node": node, "bullets": bullets, "selection_method": "all"}
 
 
 @app.post("/api/v1/test/comprehensive")

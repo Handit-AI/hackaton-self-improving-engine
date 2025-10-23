@@ -2,6 +2,7 @@
 BulletPlaybook - Manages bullets with per-node organization.
 
 This class handles storage, retrieval, and performance tracking of bullets.
+Supports both in-memory and database-backed storage.
 """
 from typing import List, Dict, Optional, Any
 from datetime import datetime
@@ -53,14 +54,101 @@ class BulletPlaybook:
     """
     Manages bullets with per-node organization.
     
-    This is a simplified in-memory version. In production, this would
-    interact with the database models.
+    Supports both in-memory and database-backed storage.
     """
     
-    def __init__(self):
+    def __init__(self, db_session=None):
+        """
+        Initialize playbook.
+        
+        Args:
+            db_session: SQLAlchemy session for database persistence (optional)
+        """
+        self.db_session = db_session
         self.bullets: List[Bullet] = []
         self._bullet_index: Dict[str, Bullet] = {}
         self._node_index: Dict[str, List[Bullet]] = {}
+        
+        # Load from database if session provided
+        if self.db_session:
+            self._load_from_db()
+    
+    def _load_from_db(self):
+        """Load bullets from database."""
+        try:
+            from models import Bullet as BulletModel
+            
+            db_bullets = self.db_session.query(BulletModel).all()
+            
+            for db_bullet in db_bullets:
+                bullet = Bullet(
+                    id=db_bullet.id,
+                    content=db_bullet.content,
+                    node=db_bullet.node,
+                    helpful_count=db_bullet.helpful_count,
+                    harmful_count=db_bullet.harmful_count,
+                    times_selected=db_bullet.times_selected,
+                    created_at=db_bullet.created_at.isoformat() if db_bullet.created_at else datetime.now().isoformat(),
+                    last_used=db_bullet.last_used.isoformat() if db_bullet.last_used else None,
+                    source=db_bullet.source or "online"
+                )
+                
+                self.bullets.append(bullet)
+                self._bullet_index[bullet.id] = bullet
+                
+                if bullet.node not in self._node_index:
+                    self._node_index[bullet.node] = []
+                self._node_index[bullet.node].append(bullet)
+            
+            logger.info(f"Loaded {len(self.bullets)} bullets from database")
+            
+        except Exception as e:
+            logger.error(f"Error loading bullets from database: {e}")
+    
+    def _save_to_db(self, bullet: Bullet):
+        """Save bullet to database."""
+        if not self.db_session:
+            return
+        
+        try:
+            from models import Bullet as BulletModel
+            from sqlalchemy.sql import func
+            
+            # Check if bullet exists
+            db_bullet = self.db_session.query(BulletModel).filter(
+                BulletModel.id == bullet.id
+            ).first()
+            
+            if db_bullet:
+                # Update existing
+                db_bullet.content = bullet.content
+                db_bullet.node = bullet.node
+                db_bullet.helpful_count = bullet.helpful_count
+                db_bullet.harmful_count = bullet.harmful_count
+                db_bullet.times_selected = bullet.times_selected
+                db_bullet.source = bullet.source
+                if bullet.last_used:
+                    db_bullet.last_used = datetime.fromisoformat(bullet.last_used)
+            else:
+                # Create new
+                db_bullet = BulletModel(
+                    id=bullet.id,
+                    content=bullet.content,
+                    node=bullet.node,
+                    helpful_count=bullet.helpful_count,
+                    harmful_count=bullet.harmful_count,
+                    times_selected=bullet.times_selected,
+                    source=bullet.source,
+                    created_at=datetime.fromisoformat(bullet.created_at) if bullet.created_at else func.now(),
+                    last_used=datetime.fromisoformat(bullet.last_used) if bullet.last_used else None
+                )
+                self.db_session.add(db_bullet)
+            
+            self.db_session.commit()
+            
+        except Exception as e:
+            logger.error(f"Error saving bullet to database: {e}")
+            self.db_session.rollback()
     
     def add_bullet(
         self,
@@ -90,6 +178,9 @@ class BulletPlaybook:
         if node not in self._node_index:
             self._node_index[node] = []
         self._node_index[node].append(bullet)
+        
+        # Save to database
+        self._save_to_db(bullet)
         
         logger.info(f"Added bullet [{bullet_id}] to {node} (source: {source}): {content[:50]}...")
         return bullet_id
@@ -125,6 +216,8 @@ class BulletPlaybook:
         bullet = self.get_bullet(bullet_id)
         if bullet:
             bullet.update_stats(is_helpful)
+            # Save to database
+            self._save_to_db(bullet)
     
     def get_stats(self) -> Dict[str, Any]:
         """Get playbook statistics."""

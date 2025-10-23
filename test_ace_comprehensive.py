@@ -85,17 +85,20 @@ Is the predicted output correct? Respond in JSON:
 class SimpleFraudAgent:
     """Simple fraud detection agent using GPT-3.5-turbo for speed."""
     
-    def __init__(self, api_key: str = None, bullets: List[str] = None):
+    def __init__(self, api_key: str = None, bullets: List[str] = None, max_bullets: int = 5):
         self.client = OpenAI(api_key=api_key or os.getenv("OPENAI_API_KEY"))
         self.model = "gpt-3.5-turbo"  # Use 3.5-turbo for fast agent responses
         self.bullets = bullets or []
+        self.max_bullets = max_bullets  # Limit bullets to prevent context rot
     
     def analyze(self, transaction: str) -> Dict[str, Any]:
         """Analyze transaction and return decision."""
         try:
             bullets_context = ""
             if self.bullets:
-                bullets_context = "\n\nGuidelines:\n" + "\n".join(f"- {b}" for b in self.bullets)
+                # Limit bullets to prevent context rot
+                limited_bullets = self.bullets[:self.max_bullets]
+                bullets_context = "\n\nGuidelines:\n" + "\n".join(f"- {b}" for b in limited_bullets)
             
             response = self.client.chat.completions.create(
                 model=self.model,
@@ -218,6 +221,10 @@ async def run_offline_online_mode(
     from ace.hybrid_selector import HybridSelector
     from ace.reflector import Reflector
     from ace.curator import Curator
+    from database import SessionLocal
+    
+    # Create database session
+    db_session = SessionLocal()
     
     # Mock agent for offline training
     class MockAgent:
@@ -229,14 +236,19 @@ async def run_offline_online_mode(
     reflector = Reflector()
     curator = Curator()
     training_pipeline = TrainingPipeline(mock_agent, selector, reflector, curator)
-    playbook = BulletPlaybook()
+    playbook = BulletPlaybook(db_session=db_session)
     
-    # Generate bullets from offline training
-    logger.info(f"Training on {len(train_set)} examples...")
+    # Split train_set into offline_train (70%) and offline_test (30%)
+    offline_train_set, offline_test_set = split_dataset(train_set, train_ratio=0.7)
+    logger.info(f"Offline training set: {len(offline_train_set)} examples")
+    logger.info(f"Offline test set: {len(offline_test_set)} examples")
+    
+    # Generate bullets from offline training (only using 70% of train_set)
+    logger.info(f"Training on {len(offline_train_set)} examples...")
     offline_bullets = []
     
-    for idx, item in enumerate(train_set):
-        logger.info(f"  [{idx+1}/{len(train_set)}] Generating bullet...")
+    for idx, item in enumerate(offline_train_set):
+        logger.info(f"  [{idx+1}/{len(offline_train_set)}] Generating bullet...")
         
         bullet_id = await training_pipeline.add_bullet_from_reflection(
             query=item['query'],
@@ -250,22 +262,53 @@ async def run_offline_online_mode(
         
         if bullet_id:
             offline_bullets.append(bullet_id)
+        
+        # Log training progress every 10 items
+        if (idx + 1) % 10 == 0:
+            total_bullets = len(playbook.get_bullets_for_node("fraud_detection"))
+            logger.info(f"    Training progress: {idx+1}/{len(offline_train_set)} | Bullets created: {total_bullets}")
     
     # Get bullets from playbook
     bullets = playbook.get_bullets_for_node("fraud_detection")
     bullet_texts = [b.content for b in bullets]
     
-    logger.info(f"Generated {len(bullet_texts)} bullets from offline training")
+    logger.info(f"\n✓ Offline training complete!")
+    logger.info(f"  Total bullets generated: {len(bullet_texts)}")
+    logger.info(f"  Unique bullets: {len(set(bullet_texts))}")
+    logger.info(f"  Deduplication rate: {(1 - len(set(bullet_texts)) / len(bullet_texts)) * 100:.1f}%")
     
     # Step 2: Test with offline bullets
     logger.info("\n--- Step 2: Testing with Offline Bullets ---")
     
-    agent = SimpleFraudAgent(bullets=bullet_texts)
+    # Use HybridSelector to intelligently select bullets for each transaction
+    selector = HybridSelector()
+    max_bullets = 5  # Hyperparameter: limit bullets to prevent context rot
+    
+    agent = SimpleFraudAgent(max_bullets=max_bullets)
     results = []
     correct = 0
     
     for idx, item in enumerate(test_set):
         logger.info(f"\n[{idx+1}/{len(test_set)}] Testing offline+online mode...")
+        
+        # Intelligently select bullets for this specific transaction
+        selected_bullets, scores = selector.select_bullets(
+            query=item['query'],
+            node="fraud_detection",
+            playbook=playbook,
+            n_bullets=max_bullets,
+            iteration=idx
+        )
+        
+        # Extract bullet texts for agent
+        bullet_texts = [b.content for b in selected_bullets]
+        agent.bullets = bullet_texts
+        
+        # Log metrics
+        logger.info(f"  Selected {len(selected_bullets)} bullets from {len(playbook.get_bullets_for_node('fraud_detection'))} total")
+        if scores:
+            top_scores = [f'{s.get("final_score", 0):.3f}' for s in scores[:3]]
+            logger.info(f"  Top bullet scores: {top_scores}")
         
         result = agent.analyze(item['query'])
         predicted = result['decision']
@@ -279,6 +322,11 @@ async def run_offline_online_mode(
         if is_correct:
             correct += 1
         
+        # Log progress metrics
+        if (idx + 1) % 5 == 0:
+            current_accuracy = correct / (idx + 1)
+            logger.info(f"  Progress: {idx+1}/{len(test_set)} | Current Accuracy: {current_accuracy:.2%}")
+        
         results.append({
             "query": item['query'][:100] + "...",
             "predicted": predicted,
@@ -286,7 +334,8 @@ async def run_offline_online_mode(
             "correct": is_correct,
             "confidence": confidence,
             "reason": reason,
-            "bullets_used": len(bullet_texts)
+            "bullets_used": len(bullet_texts),
+            "scores": scores[:3] if scores else []
         })
         
         logger.info(f"Query: {item['query'][:80]}...")
@@ -392,14 +441,12 @@ def main():
     logger.info("\nLoading datasets...")
     complex_dataset = load_dataset("agents/complex_fraud_detection.json")
     ultra_hard_dataset = load_dataset("agents/ultra_hard_fraud_detection.json")
-    ambiguous_dataset = load_dataset("agents/ambiguous_fraud_detection.json")
     
     logger.info(f"Complex dataset: {len(complex_dataset)} examples")
     logger.info(f"Ultra hard dataset: {len(ultra_hard_dataset)} examples")
-    logger.info(f"Ambiguous dataset: {len(ambiguous_dataset)} examples")
     
     # Combine datasets
-    full_dataset = complex_dataset + ultra_hard_dataset + ambiguous_dataset
+    full_dataset = complex_dataset + ultra_hard_dataset
     logger.info(f"Combined dataset: {len(full_dataset)} examples")
     
     # Split into train/test
@@ -433,7 +480,7 @@ def main():
     
     # 1. Vanilla mode - Pattern-focused judge (not used, just ground truth)
     logger.info("\n" + "="*60)
-    logger.info("Vanilla Mode - Ground Truth Comparison")
+    logger.info("VANILLA MODE - Ground Truth Comparison")
     logger.info("="*60)
     vanilla_judge = judge_instances['pattern_focused']  # Not used, just for compatibility
     vanilla_result = run_vanilla_mode(test_set, vanilla_judge)
@@ -441,20 +488,21 @@ def main():
     
     # 2. Offline + Online mode - Risk-focused judge (not used, just ground truth)
     logger.info("\n" + "="*60)
-    logger.info("Offline + Online Mode - Ground Truth Comparison")
+    logger.info("OFFLINE + ONLINE MODE - Ground Truth Comparison")
     logger.info("="*60)
     offline_online_judge = judge_instances['risk_focused']  # Not used, just for compatibility
     import asyncio
     offline_online_result = asyncio.run(run_offline_online_mode(train_set, test_set, offline_online_judge))
     results.append(offline_online_result)
     
-    # 3. Online only mode - Context-focused judge (USES LLM JUDGE!)
-    logger.info("\n" + "="*60)
-    logger.info("Online Only Mode - Using CONTEXT-FOCUSED LLM Judge")
-    logger.info("="*60)
-    online_only_judge = judge_instances['context_focused']
-    online_only_result = asyncio.run(run_online_only_mode(test_set, online_only_judge))
-    results.append(online_only_result)
+    # Skip online-only mode for now
+    # # 3. Online only mode - Context-focused judge (USES LLM JUDGE!)
+    # logger.info("\n" + "="*60)
+    # logger.info("Online Only Mode - Using CONTEXT-FOCUSED LLM Judge")
+    # logger.info("="*60)
+    # online_only_judge = judge_instances['context_focused']
+    # online_only_result = asyncio.run(run_online_only_mode(test_set, online_only_judge))
+    # results.append(online_only_result)
     
     # Summary
     logger.info("\n" + "=" * 60)

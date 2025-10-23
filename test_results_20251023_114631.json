@@ -1,0 +1,1145 @@
+{
+  "summary": {
+    "vanilla": {
+      "total": 43,
+      "correct": 40,
+      "accuracy": 0.9302325581395349
+    },
+    "offline_online": {
+      "total": 43,
+      "correct": 39,
+      "accuracy": 0.9069767441860465
+    },
+    "online_only": {
+      "total": 43,
+      "correct": 38,
+      "accuracy": 0.8837209302325582
+    }
+  },
+  "details": {
+    "vanilla": [
+      {
+        "query": "Transaction Analysis: User 'real_estate_investor_031' (age: 6 years, 4,567 transactions) attempts $2...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'phantom_buyer_002' (age: 1 day, 2 transactions) attempts $8,500 purchase...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'legitimate_emergency_018' (age: 4 years, 1,789 transactions) attempts $3...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'stealth_buyer_005' (age: 12 hours, 3 transactions) attempts $18,500 purc...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'thomas_brown' (age: 1.5 years, 445 transactions) attempts $2,100 purchas...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'synthetic_identity_036' (age: 15 minutes, 1 transaction) attempts $65,00...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'normal_user_123' (age: 1 year, 234 transactions) attempts $190 purchase ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'elite_customer_006' (age: 8 years, 2,847 transactions) attempts $2,800 p...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_rodriguez' (age: 55 years, 67,123 transactions) attempts $0.50 pu...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'luxury_regular_026' (age: 7 years, 3,456 transactions) attempts $4,200 p...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'synthetic_identity_019' (age: 30 minutes, 1 transaction) attempts $50,00...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'established_user_111' (age: 4 years, 1,234 transactions) attempts $680 p...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'bot_network_032' (age: 30 minutes, 1 transaction) attempts $18,000 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'identity_theft_027' (age: 1 hour, 1 transaction) attempts $32,000 purcha...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'card_testing_023' (age: 6 hours, 7 transactions) attempts $1,500 purchas...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_rodriguez' (age: 20 years, 18,234 transactions) attempts $20 purc...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'business_account_777' (age: 3 years, 892 transactions) attempts $4,500 p...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'mia_davis' (age: 50 years, 58,789 transactions) attempts $1 purchase at ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'ava_moore' (age: 4 years, 2,345 transactions) attempts $180 purchase at ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'borderline_case_011' (age: 2 months, 8 transactions) attempts $950 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'daniel_wilson' (age: 1 day, 1 transaction) attempts $50,000 purchase at ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'synthetic_identity_019' (age: 30 minutes, 1 transaction) attempts $50,00...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'olivia_johnson' (age: 25 years, 22,456 transactions) attempts $12 purcha...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'james_brown' (age: 5 months, 45 transactions) attempts $9,200 purchase a...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'jennifer_lee' (age: 3 years, 1,456 transactions) attempts $650 purchase ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'olivia_johnson' (age: 8 years, 6,789 transactions) attempts $45 purchase...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'kevin_wilson' (age: 5 months, 67 transactions) attempts $1,800 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'david_thompson' (age: 2 years, 423 transactions, avg $120) attempts $850...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'robert_jones' (age: 1 year, 234 transactions) attempts $950 purchase at ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'william_garcia' (age: 9 months, 156 transactions) attempts $22,800 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_anderson' (age: 1 year, 298 transactions) attempts $220 purchase ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'anthony_lee' (age: 6 months, 145 transactions) attempts $1,950 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'ava_taylor' (age: 35 years, 35,123 transactions) attempts $5 purchase at...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'alexander_moore' (age: 3 weeks, 1 transaction) attempts $8,500 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'corporate_client_007' (age: 5 years, 1,456 transactions) attempts $5,200...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'daniel_rodriguez' (age: 4 months, 34 transactions) attempts $1,650 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'medical_emergency_024' (age: 2 years, 567 transactions) attempts $8,900 ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'merchant_test_016' (age: 1 day, 1 transaction) attempts $0.01 purchase a...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'benjamin_lee' (age: 5 months, 67 transactions) attempts $3,200 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'whale_customer_020' (age: 8 years, 5,678 transactions) attempts $15,000 ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'suspicious_pattern_012' (age: 1 week, 5 transactions) attempts $4,200 pu...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'zoe_anderson' (age: 6 years, 4,567 transactions) attempts $95 purchase a...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'corporate_client_007' (age: 5 years, 1,456 transactions) attempts $5,200...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      }
+    ],
+    "offline_online": [
+      {
+        "query": "Transaction Analysis: User 'real_estate_investor_031' (age: 6 years, 4,567 transactions) attempts $2...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'phantom_buyer_002' (age: 1 day, 2 transactions) attempts $8,500 purchase...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'legitimate_emergency_018' (age: 4 years, 1,789 transactions) attempts $3...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'stealth_buyer_005' (age: 12 hours, 3 transactions) attempts $18,500 purc...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'thomas_brown' (age: 1.5 years, 445 transactions) attempts $2,100 purchas...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'synthetic_identity_036' (age: 15 minutes, 1 transaction) attempts $65,00...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'normal_user_123' (age: 1 year, 234 transactions) attempts $190 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'elite_customer_006' (age: 8 years, 2,847 transactions) attempts $2,800 p...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_rodriguez' (age: 55 years, 67,123 transactions) attempts $0.50 pu...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'luxury_regular_026' (age: 7 years, 3,456 transactions) attempts $4,200 p...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'synthetic_identity_019' (age: 30 minutes, 1 transaction) attempts $50,00...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'established_user_111' (age: 4 years, 1,234 transactions) attempts $680 p...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'bot_network_032' (age: 30 minutes, 1 transaction) attempts $18,000 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'identity_theft_027' (age: 1 hour, 1 transaction) attempts $32,000 purcha...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'card_testing_023' (age: 6 hours, 7 transactions) attempts $1,500 purchas...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_rodriguez' (age: 20 years, 18,234 transactions) attempts $20 purc...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'business_account_777' (age: 3 years, 892 transactions) attempts $4,500 p...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'mia_davis' (age: 50 years, 58,789 transactions) attempts $1 purchase at ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'ava_moore' (age: 4 years, 2,345 transactions) attempts $180 purchase at ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'borderline_case_011' (age: 2 months, 8 transactions) attempts $950 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'daniel_wilson' (age: 1 day, 1 transaction) attempts $50,000 purchase at ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'synthetic_identity_019' (age: 30 minutes, 1 transaction) attempts $50,00...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'olivia_johnson' (age: 25 years, 22,456 transactions) attempts $12 purcha...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'james_brown' (age: 5 months, 45 transactions) attempts $9,200 purchase a...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'jennifer_lee' (age: 3 years, 1,456 transactions) attempts $650 purchase ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'olivia_johnson' (age: 8 years, 6,789 transactions) attempts $45 purchase...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'kevin_wilson' (age: 5 months, 67 transactions) attempts $1,800 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'david_thompson' (age: 2 years, 423 transactions, avg $120) attempts $850...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'robert_jones' (age: 1 year, 234 transactions) attempts $950 purchase at ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'william_garcia' (age: 9 months, 156 transactions) attempts $22,800 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_anderson' (age: 1 year, 298 transactions) attempts $220 purchase ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'anthony_lee' (age: 6 months, 145 transactions) attempts $1,950 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'ava_taylor' (age: 35 years, 35,123 transactions) attempts $5 purchase at...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'alexander_moore' (age: 3 weeks, 1 transaction) attempts $8,500 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'corporate_client_007' (age: 5 years, 1,456 transactions) attempts $5,200...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'daniel_rodriguez' (age: 4 months, 34 transactions) attempts $1,650 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'medical_emergency_024' (age: 2 years, 567 transactions) attempts $8,900 ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'merchant_test_016' (age: 1 day, 1 transaction) attempts $0.01 purchase a...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'benjamin_lee' (age: 5 months, 67 transactions) attempts $3,200 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'whale_customer_020' (age: 8 years, 5,678 transactions) attempts $15,000 ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'suspicious_pattern_012' (age: 1 week, 5 transactions) attempts $4,200 pu...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'zoe_anderson' (age: 6 years, 4,567 transactions) attempts $95 purchase a...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      },
+      {
+        "query": "Transaction Analysis: User 'corporate_client_007' (age: 5 years, 1,456 transactions) attempts $5,200...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 75
+      }
+    ],
+    "online_only": [
+      {
+        "query": "Transaction Analysis: User 'real_estate_investor_031' (age: 6 years, 4,567 transactions) attempts $2...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The user's transaction history aligns with their spending pattern, and the merchant has a high rating with no fraud reports, indicating a low risk for this transaction.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'phantom_buyer_002' (age: 1 day, 2 transactions) attempts $8,500 purchase...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction shows multiple red flags including a new user with a very high purchase amount compared to previous transactions, a low merchant rating with numerous fraud reports, and indications of VPN usage and device emulation, all of which justify the decline.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'legitimate_emergency_018' (age: 4 years, 1,789 transactions) attempts $3...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction aligns with the user's established spending pattern for emergency purchases, the merchant has a high rating with no fraud reports, and the purchase is for legitimate medical equipment with a valid prescription.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'stealth_buyer_005' (age: 12 hours, 3 transactions) attempts $18,500 purc...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction shows multiple red flags including the user's age, high transaction amount compared to previous transactions, a low merchant rating with numerous fraud reports, a jailbroken device, and timing during a known fraud window. All these factors justify the decline.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'thomas_brown' (age: 1.5 years, 445 transactions) attempts $2,100 purchas...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction amount significantly exceeds the user's typical spending range, and the user has a limited history of high-value purchases. Additionally, the merchant has recent fraud reports, which increases the risk of fraud.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'synthetic_identity_036' (age: 15 minutes, 1 transaction) attempts $65,00...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "The transaction exhibits multiple red flags indicative of synthetic identity fraud, including the user's age, the extreme transaction amount, the suspicious timing, the offshore jurisdiction, and the merchant's poor rating with numerous fraud reports. Therefore, the predicted output of DECLINE is accurate.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'normal_user_123' (age: 1 year, 234 transactions) attempts $190 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.85,
+        "reason": "The predicted output is incorrect because the user has a history of making high-value purchases, and the transaction is within the user's typical location and during business hours. The merchant also has a high rating with no fraud reports, indicating a low risk for fraud.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'elite_customer_006' (age: 8 years, 2,847 transactions) attempts $2,800 p...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction aligns with the user's history of high-value purchases and regular visits to Geneva, and the merchant has a strong reputation with no fraud reports.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_rodriguez' (age: 55 years, 67,123 transactions) attempts $0.50 pu...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction aligns with the user's established spending pattern, the merchant has a high rating with no fraud reports, and the user has a long history of purchases from the same pharmacy, indicating low risk.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'luxury_regular_026' (age: 7 years, 3,456 transactions) attempts $4,200 p...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The user's spending pattern aligns with the transaction amount, and their history of luxury purchases and regular visits to Milan supports the legitimacy of the transaction. The merchant's high rating and absence of fraud reports further validate the approval.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'synthetic_identity_019' (age: 30 minutes, 1 transaction) attempts $50,00...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "The transaction exhibits multiple red flags indicative of synthetic identity fraud, including a brand new account, an unusually high transaction amount, a suspicious time of day, an offshore jurisdiction, and a connection to a sanctioned country. The predicted output to decline the transaction aligns with the ground truth assessment.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'established_user_111' (age: 4 years, 1,234 transactions) attempts $680 p...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The user's transaction history and established relationship with the merchant indicate a low risk for fraud. The purchase amount, while higher than typical, falls within the user's occasional larger purchase pattern, and the merchant has a strong rating with no fraud reports.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'bot_network_032' (age: 30 minutes, 1 transaction) attempts $18,000 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction exhibits multiple high-risk indicators, including a brand new account, an extreme purchase amount, a suspicious transaction time, and a connection to a sanctioned country, all of which justify the decline.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'identity_theft_027' (age: 1 hour, 1 transaction) attempts $32,000 purcha...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "The transaction exhibits multiple red flags including a brand new account, an extremely high purchase amount, a suspicious transaction time, and a connection to a sanctioned country, all of which justify the decline decision.",
+        "bullet_added": false
+      },
+      {
+        "query": "Transaction Analysis: User 'card_testing_023' (age: 6 hours, 7 transactions) attempts $1,500 purchas...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction shows clear signs of card testing behavior with escalating amounts and a new user account making a high-value purchase. Additionally, the merchant has a low rating and multiple fraud reports, further supporting the decision to decline.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_rodriguez' (age: 20 years, 18,234 transactions) attempts $20 purc...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction aligns with the user's established spending pattern and history with the merchant, indicating low risk. The merchant's high rating and absence of fraud reports further support the approval.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'business_account_777' (age: 3 years, 892 transactions) attempts $4,500 p...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.85,
+        "reason": "The predicted output is incorrect because the user has a verified business account with a history of high-value purchases, and the transaction amount, while above their typical spending, falls within their annual pattern of making larger purchases. Additionally, the merchant has a good rating and only one fraud report in the past six months, which does not significantly raise the risk.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'mia_davis' (age: 50 years, 58,789 transactions) attempts $1 purchase at ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction aligns with the user's established spending pattern, the merchant has a high rating with no fraud reports, and the user has a long history of purchases at this grocery store, indicating low risk.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'ava_moore' (age: 4 years, 2,345 transactions) attempts $180 purchase at ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The user's transaction history and spending pattern align with the current purchase, and the merchant has a high rating with no fraud reports, indicating low risk.",
+        "bullet_added": false
+      },
+      {
+        "query": "Transaction Analysis: User 'borderline_case_011' (age: 2 months, 8 transactions) attempts $950 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.85,
+        "reason": "The transaction presents several red flags, including the user's short account age, a significant increase in transaction amount, and a change in location. Given these factors, the decision to decline the transaction aligns with the risk assessment.",
+        "bullet_added": false
+      },
+      {
+        "query": "Transaction Analysis: User 'daniel_wilson' (age: 1 day, 1 transaction) attempts $50,000 purchase at ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction is flagged correctly due to the user's very short account age, a significant increase in transaction amount compared to previous activity, and the merchant's poor rating and high number of fraud reports.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'synthetic_identity_019' (age: 30 minutes, 1 transaction) attempts $50,00...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "The transaction exhibits multiple red flags indicative of synthetic identity fraud, including a brand new account, an unusually high transaction amount, a suspicious time of day, an offshore jurisdiction, and a connection to a sanctioned country. The predicted output of 'DECLINE' aligns with the ground truth assessment.",
+        "bullet_added": false
+      },
+      {
+        "query": "Transaction Analysis: User 'olivia_johnson' (age: 25 years, 22,456 transactions) attempts $12 purcha...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction aligns with the user's established spending pattern, the merchant has a high rating with no fraud reports, and the user has a history of frequent purchases at this restaurant, indicating low risk.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'james_brown' (age: 5 months, 45 transactions) attempts $9,200 purchase a...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction is flagged correctly due to the significant deviation in transaction amount compared to the user's history, the low merchant rating, and the high number of fraud reports, indicating a high risk of fraud.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'jennifer_lee' (age: 3 years, 1,456 transactions) attempts $650 purchase ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The predicted output is correct as the user's transaction history and spending pattern align with the current purchase, and the merchant has a good rating with no fraud reports.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'olivia_johnson' (age: 8 years, 6,789 transactions) attempts $45 purchase...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.9,
+        "reason": "The predicted output is incorrect because the user's transaction history shows a consistent spending pattern that aligns with the current purchase. The merchant has a high rating and no fraud reports, and the user has a history of frequent purchases at this grocery store, indicating a low risk of fraud.",
+        "bullet_added": false
+      },
+      {
+        "query": "Transaction Analysis: User 'kevin_wilson' (age: 5 months, 67 transactions) attempts $1,800 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The predicted output is correct as the transaction presents multiple red flags: the user's short account age, a significant increase in transaction amount compared to previous purchases, and the merchant's low rating with multiple fraud reports. These factors collectively indicate a high risk of fraud.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'david_thompson' (age: 2 years, 423 transactions, avg $120) attempts $850...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.85,
+        "reason": "The predicted output of DECLINE is incorrect because the user has a long history of successful transactions, and while the current purchase is above their typical spending, they have made several similar high-value purchases recently. The merchant's rating is also relatively high, which suggests a lower risk.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'robert_jones' (age: 1 year, 234 transactions) attempts $950 purchase at ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The predicted output is correct because the user's transaction history shows a significant discrepancy in spending behavior, with a sudden attempt to make a high-value purchase after multiple low-value transactions. Additionally, the merchant has a low rating and multiple fraud reports, further increasing the risk of fraud.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'william_garcia' (age: 9 months, 156 transactions) attempts $22,800 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction is flagged correctly due to the significant increase in purchase amount, the user's short account history, and the low merchant rating with numerous fraud reports, indicating a high risk of fraud.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_anderson' (age: 1 year, 298 transactions) attempts $220 purchase ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The user's transaction history aligns with the current purchase amount and frequency, and the merchant has a good reputation with no fraud reports. The user has made similar purchases before, indicating a consistent spending pattern.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'anthony_lee' (age: 6 months, 145 transactions) attempts $1,950 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction is flagged correctly due to the significant increase in purchase amount compared to previous transactions, the low merchant rating, and the high number of recent fraud reports.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'ava_taylor' (age: 35 years, 35,123 transactions) attempts $5 purchase at...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction aligns with the user's established spending pattern, the merchant has a high rating with no fraud reports, and the user has a history of purchases from this pharmacy, indicating low risk.",
+        "bullet_added": false
+      },
+      {
+        "query": "Transaction Analysis: User 'alexander_moore' (age: 3 weeks, 1 transaction) attempts $8,500 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction is flagged as high risk due to the user's short account age, the significant increase in transaction amount compared to previous activity, and the low merchant rating with numerous fraud reports.",
+        "bullet_added": false
+      },
+      {
+        "query": "Transaction Analysis: User 'corporate_client_007' (age: 5 years, 1,456 transactions) attempts $5,200...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The user's transaction history and spending pattern align with the current purchase, and the merchant has a high rating with no fraud reports, indicating low risk.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'daniel_rodriguez' (age: 4 months, 34 transactions) attempts $1,650 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction is flagged correctly due to the significant increase in purchase amount, the user's short account history, and the merchant's low rating with multiple fraud reports.",
+        "bullet_added": false
+      },
+      {
+        "query": "Transaction Analysis: User 'medical_emergency_024' (age: 2 years, 567 transactions) attempts $8,900 ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction aligns with the user's spending pattern for medical emergencies, the merchant has a high rating with minimal fraud reports, and the purchase is backed by a valid prescription and insurance pre-authorization.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'merchant_test_016' (age: 1 day, 1 transaction) attempts $0.01 purchase a...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction is consistent with typical merchant testing behavior, involving a minimal amount and the same location as the previous transaction. The merchant's high rating and lack of fraud reports further support the low risk assessment.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'benjamin_lee' (age: 5 months, 67 transactions) attempts $3,200 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction is flagged correctly due to the significant increase in purchase amount compared to previous transactions, the user's short account age, and the low merchant rating with multiple fraud reports.",
+        "bullet_added": false
+      },
+      {
+        "query": "Transaction Analysis: User 'whale_customer_020' (age: 8 years, 5,678 transactions) attempts $15,000 ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The user's spending pattern aligns with the transaction amount, and their history of luxury purchases and regular visits to Monaco supports the legitimacy of the transaction. The merchant's high rating and absence of fraud reports further validate the approval.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'suspicious_pattern_012' (age: 1 week, 5 transactions) attempts $4,200 pu...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The transaction shows a significant increase in amount compared to previous transactions, occurring at an unusual time, and the merchant has a low rating with multiple fraud reports, indicating a high risk of fraud.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'zoe_anderson' (age: 6 years, 4,567 transactions) attempts $95 purchase a...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.85,
+        "reason": "The predicted output is incorrect because the user's transaction history shows a consistent spending pattern that aligns with the current purchase amount, and the merchant has a high rating with no fraud reports. Additionally, the user has a history of purchases from this merchant, indicating a low risk for fraud.",
+        "bullet_added": true
+      },
+      {
+        "query": "Transaction Analysis: User 'corporate_client_007' (age: 5 years, 1,456 transactions) attempts $5,200...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 0.95,
+        "reason": "The user's transaction history aligns with the current purchase pattern, and the merchant has a high rating with no fraud reports, indicating a low risk of fraud.",
+        "bullet_added": true
+      }
+    ]
+  }
+}
