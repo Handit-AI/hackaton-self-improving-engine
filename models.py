@@ -108,10 +108,12 @@ class Transaction(Base):
     # Analysis metadata
     mode = Column(String(50), nullable=False)  # 'vanilla', 'offline_ace', 'online_ace'
     node = Column(String(50), nullable=True)  # Agent node name (e.g., 'fraud_detection')
+    session_id = Column(String(100), nullable=True, index=True)  # Session identifier
+    run_id = Column(String(100), nullable=True, index=True)  # Run identifier within session
     
     # Results
-    predicted_decision = Column(String(2000), nullable=False)  # Increased to accommodate very long outputs
-    correct_decision = Column(String(2000), nullable=False)  # Increased to accommodate very long outputs
+    predicted_decision = Column(Text, nullable=False)  # No length limit
+    correct_decision = Column(Text, nullable=False)  # No length limit
     is_correct = Column(Boolean, nullable=False, default=False)
     
     # Links
@@ -149,7 +151,8 @@ class LLMJudge(Base):
     id = Column(Integer, primary_key=True, index=True)
     
     # Configuration
-    node = Column(String(100), nullable=False, unique=True)  # Which agent node
+    node = Column(String(100), nullable=False)  # Which agent node
+    evaluator = Column(String(100), nullable=False)  # Evaluator name
     model = Column(String(50), nullable=False, default='gpt-4o-mini')  # Model to use
     temperature = Column(Float, default=0.0)  # Temperature for judging
     
@@ -171,6 +174,7 @@ class LLMJudge(Base):
     
     # Constraints
     __table_args__ = (
+        UniqueConstraint('node', 'evaluator', name='unique_node_evaluator'),
         CheckConstraint('temperature >= 0 AND temperature <= 2', name='valid_temperature'),
         CheckConstraint('accuracy >= 0 AND accuracy <= 1', name='valid_accuracy'),
     )
@@ -202,5 +206,36 @@ class JudgeEvaluation(Base):
     
     # Timestamps
     evaluated_at = Column(TIMESTAMP, server_default=func.current_timestamp())
+
+
+class SessionRunMetrics(Base):
+    """Track metrics per session, run, and evaluator."""
+    
+    __tablename__ = "session_run_metrics"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    
+    # Session and run identifiers
+    session_id = Column(String(100), nullable=False, index=True)
+    run_id = Column(String(100), nullable=False, index=True)
+    node = Column(String(100), nullable=False)  # Agent node name
+    evaluator = Column(String(100), nullable=False)  # Evaluator name
+    mode = Column(String(50), nullable=False)  # Mode: 'vanilla', 'offline_online', 'online'
+    
+    # Metrics
+    correct_count = Column(Integer, default=0)  # Number of correct predictions
+    total_count = Column(Integer, default=0)  # Total number of predictions
+    accuracy = Column(Float, default=0.0)  # Calculated accuracy (correct_count / total_count)
+    
+    # Metadata
+    created_at = Column(TIMESTAMP, server_default=func.current_timestamp())
+    updated_at = Column(TIMESTAMP, server_default=func.current_timestamp(), onupdate=func.current_timestamp())
+    
+    # Constraints
+    __table_args__ = (
+        UniqueConstraint('session_id', 'run_id', 'node', 'evaluator', 'mode', name='unique_session_run_evaluator_mode'),
+        CheckConstraint('correct_count >= 0 AND total_count >= 0', name='valid_counts'),
+        CheckConstraint('accuracy >= 0 AND accuracy <= 1', name='valid_accuracy'),
+    )
 
 

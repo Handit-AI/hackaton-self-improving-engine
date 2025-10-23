@@ -11,6 +11,12 @@ class Settings(BaseSettings):
     # Database
     database_url: Optional[str] = None
     
+    # OpenAI
+    openai_api_key: Optional[str] = None
+    
+    # ACE System
+    enable_darwin_evolution: bool = False  # Enable Darwin-Gödel evolution
+    
     # Application
     debug: bool = False
     log_level: str = "INFO"

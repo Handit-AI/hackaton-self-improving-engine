@@ -37,7 +37,7 @@ class PatternManager:
             similarity_threshold: Minimum similarity to consider patterns as similar
         """
         self.db_session = db_session
-        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.client = OpenAI()  # Automatically reads OPENAI_API_KEY from environment
         self.similarity_threshold = similarity_threshold
         self._embedding_cache: Dict[str, List[float]] = {}
     

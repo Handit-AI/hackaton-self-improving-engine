@@ -8,6 +8,7 @@ This module implements the hybrid selector that combines:
 4. Diversity promotion
 """
 from typing import List, Tuple, Dict, Optional
+from datetime import datetime
 import numpy as np
 from scipy.stats import beta as beta_dist
 from openai import OpenAI
@@ -130,6 +131,39 @@ class HybridSelector:
             scored_bullets, n_bullets
         )
         logger.debug(f"Stage 5: Selected {len(selected_bullets)} bullets")
+        
+        # Fallback: If no bullets selected by score, return last 5 bullets
+        if not selected_bullets and bullets:
+            logger.info(f"No bullets selected by score for node {node}. Using fallback: last {min(5, len(bullets))} bullets")
+            # Sort by created_at descending (most recent first)
+            def sort_key(bullet):
+                if hasattr(bullet, 'created_at') and bullet.created_at:
+                    try:
+                        # If created_at is a string, parse it
+                        if isinstance(bullet.created_at, str):
+                            return datetime.fromisoformat(bullet.created_at.replace('Z', '+00:00'))
+                        # If created_at is a datetime object
+                        return bullet.created_at
+                    except Exception:
+                        return datetime.min
+                return datetime.min
+            
+            sorted_bullets = sorted(bullets, key=sort_key, reverse=True)
+            selected_bullets = sorted_bullets[:min(5, len(sorted_bullets))]  # Last 5 bullets
+            final_scores = [
+                {
+                    'bullet_id': bullet.id,
+                    'quality': bullet.get_success_rate(),
+                    'semantic': 0.0,
+                    'thompson': 0.0,
+                    'pattern_boost': 0.0,
+                    'combined': 0.0,
+                    'diversity_bonus': 0.0,
+                    'final_score': 0.0,
+                    'fallback': True
+                }
+                for bullet in selected_bullets
+            ]
         
         return selected_bullets, final_scores
     

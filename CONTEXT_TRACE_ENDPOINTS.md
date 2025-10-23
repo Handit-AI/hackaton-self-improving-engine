@@ -128,8 +128,8 @@ Saves transaction to database and executes online learning (bullet generation an
 **Fields:**
 - `input_text` (required): The transaction/input that was analyzed
 - `node` (required): Agent node name
-- `output` (required): Agent's decision/output (up to 2000 characters)
-- `ground_truth` (optional): Correct answer (up to 2000 characters, defaults to output if not provided)
+- `output` (required): Agent's decision/output (unlimited length)
+- `ground_truth` (optional): Correct answer (unlimited length, defaults to output if not provided)
 - `agent_reasoning` (optional): Agent's reasoning for the decision
 - `bullet_ids` (optional): Object with bullet IDs that were used
   - `full`: Bullet IDs used in offline + online context

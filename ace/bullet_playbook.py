@@ -172,7 +172,7 @@ class BulletPlaybook:
         import os
         
         try:
-            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+            client = OpenAI()  # Automatically reads OPENAI_API_KEY from environment
             response = client.embeddings.create(
                 model="text-embedding-3-small",
                 input=content
