@@ -1,8 +1,8 @@
 """
-TrainingPipeline - Orchestrates offline and online training.
+TrainingPipeline - Orchestrates offline and online training with Darwin-Gödel evolution.
 
 This module handles the training process for both offline (pre-training)
-and online (real-time learning) modes.
+and online (real-time learning) modes, with integrated Darwin-Gödel evolution.
 """
 import logging
 from typing import List, Dict, Any, Optional
@@ -16,11 +16,12 @@ logger = logging.getLogger(__name__)
 
 class TrainingPipeline:
     """
-    Orchestrates training for ACE system.
+    Orchestrates training for ACE system with Darwin-Gödel evolution.
     
     Supports:
     - Offline training: Pre-train on historical data
     - Online training: Real-time learning during operation
+    - Darwin-Gödel evolution: Integrated into bullet generation
     """
     
     def __init__(
@@ -28,7 +29,8 @@ class TrainingPipeline:
         fraud_agent,
         selector: HybridSelector,
         reflector: Reflector,
-        curator: Curator
+        curator: Curator,
+        darwin_evolver=None
     ):
         """
         Initialize TrainingPipeline.
@@ -38,11 +40,13 @@ class TrainingPipeline:
             selector: HybridSelector instance
             reflector: Reflector instance
             curator: Curator instance
+            darwin_evolver: DarwinBulletEvolver instance (optional)
         """
         self.fraud_agent = fraud_agent
         self.selector = selector
         self.reflector = reflector
         self.curator = curator
+        self.darwin_evolver = darwin_evolver
     
     async def train_offline(
         self,
@@ -208,10 +212,11 @@ class TrainingPipeline:
         agent_reasoning: str,
         playbook: BulletPlaybook,
         source: str = "online",
-        judge_reasoning: str = ""
+        judge_reasoning: str = "",
+        evaluator: Optional[str] = None
     ) -> Optional[str]:
         """
-        Add a new bullet from reflection.
+        Add a new bullet from reflection with Darwin-Gödel evolution.
         
         Args:
             query: Input query
@@ -222,10 +227,12 @@ class TrainingPipeline:
             playbook: BulletPlaybook to update
             source: 'offline' or 'online'
             judge_reasoning: Judge's reasoning/insight (optional)
+            evaluator: Evaluator/perspective name (optional)
         
         Returns:
             Bullet ID if added, None if duplicate
         """
+        # Step 1: Generate bullet from reflection
         reflection = await self.reflector.reflect(
             query=query,
             predicted=predicted,
@@ -238,10 +245,50 @@ class TrainingPipeline:
         if not reflection or not reflection.get('new_bullet'):
             return None
         
-        return self.curator.merge_bullet(
+        # Add initial bullet
+        initial_bullet_id = self.curator.merge_bullet(
             content=reflection['new_bullet'],
             node=node,
             playbook=playbook,
-            source=source
+            source=source,
+            evaluator=evaluator
         )
+        
+        if not initial_bullet_id:
+            return None
+        
+        # Step 2: Darwin-Gödel Evolution (if enabled and we have enough bullets)
+        if self.darwin_evolver:
+            # Get recent bullets for this node and evaluator
+            recent_bullets = playbook.get_bullets_for_node(node, evaluator=evaluator)
+            
+            if len(recent_bullets) >= 6:
+                logger.info(f"🧬 Darwin-Gödel Evolution: Evolving bullets for {node} (evaluator: {evaluator})")
+                
+                # Get bullet texts
+                bullet_texts = [b.content for b in recent_bullets[-6:]]  # Use last 6 bullets
+                
+                # Evolve bullets
+                evolved_bullets = await self.darwin_evolver.evolve_bullets(
+                    initial_bullets=bullet_texts,
+                    node=node,
+                    n_samples=10,
+                    min_transactions=5,
+                    max_transactions=20
+                )
+                
+                # Add evolved bullets
+                for evolved_bullet in evolved_bullets:
+                    evolved_id = self.curator.merge_bullet(
+                        content=evolved_bullet,
+                        node=node,
+                        playbook=playbook,
+                        source="evolution",
+                        evaluator=evaluator
+                    )
+                    
+                    if evolved_id:
+                        logger.info(f"  ✓ Added evolved bullet: {evolved_id[:50]}...")
+        
+        return initial_bullet_id
 

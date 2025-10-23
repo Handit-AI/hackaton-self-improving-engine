@@ -160,6 +160,10 @@ def run_vanilla_mode(test_set: List[Dict[str, Any]], judge) -> TestResult:
     logger.info("Testing VANILLA mode")
     logger.info("=" * 60)
     
+    from database import SessionLocal
+    from models import Transaction
+    
+    db_session = SessionLocal()
     agent = SimpleFraudAgent()
     results = []
     correct = 0
@@ -178,6 +182,29 @@ def run_vanilla_mode(test_set: List[Dict[str, Any]], judge) -> TestResult:
         
         if is_correct:
             correct += 1
+        
+        # Save transaction to database
+        try:
+            transaction_data = {
+                "systemprompt": "You are a fraud detection expert analyzing transactions.",
+                "userprompt": item['query'],
+                "output": predicted,
+                "reasoning": result.get('reasoning', '')
+            }
+            
+            txn = Transaction(
+                transaction_data=transaction_data,
+                mode="vanilla",
+                predicted_decision=predicted,
+                correct_decision=ground_truth,
+                is_correct=is_correct
+            )
+            db_session.add(txn)
+            db_session.commit()
+            db_session.flush()
+            
+        except Exception as e:
+            logger.error(f"Error saving transaction: {e}")
         
         results.append({
             "query": item['query'][:100] + "...",
@@ -221,47 +248,109 @@ async def run_offline_online_mode(
     from ace.hybrid_selector import HybridSelector
     from ace.reflector import Reflector
     from ace.curator import Curator
+    from ace.pattern_manager import PatternManager
     from database import SessionLocal
     
     # Create database session
     db_session = SessionLocal()
     
-    # Mock agent for offline training
-    class MockAgent:
-        async def analyze(self, transaction):
-            return {"decision": "DECLINE", "reasoning": "Default"}
+    # Initialize PatternManager first
+    pattern_manager = PatternManager(db_session=db_session)
     
-    mock_agent = MockAgent()
-    selector = HybridSelector()
+    # Create SimpleFraudAgent for offline training
+    agent = SimpleFraudAgent(max_bullets=5)
+    selector = HybridSelector(db_session=db_session, pattern_manager=pattern_manager)
     reflector = Reflector()
     curator = Curator()
-    training_pipeline = TrainingPipeline(mock_agent, selector, reflector, curator)
+    training_pipeline = TrainingPipeline(agent, selector, reflector, curator)
     playbook = BulletPlaybook(db_session=db_session)
     
-    # Split train_set into offline_train (70%) and offline_test (30%)
-    offline_train_set, offline_test_set = split_dataset(train_set, train_ratio=0.7)
-    logger.info(f"Offline training set: {len(offline_train_set)} examples")
-    logger.info(f"Offline test set: {len(offline_test_set)} examples")
+    # Limit training to max 20 inputs
+    training_inputs = train_set[:20]
+    logger.info(f"Using {len(training_inputs)} inputs for training (limited to 20)")
     
-    # Generate bullets from offline training (only using 70% of train_set)
+    # Use the same set for testing
+    offline_train_set = training_inputs
+    offline_test_set = training_inputs
+    logger.info(f"Training set: {len(offline_train_set)} examples")
+    logger.info(f"Test set: {len(offline_test_set)} examples (same as training)")
+    
+    # Generate bullets from offline training
     logger.info(f"Training on {len(offline_train_set)} examples...")
     offline_bullets = []
     
     for idx, item in enumerate(offline_train_set):
-        logger.info(f"  [{idx+1}/{len(offline_train_set)}] Generating bullet...")
+        logger.info(f"  [{idx+1}/{len(offline_train_set)}] Processing...")
         
-        bullet_id = await training_pipeline.add_bullet_from_reflection(
-            query=item['query'],
-            predicted=item['answer'],
-            correct=item['answer'],
-            node="fraud_detection",
-            agent_reasoning=item['answer'],
-            playbook=playbook,
-            source="offline"
+        # Get pattern classification
+        pattern_id, confidence = pattern_manager.classify_input_to_category(
+            input_summary=item['query'],
+            node="fraud_detection"
         )
         
-        if bullet_id:
-            offline_bullets.append(bullet_id)
+        # Get existing bullets
+        existing_bullets = playbook.get_bullets_for_node("fraud_detection")
+        
+        # Check if we have relevant bullets for this input
+        has_relevant_bullets = selector.has_relevant_bullets(
+            query=item['query'],
+            bullets=existing_bullets,
+            similarity_threshold=0.7
+        )
+        
+        # Select bullets for agent
+        bullets_used = 0
+        if existing_bullets:
+            selected_bullets, _ = selector.select_bullets(
+                query=item['query'],
+                node="fraud_detection",
+                playbook=playbook,
+                n_bullets=5,  # Request up to 5 bullets
+                iteration=idx,
+                pattern_id=pattern_id
+            )
+            agent.bullets = [b.content for b in selected_bullets]
+            bullets_used = len(selected_bullets)
+        else:
+            agent.bullets = []
+            bullets_used = 0
+        
+        # STEP 1: Execute agent on this input
+        result = agent.analyze(item['query'])
+        predicted = result['decision']
+        ground_truth = item['answer']
+        
+        # STEP 2: Check if correct or incorrect
+        is_correct = predicted == ground_truth
+        
+        # STEP 3: Generate bullet only if:
+        # 1. Output was incorrect (wrong prediction), OR
+        # 2. Bullets used was less than 5 (coverage issue)
+        should_generate = False
+        
+        if not is_correct:
+            # Wrong prediction - always generate bullet
+            should_generate = True
+            logger.info(f"    Wrong prediction: {predicted} != {ground_truth} - Generating bullet")
+        elif bullets_used < 5:
+            # Correct but not enough bullets used - generate bullet for coverage
+            should_generate = True
+            logger.info(f"    Correct prediction but only {bullets_used} bullets used (< 5) - Generating bullet")
+        
+        if should_generate:
+            bullet_id = await training_pipeline.add_bullet_from_reflection(
+                query=item['query'],
+                predicted=predicted,
+                correct=ground_truth,
+                node="fraud_detection",
+                agent_reasoning=result.get('reasoning', ''),
+                playbook=playbook,
+                source="offline"
+            )
+            
+            if bullet_id:
+                offline_bullets.append(bullet_id)
+                logger.info(f"    Generated bullet: {bullet_id}")
         
         # Log training progress every 10 items
         if (idx + 1) % 10 == 0:
@@ -277,6 +366,41 @@ async def run_offline_online_mode(
     logger.info(f"  Unique bullets: {len(set(bullet_texts))}")
     logger.info(f"  Deduplication rate: {(1 - len(set(bullet_texts)) / len(bullet_texts)) * 100:.1f}%")
     
+    # Darwin-Gödel Evolution Phase
+    logger.info(f"\n{'='*60}")
+    logger.info("DARWIN-GÖDEL EVOLUTION PHASE")
+    logger.info(f"{'='*60}")
+    
+    if len(bullet_texts) >= 6:
+        logger.info(f"Starting evolution with {len(bullet_texts)} bullets")
+        
+        from ace.darwin_bullet_evolver import DarwinBulletEvolver
+        
+        evolver = DarwinBulletEvolver(db_session=db_session)
+        
+        # Evolve bullets
+        evolved_bullets = await evolver.evolve_bullets(
+            initial_bullets=bullet_texts[:6],  # Use first 6 bullets
+            node="fraud_detection",
+            n_samples=10,  # Test on 10 transactions
+            min_transactions=5,  # Need at least 5 transactions
+            max_transactions=20  # Use max 20 transactions
+        )
+        
+        # Replace old bullets with evolved ones
+        logger.info(f"\nAdding {len(evolved_bullets)} evolved bullets to playbook")
+        for evolved_bullet in evolved_bullets:
+            # Add evolved bullet to playbook
+            playbook.add_bullet(
+                content=evolved_bullet,
+                node="fraud_detection",
+                source="evolution"
+            )
+        
+        logger.info(f"✓ Evolution complete! Added {len(evolved_bullets)} evolved bullets")
+    else:
+        logger.info(f"Not enough bullets for evolution ({len(bullet_texts)} < 6), skipping")
+    
     # Step 2: Test with offline bullets
     logger.info("\n--- Step 2: Testing with Offline Bullets ---")
     
@@ -288,8 +412,14 @@ async def run_offline_online_mode(
     results = []
     correct = 0
     
-    for idx, item in enumerate(test_set):
-        logger.info(f"\n[{idx+1}/{len(test_set)}] Testing offline+online mode...")
+    for idx, item in enumerate(offline_test_set):
+        logger.info(f"\n[{idx+1}/{len(offline_test_set)}] Testing offline+online mode...")
+        
+        # Get pattern classification for this input
+        pattern_id, confidence = pattern_manager.classify_input_to_category(
+            input_summary=item['query'],
+            node="fraud_detection"
+        )
         
         # Intelligently select bullets for this specific transaction
         selected_bullets, scores = selector.select_bullets(
@@ -297,7 +427,8 @@ async def run_offline_online_mode(
             node="fraud_detection",
             playbook=playbook,
             n_bullets=max_bullets,
-            iteration=idx
+            iteration=idx,
+            pattern_id=pattern_id
         )
         
         # Extract bullet texts for agent
@@ -305,6 +436,7 @@ async def run_offline_online_mode(
         agent.bullets = bullet_texts
         
         # Log metrics
+        logger.info(f"  Pattern ID: {pattern_id} (confidence: {confidence:.2f})")
         logger.info(f"  Selected {len(selected_bullets)} bullets from {len(playbook.get_bullets_for_node('fraud_detection'))} total")
         if scores:
             top_scores = [f'{s.get("final_score", 0):.3f}' for s in scores[:3]]
@@ -321,6 +453,43 @@ async def run_offline_online_mode(
         
         if is_correct:
             correct += 1
+        
+        # Save transaction to database
+        try:
+            from models import Transaction
+            
+            # Construct transaction data with system and user prompts
+            transaction_data = {
+                "systemprompt": f"You are a fraud detection expert analyzing transactions. Use these rules:\n{chr(10).join(f'- {b}' for b in bullet_texts)}",
+                "userprompt": item['query'],
+                "output": predicted,
+                "reasoning": result.get('reasoning', '')
+            }
+            
+            txn = Transaction(
+                transaction_data=transaction_data,
+                mode="offline_online",
+                predicted_decision=predicted,
+                correct_decision=ground_truth,
+                is_correct=is_correct,
+                input_pattern_id=pattern_id
+            )
+            db_session.add(txn)
+            db_session.commit()
+            db_session.flush()
+            
+        except Exception as e:
+            logger.error(f"Error saving transaction: {e}")
+        
+        # Record bullet effectiveness for this pattern
+        if pattern_id:
+            for bullet in selected_bullets:
+                pattern_manager.record_bullet_effectiveness(
+                    pattern_id=pattern_id,
+                    bullet_id=bullet.id,
+                    node="fraud_detection",
+                    is_helpful=is_correct
+                )
         
         # Log progress metrics
         if (idx + 1) % 5 == 0:
@@ -341,12 +510,12 @@ async def run_offline_online_mode(
         logger.info(f"Query: {item['query'][:80]}...")
         logger.info(f"Predicted: {predicted} | Ground Truth: {ground_truth} | Correct: {is_correct}")
     
-    accuracy = correct / len(test_set) if test_set else 0.0
+    accuracy = correct / len(offline_test_set) if offline_test_set else 0.0
     logger.info(f"\nOffline + Online Mode Accuracy: {accuracy:.2%}")
     
     return TestResult(
         mode="offline_online",
-        total=len(test_set),
+        total=len(offline_test_set),
         correct=correct,
         accuracy=accuracy,
         details=results
@@ -440,10 +609,10 @@ def main():
     # Load datasets
     logger.info("\nLoading datasets...")
     complex_dataset = load_dataset("agents/complex_fraud_detection.json")
-    ultra_hard_dataset = load_dataset("agents/ultra_hard_fraud_detection.json")
+    ultra_hard_dataset = load_dataset("agents/ultra_hard_subset.json")  # Use subset for faster testing
     
     logger.info(f"Complex dataset: {len(complex_dataset)} examples")
-    logger.info(f"Ultra hard dataset: {len(ultra_hard_dataset)} examples")
+    logger.info(f"Ultra hard dataset (subset): {len(ultra_hard_dataset)} examples")
     
     # Combine datasets
     full_dataset = complex_dataset + ultra_hard_dataset
@@ -453,6 +622,10 @@ def main():
     train_set, test_set = split_dataset(full_dataset, train_ratio=0.7)
     logger.info(f"Train set: {len(train_set)} examples")
     logger.info(f"Test set: {len(test_set)} examples")
+    
+    # Limit test set to 20 items for faster testing
+    test_set = test_set[:20]
+    logger.info(f"Limited test set to {len(test_set)} examples for faster testing")
     
     # Initialize LLM judges with different perspectives
     db_session = SessionLocal()

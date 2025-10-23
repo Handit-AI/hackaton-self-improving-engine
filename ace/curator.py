@@ -29,7 +29,8 @@ class Curator:
         node: str,
         playbook: BulletPlaybook,
         bullet_id: Optional[str] = None,
-        source: str = "online"
+        source: str = "online",
+        evaluator: Optional[str] = None
     ) -> Optional[str]:
         """
         Add bullet if not duplicate.
@@ -40,17 +41,18 @@ class Curator:
             playbook: BulletPlaybook instance
             bullet_id: Optional bullet ID
             source: Source of bullet ('offline' or 'online')
+            evaluator: Evaluator/perspective name (optional)
         
         Returns:
             Bullet ID if added, None if duplicate
         """
-        # Check duplicates within this node's bullets
-        node_bullets = playbook.get_bullets_for_node(node)
+        # Check duplicates within this node's bullets (and evaluator)
+        node_bullets = playbook.get_bullets_for_node(node, evaluator=evaluator)
         
         for existing in node_bullets:
             similarity = self._text_similarity(content, existing.content)
             if similarity > self.similarity_threshold:
-                logger.debug(f"Duplicate bullet detected for {node} (similarity: {similarity:.2f})")
+                logger.debug(f"Duplicate bullet detected for {node} (evaluator: {evaluator}, similarity: {similarity:.2f})")
                 return None
         
         # Add new bullet
@@ -58,10 +60,11 @@ class Curator:
             content=content,
             node=node,
             bullet_id=bullet_id,
-            source=source
+            source=source,
+            evaluator=evaluator
         )
         
-        logger.info(f"Added bullet [{bullet_id}] to {node} (source: {source}): {content[:50]}...")
+        logger.info(f"Added bullet [{bullet_id}] to {node} (evaluator: {evaluator}, source: {source}): {content[:50]}...")
         return bullet_id
     
     def _text_similarity(self, text1: str, text2: str) -> float:

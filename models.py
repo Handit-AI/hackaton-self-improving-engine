@@ -45,6 +45,10 @@ class Bullet(Base):
     # Content
     content = Column(Text, nullable=False)
     node = Column(String(100), nullable=False)  # Which agent node
+    evaluator = Column(String(100), nullable=True)  # Which evaluator/perspective (e.g., 'formatter', 'correctness')
+    
+    # Embedding for semantic search (cached!)
+    content_embedding = Column(ARRAY(Float), nullable=True)  # 1536 dimensions
     
     # Performance tracking (global)
     helpful_count = Column(Integer, default=0)
@@ -59,6 +63,7 @@ class Bullet(Base):
     # Constraints
     __table_args__ = (
         CheckConstraint('helpful_count >= 0 AND harmful_count >= 0', name='valid_performance'),
+        CheckConstraint('content_embedding IS NULL OR array_length(content_embedding, 1) = 1536', name='valid_embedding'),
     )
 
 

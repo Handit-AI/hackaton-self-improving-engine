@@ -36,7 +36,9 @@ class HybridSelector:
         semantic_threshold: float = 0.5,
         diversity_weight: float = 0.15,
         weights: Optional[Dict[str, float]] = None,
-        embedding_model: str = "text-embedding-3-small"
+        embedding_model: str = "text-embedding-3-small",
+        db_session = None,
+        pattern_manager = None
     ):
         """
         Initialize HybridSelector.
@@ -48,6 +50,8 @@ class HybridSelector:
             diversity_weight: Weight for diversity bonus
             weights: Weights for scoring components
             embedding_model: OpenAI embedding model to use
+            db_session: Database session for pattern-based effectiveness
+            pattern_manager: PatternManager instance for pattern-based selection
         """
         self.client = OpenAI(api_key=api_key or os.getenv("OPENAI_API_KEY"))
         self.embedding_model = embedding_model
@@ -63,6 +67,10 @@ class HybridSelector:
         }
         
         self._embedding_cache: Dict[str, List[float]] = {}
+        
+        # Pattern-based effectiveness
+        self.db_session = db_session
+        self.pattern_manager = pattern_manager
     
     def select_bullets(
         self,
@@ -71,7 +79,8 @@ class HybridSelector:
         playbook: 'BulletPlaybook',
         n_bullets: int = 5,
         iteration: int = 0,
-        source: Optional[str] = None  # 'offline', 'online', or None for all
+        source: Optional[str] = None,  # 'offline', 'online', or None for all
+        pattern_id: Optional[int] = None  # Pattern ID for pattern-based selection
     ) -> Tuple[List['Bullet'], List[Dict]]:
         """
         Select bullets for a specific agent node.
@@ -83,6 +92,7 @@ class HybridSelector:
             n_bullets: Number of bullets to select
             iteration: Current iteration (for exploration decay)
             source: Filter by source ('offline', 'online', or None for all)
+            pattern_id: Pattern ID for pattern-based effectiveness boost
         
         Returns:
             Tuple of (selected_bullets, score_details)
@@ -110,9 +120,9 @@ class HybridSelector:
         )
         logger.debug(f"Stage 3: Semantic filter: {len(stage3_bullets)} bullets")
         
-        # Stage 4: Hybrid Scoring
+        # Stage 4: Hybrid Scoring (with pattern boost)
         scored_bullets = self._hybrid_scoring(
-            stage3_bullets, semantic_scores, iteration
+            stage3_bullets, semantic_scores, iteration, pattern_id
         )
         
         # Stage 5: Diversity Promotion
@@ -150,7 +160,9 @@ class HybridSelector:
         # Ensure bullets have embeddings
         for bullet in bullets:
             if bullet.embedding is None:
+                # Generate embedding and cache it
                 bullet.embedding = self._get_embedding(bullet.content)
+                # Note: Embedding will be saved to DB when bullet is updated
         
         # Calculate semantic scores
         semantic_scores = {}
@@ -178,9 +190,10 @@ class HybridSelector:
         self, 
         bullets: List['Bullet'], 
         semantic_scores: Dict[str, float],
-        iteration: int
+        iteration: int,
+        pattern_id: Optional[int] = None
     ) -> List[Tuple['Bullet', float, Dict[str, float]]]:
-        """Stage 4: Hybrid scoring with Thompson sampling."""
+        """Stage 4: Hybrid scoring with Thompson sampling and pattern-based effectiveness."""
         scored = []
         
         # Exponential decay for exploration
@@ -192,17 +205,24 @@ class HybridSelector:
             semantic_score = semantic_scores.get(bullet.id, 0.5)
             thompson_score = self._thompson_sample(bullet)
             
+            # Pattern-based effectiveness boost
+            pattern_boost = 0.0
+            if pattern_id and self.db_session:
+                pattern_boost = self._get_pattern_effectiveness(bullet.id, pattern_id)
+            
             # Combined score
             combined = (
                 self.weights['quality'] * quality_score +
                 self.weights['semantic'] * semantic_score +
-                exploration_weight * thompson_score
+                exploration_weight * thompson_score +
+                pattern_boost  # Boost for pattern-specific effectiveness
             )
             
             breakdown = {
                 'quality': quality_score,
                 'semantic': semantic_score,
                 'thompson': thompson_score,
+                'pattern_boost': pattern_boost,
                 'combined': combined
             }
             
@@ -211,6 +231,38 @@ class HybridSelector:
         # Sort by combined score
         scored.sort(key=lambda x: x[1], reverse=True)
         return scored
+    
+    def _get_pattern_effectiveness(self, bullet_id: str, pattern_id: int) -> float:
+        """
+        Get pattern-specific effectiveness for a bullet.
+        
+        Returns effectiveness boost (0.0 to 0.3) based on how well this bullet
+        works for this specific pattern.
+        """
+        if not self.db_session:
+            return 0.0
+        
+        try:
+            from models import BulletInputEffectiveness
+            
+            # Get effectiveness record
+            record = self.db_session.query(BulletInputEffectiveness).filter(
+                BulletInputEffectiveness.bullet_id == bullet_id,
+                BulletInputEffectiveness.input_pattern_id == pattern_id
+            ).first()
+            
+            if record:
+                total = record.helpful_count + record.harmful_count
+                if total > 0:
+                    success_rate = record.helpful_count / total
+                    # Boost proportional to success rate (max 0.3 boost)
+                    return success_rate * 0.3
+            
+            return 0.0
+            
+        except Exception as e:
+            logger.error(f"Error getting pattern effectiveness: {e}")
+            return 0.0
     
     def _thompson_sample(self, bullet: 'Bullet') -> float:
         """Thompson sampling for exploration-exploitation balance."""
@@ -286,6 +338,38 @@ class HybridSelector:
             return 0.0
         
         return float(dot_product / (norm1 * norm2))
+    
+    def has_relevant_bullets(
+        self,
+        query: str,
+        bullets: List['Bullet'],
+        similarity_threshold: float = 0.7
+    ) -> bool:
+        """
+        Check if there are relevant bullets for a query.
+        
+        Args:
+            query: Input query text
+            bullets: List of bullets to check
+            similarity_threshold: Minimum similarity score (default: 0.7)
+        
+        Returns:
+            True if at least one bullet has similarity > threshold
+        """
+        if not bullets or len(bullets) < 3:
+            return False
+        
+        # Get query embedding
+        query_embedding = self._get_embedding(query)
+        
+        # Check similarity with existing bullets
+        for bullet in bullets:
+            if bullet.embedding:
+                similarity = self._cosine_similarity(query_embedding, bullet.embedding)
+                if similarity > similarity_threshold:
+                    return True
+        
+        return False
     
     def clear_cache(self):
         """Clear embedding cache."""

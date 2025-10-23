@@ -18,6 +18,7 @@ class Bullet:
     id: str
     content: str
     node: str  # Which agent node uses this bullet
+    evaluator: Optional[str] = None  # Which evaluator/perspective
     
     # Performance tracking
     helpful_count: int = 0
@@ -85,12 +86,14 @@ class BulletPlaybook:
                     id=db_bullet.id,
                     content=db_bullet.content,
                     node=db_bullet.node,
+                    evaluator=db_bullet.evaluator,
                     helpful_count=db_bullet.helpful_count,
                     harmful_count=db_bullet.harmful_count,
                     times_selected=db_bullet.times_selected,
                     created_at=db_bullet.created_at.isoformat() if db_bullet.created_at else datetime.now().isoformat(),
                     last_used=db_bullet.last_used.isoformat() if db_bullet.last_used else None,
-                    source=db_bullet.source or "online"
+                    source=db_bullet.source or "online",
+                    embedding=db_bullet.content_embedding  # Load cached embedding!
                 )
                 
                 self.bullets.append(bullet)
@@ -123,32 +126,61 @@ class BulletPlaybook:
                 # Update existing
                 db_bullet.content = bullet.content
                 db_bullet.node = bullet.node
+                db_bullet.evaluator = bullet.evaluator
                 db_bullet.helpful_count = bullet.helpful_count
                 db_bullet.harmful_count = bullet.harmful_count
                 db_bullet.times_selected = bullet.times_selected
                 db_bullet.source = bullet.source
                 if bullet.last_used:
                     db_bullet.last_used = datetime.fromisoformat(bullet.last_used)
+                # Update embedding if it exists
+                if bullet.embedding:
+                    db_bullet.content_embedding = bullet.embedding
             else:
                 # Create new
                 db_bullet = BulletModel(
                     id=bullet.id,
                     content=bullet.content,
                     node=bullet.node,
+                    evaluator=bullet.evaluator,
                     helpful_count=bullet.helpful_count,
                     harmful_count=bullet.harmful_count,
                     times_selected=bullet.times_selected,
                     source=bullet.source,
                     created_at=datetime.fromisoformat(bullet.created_at) if bullet.created_at else func.now(),
-                    last_used=datetime.fromisoformat(bullet.last_used) if bullet.last_used else None
+                    last_used=datetime.fromisoformat(bullet.last_used) if bullet.last_used else None,
+                    content_embedding=bullet.embedding  # Save embedding!
                 )
                 self.db_session.add(db_bullet)
             
+            # Flush to ensure bullet is available for foreign key relationships
+            self.db_session.flush()
+            # Commit to persist the bullet
             self.db_session.commit()
             
         except Exception as e:
             logger.error(f"Error saving bullet to database: {e}")
             self.db_session.rollback()
+    
+    def generate_embedding(self, content: str) -> Optional[List[float]]:
+        """
+        Generate embedding for content.
+        
+        This should be called explicitly when creating new bullets.
+        """
+        from openai import OpenAI
+        import os
+        
+        try:
+            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+            response = client.embeddings.create(
+                model="text-embedding-3-small",
+                input=content
+            )
+            return response.data[0].embedding
+        except Exception as e:
+            logger.error(f"Error generating embedding: {e}")
+            return None
     
     def add_bullet(
         self,
@@ -156,17 +188,35 @@ class BulletPlaybook:
         node: str,
         bullet_id: Optional[str] = None,
         embedding: Optional[List[float]] = None,
-        source: str = "online"
+        source: str = "online",
+        evaluator: Optional[str] = None
     ) -> str:
-        """Add bullet to specific node's playbook."""
+        """
+        Add bullet to specific node's playbook.
+        
+        Args:
+            content: Bullet content
+            node: Agent node name
+            bullet_id: Optional bullet ID
+            embedding: Optional embedding (will be generated if not provided)
+            source: Source of bullet ('offline' or 'online')
+            evaluator: Evaluator/perspective name (e.g., 'formatter', 'correctness')
+        """
         if bullet_id is None:
             import uuid
             bullet_id = f"{node}_{str(uuid.uuid4())[:8]}"
+        
+        # Only generate embedding if not provided (embeddings should be pre-calculated)
+        if embedding is None:
+            logger.warning(f"No embedding provided for bullet {bullet_id}. Embeddings should be pre-calculated.")
+            # Don't generate on-the-fly - embeddings should be pre-calculated
+            embedding = None
         
         bullet = Bullet(
             id=bullet_id,
             content=content,
             node=node,
+            evaluator=evaluator,
             embedding=embedding,
             source=source
         )
@@ -185,13 +235,14 @@ class BulletPlaybook:
         logger.info(f"Added bullet [{bullet_id}] to {node} (source: {source}): {content[:50]}...")
         return bullet_id
     
-    def get_bullets_for_node(self, node: str, source: Optional[str] = None) -> List[Bullet]:
+    def get_bullets_for_node(self, node: str, source: Optional[str] = None, evaluator: Optional[str] = None) -> List[Bullet]:
         """
-        Get bullets for specific node, optionally filtered by source.
+        Get bullets for specific node, optionally filtered by source and evaluator.
         
         Args:
             node: Agent node name
             source: 'offline', 'online', or None for all
+            evaluator: Evaluator/perspective name, or None for all
         
         Returns:
             List of bullets
@@ -200,6 +251,9 @@ class BulletPlaybook:
         
         if source:
             bullets = [b for b in bullets if b.source == source]
+        
+        if evaluator:
+            bullets = [b for b in bullets if b.evaluator == evaluator]
         
         return bullets
     
@@ -216,7 +270,7 @@ class BulletPlaybook:
         bullet = self.get_bullet(bullet_id)
         if bullet:
             bullet.update_stats(is_helpful)
-            # Save to database
+            # Save to database (including any new embeddings)
             self._save_to_db(bullet)
     
     def get_stats(self) -> Dict[str, Any]:

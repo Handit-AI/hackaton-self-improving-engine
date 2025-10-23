@@ -1,0 +1,1998 @@
+{
+  "summary": {
+    "vanilla": {
+      "total": 43,
+      "correct": 35,
+      "accuracy": 0.813953488372093
+    },
+    "offline_online": {
+      "total": 43,
+      "correct": 36,
+      "accuracy": 0.8372093023255814
+    }
+  },
+  "details": {
+    "vanilla": [
+      {
+        "query": "Transaction Analysis: User 'money_laundering_040' (age: 4 hours, 2 transactions) attempts $38,000 pu...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'david_thompson' (age: 2 years, 423 transactions, avg $120) attempts $850...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'lisa_wong' (age: 6 months, 89 transactions) attempts $180 purchase at 2:...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'liam_wilson' (age: 9 months, 234 transactions) attempts $1,750 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'zoe_anderson' (age: 6 years, 4,567 transactions) attempts $95 purchase a...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'ghost_customer_003' (age: 3 days, 4 transactions) attempts $12,000 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'mia_davis' (age: 18 years, 15,678 transactions) attempts $15 purchase at...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'benjamin_lee' (age: 3 days, 1 transaction) attempts $25,000 purchase at ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'alex_kim' (age: 3 months, 12 transactions) attempts $75 purchase at 9:30...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'crypto_trader_009' (age: 1 month, 23 transactions) attempts $7,800 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'phantom_buyer_002' (age: 1 day, 2 transactions) attempts $8,500 purchase...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'ava_taylor' (age: 10 years, 8,234 transactions) attempts $35 purchase at...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'lucas_taylor' (age: 8 months, 112 transactions) attempts $18,500 purchas...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'ava_taylor' (age: 35 years, 35,123 transactions) attempts $5 purchase at...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'risky_buyer_321' (age: 3 weeks, 14 transactions) attempts $2,800 purchas...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_rodriguez' (age: 20 years, 18,234 transactions) attempts $20 purc...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'normal_user_123' (age: 1 year, 234 transactions) attempts $190 purchase ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'money_laundering_025' (age: 3 days, 2 transactions) attempts $45,000 pur...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'robert_jones' (age: 1 year, 234 transactions) attempts $950 purchase at ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'mia_davis' (age: 5 years, 3,678 transactions) attempts $65 purchase at 1...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'john_doe' (age: 45 days, 3 total transactions) attempts $2,500 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_anderson' (age: 1 year, 298 transactions) attempts $220 purchase ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'rachel_taylor' (age: 2.5 years, 892 transactions) attempts $480 purchase...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'elite_customer_006' (age: 8 years, 2,847 transactions) attempts $2,800 p...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'ava_moore' (age: 4 years, 2,345 transactions) attempts $180 purchase at ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'anthony_lee' (age: 6 months, 145 transactions) attempts $1,950 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'fraud_ring_017' (age: 2 hours, 1 transaction) attempts $35,000 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'amanda_clark' (age: 2 years, 678 transactions) attempts $320 purchase at...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'grace_williams' (age: 5 years, 3,456 transactions) attempts $150 purchas...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'vip_member_008' (age: 10 years, 4,567 transactions) attempts $3,500 purc...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'healthcare_professional_037' (age: 4 years, 1,567 transactions) attempts...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'emma_martinez' (age: 9 years, 7,456 transactions) attempts $85 purchase ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'phantom_buyer_002' (age: 1 day, 2 transactions) attempts $8,500 purchase...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_rodriguez' (age: 7 years, 5,234 transactions) attempts $125 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'william_garcia' (age: 9 months, 156 transactions) attempts $22,800 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'education_investor_035' (age: 3 years, 2,345 transactions) attempts $7,2...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'mia_davis' (age: 50 years, 58,789 transactions) attempts $1 purchase at ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'suspicious_user_456' (age: 5 days, 7 transactions) attempts $1,200 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'nicole_garcia' (age: 8 months, 156 transactions) attempts $95 purchase a...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'robert_martinez' (age: 3 years, 512 transactions) attempts $5,200 purcha...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'merchant_test_016' (age: 1 day, 1 transaction) attempts $0.01 purchase a...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'legitimate_emergency_018' (age: 4 years, 1,789 transactions) attempts $3...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      },
+      {
+        "query": "Transaction Analysis: User 'corporate_client_007' (age: 5 years, 1,456 transactions) attempts $5,200...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth"
+      }
+    ],
+    "offline_online": [
+      {
+        "query": "Transaction Analysis: User 'money_laundering_040' (age: 4 hours, 2 transactions) attempts $38,000 pu...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_9df4d576",
+            "quality": 0.5,
+            "semantic": 0.6212683829759746,
+            "thompson": 0.9897237362654141,
+            "combined": 0.6954244740700142,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6954244740700142
+          },
+          {
+            "bullet_id": "fraud_detection_6ea70ec9",
+            "quality": 0.5,
+            "semantic": 0.6058487380729205,
+            "thompson": 0.9815779043845813,
+            "combined": 0.6868128665445425,
+            "diversity_bonus": 0.04287722582610537,
+            "final_score": 0.729690092370648
+          },
+          {
+            "bullet_id": "fraud_detection_9cc32b1c",
+            "quality": 0.5,
+            "semantic": 0.6312056180561899,
+            "thompson": 0.9331538841977693,
+            "combined": 0.6824284124818067,
+            "diversity_bonus": 0.05181257901898086,
+            "final_score": 0.7342409915007876
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'david_thompson' (age: 2 years, 423 transactions, avg $120) attempts $850...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_a2027a96",
+            "quality": 0.5,
+            "semantic": 0.6852168901819725,
+            "thompson": 0.9843135682357435,
+            "combined": 0.7164426014494435,
+            "diversity_bonus": 0.0,
+            "final_score": 0.7164426014494435
+          },
+          {
+            "bullet_id": "fraud_detection_67754097",
+            "quality": 0.5,
+            "semantic": 0.6609620622210125,
+            "thompson": 0.9658738750820048,
+            "combined": 0.7012638057226861,
+            "diversity_bonus": 0.04567922236782844,
+            "final_score": 0.7469430280905145
+          },
+          {
+            "bullet_id": "fraud_detection_5321025a",
+            "quality": 0.5,
+            "semantic": 0.6607349772688892,
+            "thompson": 0.9233145678600198,
+            "combined": 0.6885322212299549,
+            "diversity_bonus": 0.04215665962026227,
+            "final_score": 0.7306888808502172
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'lisa_wong' (age: 6 months, 89 transactions) attempts $180 purchase at 2:...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_92dca416",
+            "quality": 0.5,
+            "semantic": 0.5943329773722487,
+            "thompson": 0.9950027533083636,
+            "combined": 0.6803233045677275,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6803233045677275
+          },
+          {
+            "bullet_id": "fraud_detection_ffd6e461",
+            "quality": 0.5,
+            "semantic": 0.642401887882044,
+            "thompson": 0.823864567941757,
+            "combined": 0.6492260420971037,
+            "diversity_bonus": 0.06289322213455549,
+            "final_score": 0.7121192642316592
+          },
+          {
+            "bullet_id": "fraud_detection_e1fabdeb",
+            "quality": 0.5,
+            "semantic": 0.5846345003204064,
+            "thompson": 0.8755395488730436,
+            "combined": 0.6413146113980484,
+            "diversity_bonus": 0.06005845094697246,
+            "final_score": 0.7013730623450208
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'liam_wilson' (age: 9 months, 234 transactions) attempts $1,750 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_580f5399",
+            "quality": 0.5,
+            "semantic": 0.6500809652988325,
+            "thompson": 0.9479462188498954,
+            "combined": 0.6860114383576562,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6860114383576562
+          },
+          {
+            "bullet_id": "fraud_detection_67754097",
+            "quality": 0.5,
+            "semantic": 0.6184843213515941,
+            "thompson": 0.8938980428666038,
+            "combined": 0.6576375374849323,
+            "diversity_bonus": 0.044523503066485344,
+            "final_score": 0.7021610405514176
+          },
+          {
+            "bullet_id": "fraud_detection_21010048",
+            "quality": 0.5,
+            "semantic": 0.618020665520381,
+            "thompson": 0.8879525457882756,
+            "combined": 0.6557211408271302,
+            "diversity_bonus": 0.053555858267651475,
+            "final_score": 0.7092769990947817
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'zoe_anderson' (age: 6 years, 4,567 transactions) attempts $95 purchase a...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_f3657d8e",
+            "quality": 0.5,
+            "semantic": 0.6440406757861363,
+            "thompson": 0.9521323527473713,
+            "combined": 0.6820558830729332,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6820558830729332
+          },
+          {
+            "bullet_id": "fraud_detection_580f5399",
+            "quality": 0.5,
+            "semantic": 0.6099594845620063,
+            "thompson": 0.9897633528411199,
+            "combined": 0.6792700468257253,
+            "diversity_bonus": 0.032388244292764615,
+            "final_score": 0.71165829111849
+          },
+          {
+            "bullet_id": "fraud_detection_6df3c0ed",
+            "quality": 0.5,
+            "semantic": 0.605664993508657,
+            "thompson": 0.9287982430059873,
+            "combined": 0.6599798602984785,
+            "diversity_bonus": 0.03399932563300975,
+            "final_score": 0.6939791859314883
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'ghost_customer_003' (age: 3 days, 4 transactions) attempts $12,000 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_328d419b",
+            "quality": 0.5,
+            "semantic": 0.672464717783284,
+            "thompson": 0.9838616284950611,
+            "combined": 0.6997493263118213,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6997493263118213
+          },
+          {
+            "bullet_id": "fraud_detection_2621b85a",
+            "quality": 0.5,
+            "semantic": 0.6259215448004963,
+            "thompson": 0.9899118824903637,
+            "combined": 0.6828586110065167,
+            "diversity_bonus": 0.05070982802549057,
+            "final_score": 0.7335684390320073
+          },
+          {
+            "bullet_id": "fraud_detection_8d6482c3",
+            "quality": 0.5,
+            "semantic": 0.640913745376695,
+            "thompson": 0.9639430273756976,
+            "combined": 0.6814447895052962,
+            "diversity_bonus": 0.03375643036170469,
+            "final_score": 0.7152012198670009
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'mia_davis' (age: 18 years, 15,678 transactions) attempts $15 purchase at...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_ffd6e461",
+            "quality": 0.5,
+            "semantic": 0.6330538787939715,
+            "thompson": 0.9267530542024924,
+            "combined": 0.665056498869225,
+            "diversity_bonus": 0.0,
+            "final_score": 0.665056498869225
+          },
+          {
+            "bullet_id": "fraud_detection_e1fabdeb",
+            "quality": 0.5,
+            "semantic": 0.5829978104010635,
+            "thompson": 0.9962985873033737,
+            "combined": 0.6646827264751477,
+            "diversity_bonus": 0.0565264685797659,
+            "final_score": 0.7212091950549135
+          },
+          {
+            "bullet_id": "fraud_detection_21010048",
+            "quality": 0.5,
+            "semantic": 0.6257126120246354,
+            "thompson": 0.9281758952420452,
+            "combined": 0.6625219865298844,
+            "diversity_bonus": 0.05590010197258941,
+            "final_score": 0.7184220885024738
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'benjamin_lee' (age: 3 days, 1 transaction) attempts $25,000 purchase at ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_6df3c0ed",
+            "quality": 0.5,
+            "semantic": 0.6183695198673781,
+            "thompson": 0.9860015617853406,
+            "combined": 0.6731503367348306,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6731503367348306
+          },
+          {
+            "bullet_id": "fraud_detection_e51f102d",
+            "quality": 0.5,
+            "semantic": 0.5970470641567567,
+            "thompson": 0.9523852067324237,
+            "combined": 0.6552182499408509,
+            "diversity_bonus": 0.03172453992860474,
+            "final_score": 0.6869427898694556
+          },
+          {
+            "bullet_id": "fraud_detection_9df4d576",
+            "quality": 0.5,
+            "semantic": 0.5972633999174529,
+            "thompson": 0.8759456053918472,
+            "combined": 0.6339232406793209,
+            "diversity_bonus": 0.031910971742258674,
+            "final_score": 0.6658342124215796
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'alex_kim' (age: 3 months, 12 transactions) attempts $75 purchase at 9:30...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_33ae9a99",
+            "quality": 0.5,
+            "semantic": 0.6185143687215219,
+            "thompson": 0.994115311592418,
+            "combined": 0.6727109757858702,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6727109757858702
+          },
+          {
+            "bullet_id": "fraud_detection_2621b85a",
+            "quality": 0.5,
+            "semantic": 0.6119619355454063,
+            "thompson": 0.9920710439029035,
+            "combined": 0.6695238734392497,
+            "diversity_bonus": 0.03395526896905229,
+            "final_score": 0.703479142408302
+          },
+          {
+            "bullet_id": "fraud_detection_66108d09",
+            "quality": 0.5,
+            "semantic": 0.6114210731158141,
+            "thompson": 0.9912977645219828,
+            "combined": 0.6690933804163574,
+            "diversity_bonus": 0.050983382352777225,
+            "final_score": 0.7200767627691346
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'crypto_trader_009' (age: 1 month, 23 transactions) attempts $7,800 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_a2027a96",
+            "quality": 0.5,
+            "semantic": 0.6406652737544632,
+            "thompson": 0.9969147326006921,
+            "combined": 0.6795995484558153,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6795995484558153
+          },
+          {
+            "bullet_id": "fraud_detection_6b3e9150",
+            "quality": 0.5,
+            "semantic": 0.6339804855068328,
+            "thompson": 0.9504956517574028,
+            "combined": 0.6641984794844706,
+            "diversity_bonus": 0.045941469003193805,
+            "final_score": 0.7101399484876645
+          },
+          {
+            "bullet_id": "fraud_detection_9cdc9043",
+            "quality": 0.5,
+            "semantic": 0.6249053175180477,
+            "thompson": 0.9499264141386137,
+            "combined": 0.6604123390854644,
+            "diversity_bonus": 0.02621384257711984,
+            "final_score": 0.6866261816625843
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'phantom_buyer_002' (age: 1 day, 2 transactions) attempts $8,500 purchase...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_a24e08af",
+            "quality": 0.5,
+            "semantic": 0.6605962688552982,
+            "thompson": 0.9985346795951402,
+            "combined": 0.6852919699333886,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6852919699333886
+          },
+          {
+            "bullet_id": "fraud_detection_6d8ad37b",
+            "quality": 0.5,
+            "semantic": 0.6131025894138776,
+            "thompson": 0.9183590770344018,
+            "combined": 0.6445307325936596,
+            "diversity_bonus": 0.05064838358111502,
+            "final_score": 0.6951791161747746
+          },
+          {
+            "bullet_id": "fraud_detection_ffd6e461",
+            "quality": 0.5,
+            "semantic": 0.5769622043404501,
+            "thompson": 0.9681279777358553,
+            "combined": 0.6435844076470459,
+            "diversity_bonus": 0.048754226725186076,
+            "final_score": 0.692338634372232
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'ava_taylor' (age: 10 years, 8,234 transactions) attempts $35 purchase at...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_6d8ad37b",
+            "quality": 0.5,
+            "semantic": 0.6632185388574559,
+            "thompson": 0.9327075373724795,
+            "combined": 0.6659527906109711,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6659527906109711
+          },
+          {
+            "bullet_id": "fraud_detection_328d419b",
+            "quality": 0.5,
+            "semantic": 0.6317595343243722,
+            "thompson": 0.9126521539189136,
+            "combined": 0.647979299669488,
+            "diversity_bonus": 0.0409322035486713,
+            "final_score": 0.6889115032181593
+          },
+          {
+            "bullet_id": "fraud_detection_33ae9a99",
+            "quality": 0.5,
+            "semantic": 0.5933697187217348,
+            "thompson": 0.9078415441475034,
+            "combined": 0.6313305208949871,
+            "diversity_bonus": 0.05039719075034271,
+            "final_score": 0.6817277116453297
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'lucas_taylor' (age: 8 months, 112 transactions) attempts $18,500 purchas...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_9cdc9043",
+            "quality": 0.5,
+            "semantic": 0.6424077947533946,
+            "thompson": 0.9839823143119165,
+            "combined": 0.6687773250808031,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6687773250808031
+          },
+          {
+            "bullet_id": "fraud_detection_580f5399",
+            "quality": 0.5,
+            "semantic": 0.6463893229060989,
+            "thompson": 0.945457529592462,
+            "combined": 0.6601194106755408,
+            "diversity_bonus": 0.043249263941860995,
+            "final_score": 0.7033686746174018
+          },
+          {
+            "bullet_id": "fraud_detection_f036e014",
+            "quality": 0.5,
+            "semantic": 0.6333039119662371,
+            "thompson": 0.9307703602735922,
+            "combined": 0.6509773411116669,
+            "diversity_bonus": 0.029121010547723924,
+            "final_score": 0.6800983516593908
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'ava_taylor' (age: 35 years, 35,123 transactions) attempts $5 purchase at...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_67754097",
+            "quality": 0.5,
+            "semantic": 0.5954203260773261,
+            "thompson": 0.9862208007699088,
+            "combined": 0.6479669241413927,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6479669241413927
+          },
+          {
+            "bullet_id": "fraud_detection_33ae9a99",
+            "quality": 0.5,
+            "semantic": 0.5768012189963497,
+            "thompson": 0.917388926032486,
+            "combined": 0.622386994896414,
+            "diversity_bonus": 0.04480419313529756,
+            "final_score": 0.6671911880317116
+          },
+          {
+            "bullet_id": "fraud_detection_2fea8861",
+            "quality": 0.5,
+            "semantic": 0.5931869663910555,
+            "thompson": 0.863873140643244,
+            "combined": 0.6148437038645707,
+            "diversity_bonus": 0.032874828064474525,
+            "final_score": 0.6477185319290452
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'risky_buyer_321' (age: 3 weeks, 14 transactions) attempts $2,800 purchas...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_3b5d5d1e",
+            "quality": 0.5,
+            "semantic": 0.6656185451389425,
+            "thompson": 0.9715670011548453,
+            "combined": 0.6696393501642828,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6696393501642828
+          },
+          {
+            "bullet_id": "fraud_detection_2fea8861",
+            "quality": 0.5,
+            "semantic": 0.6549669602373324,
+            "thompson": 0.9617888954340725,
+            "combined": 0.6628285131831525,
+            "diversity_bonus": 0.04133839120845631,
+            "final_score": 0.7041669043916088
+          },
+          {
+            "bullet_id": "fraud_detection_c5b6c2ce",
+            "quality": 0.5,
+            "semantic": 0.6626199810556533,
+            "thompson": 0.9244266242393291,
+            "combined": 0.6561453620635748,
+            "diversity_bonus": 0.03805190910004689,
+            "final_score": 0.6941972711636216
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_rodriguez' (age: 20 years, 18,234 transactions) attempts $20 purc...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_7bd34db0",
+            "quality": 0.5,
+            "semantic": 0.5655309310929134,
+            "thompson": 0.9569502729126653,
+            "combined": 0.6233087923185855,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6233087923185855
+          },
+          {
+            "bullet_id": "fraud_detection_6b3e9150",
+            "quality": 0.5,
+            "semantic": 0.5912239904473097,
+            "thompson": 0.8747711925024727,
+            "combined": 0.6123663590590452,
+            "diversity_bonus": 0.027907433547719778,
+            "final_score": 0.640273792606765
+          },
+          {
+            "bullet_id": "fraud_detection_9cdc9043",
+            "quality": 0.5,
+            "semantic": 0.6568101836255544,
+            "thompson": 0.76803341940888,
+            "combined": 0.6110398205240922,
+            "diversity_bonus": 0.043613339432774866,
+            "final_score": 0.6546531599568671
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'normal_user_123' (age: 1 year, 234 transactions) attempts $190 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_21010048",
+            "quality": 0.5,
+            "semantic": 0.642411897908257,
+            "thompson": 0.9813538851236088,
+            "combined": 0.6578411445590859,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6578411445590859
+          },
+          {
+            "bullet_id": "fraud_detection_66108d09",
+            "quality": 0.5,
+            "semantic": 0.6813600120402464,
+            "thompson": 0.9180834136083409,
+            "combined": 0.657245728413872,
+            "diversity_bonus": 0.05606636292121457,
+            "final_score": 0.7133120913350866
+          },
+          {
+            "bullet_id": "fraud_detection_6d8ad37b",
+            "quality": 0.5,
+            "semantic": 0.6786241478661817,
+            "thompson": 0.8731066404366301,
+            "combined": 0.6446533793724415,
+            "diversity_bonus": 0.036958101707978454,
+            "final_score": 0.6816114810804199
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'money_laundering_025' (age: 3 days, 2 transactions) attempts $45,000 pur...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_6b3e9150",
+            "quality": 0.5,
+            "semantic": 0.6587388636182581,
+            "thompson": 0.9292661888844055,
+            "combined": 0.648692302091618,
+            "diversity_bonus": 0.0,
+            "final_score": 0.648692302091618
+          },
+          {
+            "bullet_id": "fraud_detection_9cc32b1c",
+            "quality": 0.5,
+            "semantic": 0.6167870750260825,
+            "thompson": 0.9830694173670207,
+            "combined": 0.6455291539217715,
+            "diversity_bonus": 0.03888690013681409,
+            "final_score": 0.6844160540585855
+          },
+          {
+            "bullet_id": "fraud_detection_9cdc9043",
+            "quality": 0.5,
+            "semantic": 0.6117141894066779,
+            "thompson": 0.981047044258976,
+            "combined": 0.6429881381628232,
+            "diversity_bonus": 0.03215502459948407,
+            "final_score": 0.6751431627623072
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'robert_jones' (age: 1 year, 234 transactions) attempts $950 purchase at ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_1a1d1cee",
+            "quality": 0.5,
+            "semantic": 0.6568459219540721,
+            "thompson": 0.9819372541532416,
+            "combined": 0.6587932501423834,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6587932501423834
+          },
+          {
+            "bullet_id": "fraud_detection_328d419b",
+            "quality": 0.5,
+            "semantic": 0.6570838699648947,
+            "thompson": 0.9667661643498444,
+            "combined": 0.6550868415304856,
+            "diversity_bonus": 0.036616501369238094,
+            "final_score": 0.6917033428997237
+          },
+          {
+            "bullet_id": "fraud_detection_a2027a96",
+            "quality": 0.5,
+            "semantic": 0.6388764190208224,
+            "thompson": 0.9892975819235528,
+            "combined": 0.6534498077289128,
+            "diversity_bonus": 0.03832541765541338,
+            "final_score": 0.6917752253843262
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'mia_davis' (age: 5 years, 3,678 transactions) attempts $65 purchase at 1...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_ffd6e461",
+            "quality": 0.5,
+            "semantic": 0.6350692280345618,
+            "thompson": 0.9789176610965474,
+            "combined": 0.6468851615805036,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6468851615805036
+          },
+          {
+            "bullet_id": "fraud_detection_a2027a96",
+            "quality": 0.5,
+            "semantic": 0.6738672496237367,
+            "thompson": 0.8974725875156212,
+            "combined": 0.6421988459624426,
+            "diversity_bonus": 0.041929627508960045,
+            "final_score": 0.6841284734714026
+          },
+          {
+            "bullet_id": "fraud_detection_a24e08af",
+            "quality": 0.5,
+            "semantic": 0.6325463611944965,
+            "thompson": 0.9486744644441261,
+            "combined": 0.6383730485310679,
+            "diversity_bonus": 0.05074145176959053,
+            "final_score": 0.6891145003006585
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'john_doe' (age: 45 days, 3 total transactions) attempts $2,500 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_580f5399",
+            "quality": 0.5,
+            "semantic": 0.6320215824450878,
+            "thompson": 0.9882283438725118,
+            "combined": 0.6455365138355597,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6455365138355597
+          },
+          {
+            "bullet_id": "fraud_detection_60751c49",
+            "quality": 0.5,
+            "semantic": 0.6047999935996085,
+            "thompson": 0.9925045829421216,
+            "combined": 0.6356982048275088,
+            "diversity_bonus": 0.029143278685537902,
+            "final_score": 0.6648414835130467
+          },
+          {
+            "bullet_id": "fraud_detection_f3657d8e",
+            "quality": 0.5,
+            "semantic": 0.6437792916416458,
+            "thompson": 0.9217478248873536,
+            "combined": 0.6339107039020627,
+            "diversity_bonus": 0.04046964858323602,
+            "final_score": 0.6743803524852987
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_anderson' (age: 1 year, 298 transactions) attempts $220 purchase ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_9cc32b1c",
+            "quality": 0.5,
+            "semantic": 0.6645355696891999,
+            "thompson": 0.9910711949781793,
+            "combined": 0.6568182370609279,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6568182370609279
+          },
+          {
+            "bullet_id": "fraud_detection_ffd6e461",
+            "quality": 0.5,
+            "semantic": 0.6570513229071365,
+            "thompson": 0.9495779727195719,
+            "combined": 0.6437344126648925,
+            "diversity_bonus": 0.0393406939072108,
+            "final_score": 0.6830751065721034
+          },
+          {
+            "bullet_id": "fraud_detection_f3657d8e",
+            "quality": 0.5,
+            "semantic": 0.6309483474931918,
+            "thompson": 0.926436184872104,
+            "combined": 0.6276657119034921,
+            "diversity_bonus": 0.04392532587461187,
+            "final_score": 0.6715910377781039
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'rachel_taylor' (age: 2.5 years, 892 transactions) attempts $480 purchase...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_5321025a",
+            "quality": 0.5,
+            "semantic": 0.6602247642856941,
+            "thompson": 0.8981077104692826,
+            "combined": 0.6303144017882703,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6303144017882703
+          },
+          {
+            "bullet_id": "fraud_detection_cd5e5999",
+            "quality": 0.5,
+            "semantic": 0.6245053920339152,
+            "thompson": 0.950147996559849,
+            "combined": 0.6285556452392662,
+            "diversity_bonus": 0.04317433227441493,
+            "final_score": 0.6717299775136811
+          },
+          {
+            "bullet_id": "fraud_detection_3b5d5d1e",
+            "quality": 0.5,
+            "semantic": 0.6038568970565661,
+            "thompson": 0.9597646805591596,
+            "combined": 0.6226115181533801,
+            "diversity_bonus": 0.04689789814123343,
+            "final_score": 0.6695094162946136
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'elite_customer_006' (age: 8 years, 2,847 transactions) attempts $2,800 p...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_67754097",
+            "quality": 0.5,
+            "semantic": 0.6297199213520497,
+            "thompson": 0.9705077083870196,
+            "combined": 0.633218264281418,
+            "diversity_bonus": 0.0,
+            "final_score": 0.633218264281418
+          },
+          {
+            "bullet_id": "fraud_detection_9df4d576",
+            "quality": 0.5,
+            "semantic": 0.6161994226013444,
+            "thompson": 0.958802695669927,
+            "combined": 0.6250200570046982,
+            "diversity_bonus": 0.04746030623212642,
+            "final_score": 0.6724803632368246
+          },
+          {
+            "bullet_id": "fraud_detection_2fea8861",
+            "quality": 0.5,
+            "semantic": 0.6207060895249062,
+            "thompson": 0.9001052411638544,
+            "combined": 0.6128315937781773,
+            "diversity_bonus": 0.03058629494484831,
+            "final_score": 0.6434178887230256
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'ava_moore' (age: 4 years, 2,345 transactions) attempts $180 purchase at ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_c5b6c2ce",
+            "quality": 0.5,
+            "semantic": 0.6305529397729134,
+            "thompson": 0.9515186641997943,
+            "combined": 0.6267685033844819,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6267685033844819
+          },
+          {
+            "bullet_id": "fraud_detection_328d419b",
+            "quality": 0.5,
+            "semantic": 0.6529519398514131,
+            "thompson": 0.9091492307962542,
+            "combined": 0.6257294103840332,
+            "diversity_bonus": 0.04758072773322609,
+            "final_score": 0.6733101381172593
+          },
+          {
+            "bullet_id": "fraud_detection_3b5d5d1e",
+            "quality": 0.5,
+            "semantic": 0.5940719705034977,
+            "thompson": 0.9700955954605068,
+            "combined": 0.6165600551875541,
+            "diversity_bonus": 0.0431468456335504,
+            "final_score": 0.6597069008211045
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'anthony_lee' (age: 6 months, 145 transactions) attempts $1,950 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_9df4d576",
+            "quality": 0.5,
+            "semantic": 0.6281915372805831,
+            "thompson": 0.9918766939600818,
+            "combined": 0.6330189187021495,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6330189187021495
+          },
+          {
+            "bullet_id": "fraud_detection_9cdc9043",
+            "quality": 0.5,
+            "semantic": 0.6370761037160755,
+            "thompson": 0.9449947022407645,
+            "combined": 0.6256192257174611,
+            "diversity_bonus": 0.04297369437746682,
+            "final_score": 0.6685929200949279
+          },
+          {
+            "bullet_id": "fraud_detection_8d6482c3",
+            "quality": 0.5,
+            "semantic": 0.613504484966096,
+            "thompson": 0.9745979100723148,
+            "combined": 0.6231070786496604,
+            "diversity_bonus": 0.03425210882607016,
+            "final_score": 0.6573591874757305
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'fraud_ring_017' (age: 2 hours, 1 transaction) attempts $35,000 purchase ...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_328d419b",
+            "quality": 0.5,
+            "semantic": 0.6893210139702599,
+            "thompson": 0.9336105008956674,
+            "combined": 0.6416869627596438,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6416869627596438
+          },
+          {
+            "bullet_id": "fraud_detection_2621b85a",
+            "quality": 0.5,
+            "semantic": 0.6556750663045782,
+            "thompson": 0.9613521641619815,
+            "combined": 0.6346456597296671,
+            "diversity_bonus": 0.05070982802549057,
+            "final_score": 0.6853554877551578
+          },
+          {
+            "bullet_id": "fraud_detection_9df4d576",
+            "quality": 0.5,
+            "semantic": 0.6901737388043301,
+            "thompson": 0.836888591733227,
+            "combined": 0.6196547782607774,
+            "diversity_bonus": 0.038143926336933476,
+            "final_score": 0.657798704597711
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'amanda_clark' (age: 2 years, 678 transactions) attempts $320 purchase at...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_9cdc9043",
+            "quality": 0.5,
+            "semantic": 0.6522677977631524,
+            "thompson": 0.9726131888276485,
+            "combined": 0.6336490083870423,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6336490083870423
+          },
+          {
+            "bullet_id": "fraud_detection_f3657d8e",
+            "quality": 0.5,
+            "semantic": 0.6371655488825547,
+            "thompson": 0.9619565394339404,
+            "combined": 0.625167588547155,
+            "diversity_bonus": 0.031047066189855053,
+            "final_score": 0.6562146547370101
+          },
+          {
+            "bullet_id": "fraud_detection_328d419b",
+            "quality": 0.5,
+            "semantic": 0.6343903908107963,
+            "thompson": 0.948689307473553,
+            "combined": 0.6210191454709005,
+            "diversity_bonus": 0.035878842772492044,
+            "final_score": 0.6568979882433926
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'grace_williams' (age: 5 years, 3,456 transactions) attempts $150 purchas...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_8aa9200d",
+            "quality": 0.5,
+            "semantic": 0.7049202707811973,
+            "thompson": 0.9650798939060241,
+            "combined": 0.6507856162184757,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6507856162184757
+          },
+          {
+            "bullet_id": "fraud_detection_a24e08af",
+            "quality": 0.5,
+            "semantic": 0.6361202569892518,
+            "thompson": 0.9168651917616393,
+            "combined": 0.6123336443077406,
+            "diversity_bonus": 0.050520838334541913,
+            "final_score": 0.6628544826422825
+          },
+          {
+            "bullet_id": "fraud_detection_9cc32b1c",
+            "quality": 0.5,
+            "semantic": 0.6798442784446411,
+            "thompson": 0.8072826519026255,
+            "combined": 0.6049770422980363,
+            "diversity_bonus": 0.03906095723236453,
+            "final_score": 0.6440379995304009
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'vip_member_008' (age: 10 years, 4,567 transactions) attempts $3,500 purc...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_1a1d1cee",
+            "quality": 0.5,
+            "semantic": 0.5885570874588115,
+            "thompson": 0.9884606887351922,
+            "combined": 0.6073115713927728,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6073115713927728
+          },
+          {
+            "bullet_id": "fraud_detection_cd5e5999",
+            "quality": 0.5,
+            "semantic": 0.5977685642482181,
+            "thompson": 0.9559550611088171,
+            "combined": 0.6036993290403079,
+            "diversity_bonus": 0.04015038467476926,
+            "final_score": 0.6438497137150772
+          },
+          {
+            "bullet_id": "fraud_detection_67754097",
+            "quality": 0.5,
+            "semantic": 0.5867078443217755,
+            "thompson": 0.9483870011688637,
+            "combined": 0.5975761700106355,
+            "diversity_bonus": 0.031723398232158403,
+            "final_score": 0.6292995682427939
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'healthcare_professional_037' (age: 4 years, 1,567 transactions) attempts...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_6d8ad37b",
+            "quality": 0.5,
+            "semantic": 0.6324923266033183,
+            "thompson": 0.9701043028907036,
+            "combined": 0.6185982137042781,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6185982137042781
+          },
+          {
+            "bullet_id": "fraud_detection_9cdc9043",
+            "quality": 0.5,
+            "semantic": 0.6352775447524016,
+            "thompson": 0.9586407040671898,
+            "combined": 0.617164568098998,
+            "diversity_bonus": 0.010873020592318905,
+            "final_score": 0.6280375886913169
+          },
+          {
+            "bullet_id": "fraud_detection_5321025a",
+            "quality": 0.5,
+            "semantic": 0.6297548603834784,
+            "thompson": 0.8950661960609398,
+            "combined": 0.600826348180857,
+            "diversity_bonus": 0.028384263636514483,
+            "final_score": 0.6292106118173715
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'emma_martinez' (age: 9 years, 7,456 transactions) attempts $85 purchase ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_9cdc9043",
+            "quality": 0.5,
+            "semantic": 0.6540025056984706,
+            "thompson": 0.9331761674122085,
+            "combined": 0.6169315681622478,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6169315681622478
+          },
+          {
+            "bullet_id": "fraud_detection_6d8ad37b",
+            "quality": 0.5,
+            "semantic": 0.6623229105723175,
+            "thompson": 0.8960940173342736,
+            "combined": 0.6121003930803125,
+            "diversity_bonus": 0.010873020592318905,
+            "final_score": 0.6229734136726314
+          },
+          {
+            "bullet_id": "fraud_detection_1a1d1cee",
+            "quality": 0.5,
+            "semantic": 0.6095379805537231,
+            "thompson": 0.9898412107159326,
+            "combined": 0.611613999164979,
+            "diversity_bonus": 0.03757560137646525,
+            "final_score": 0.6491896005414443
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'phantom_buyer_002' (age: 1 day, 2 transactions) attempts $8,500 purchase...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_a24e08af",
+            "quality": 0.5,
+            "semantic": 0.6605962688552982,
+            "thompson": 0.9805197050864203,
+            "combined": 0.6278395394462044,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6278395394462044
+          },
+          {
+            "bullet_id": "fraud_detection_33ae9a99",
+            "quality": 0.5,
+            "semantic": 0.6280725397247049,
+            "thompson": 0.9826290858840669,
+            "combined": 0.6152895652444768,
+            "diversity_bonus": 0.0263727730317302,
+            "final_score": 0.641662338276207
+          },
+          {
+            "bullet_id": "fraud_detection_328d419b",
+            "quality": 0.5,
+            "semantic": 0.636783170965749,
+            "thompson": 0.9622059953253205,
+            "combined": 0.6143247554779038,
+            "diversity_bonus": 0.04701498305314639,
+            "final_score": 0.6613397385310502
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'sophia_rodriguez' (age: 7 years, 5,234 transactions) attempts $125 purch...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_66108d09",
+            "quality": 0.5,
+            "semantic": 0.6313233003831714,
+            "thompson": 0.9934822212465728,
+            "combined": 0.6168007044323173,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6168007044323173
+          },
+          {
+            "bullet_id": "fraud_detection_6d8ad37b",
+            "quality": 0.5,
+            "semantic": 0.6579556849428784,
+            "thompson": 0.90039865187307,
+            "combined": 0.6073776620916496,
+            "diversity_bonus": 0.03986744253831365,
+            "final_score": 0.6472451046299632
+          },
+          {
+            "bullet_id": "fraud_detection_21010048",
+            "quality": 0.5,
+            "semantic": 0.6275542062483048,
+            "thompson": 0.9365308141180589,
+            "combined": 0.6030099513072608,
+            "diversity_bonus": 0.04505756189942893,
+            "final_score": 0.6480675132066896
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'william_garcia' (age: 9 months, 156 transactions) attempts $22,800 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_328d419b",
+            "quality": 0.5,
+            "semantic": 0.649925080635589,
+            "thompson": 0.9828878769559178,
+            "combined": 0.6198471586803465,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6198471586803465
+          },
+          {
+            "bullet_id": "fraud_detection_8aa9200d",
+            "quality": 0.5,
+            "semantic": 0.6622609586314102,
+            "thompson": 0.9288930914374369,
+            "combined": 0.6132519441038788,
+            "diversity_bonus": 0.03669455080536618,
+            "final_score": 0.649946494909245
+          },
+          {
+            "bullet_id": "fraud_detection_66108d09",
+            "quality": 0.5,
+            "semantic": 0.636410879411533,
+            "thompson": 0.9561292055234307,
+            "combined": 0.6087276697300641,
+            "diversity_bonus": 0.03488642047969865,
+            "final_score": 0.6436140902097628
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'education_investor_035' (age: 3 years, 2,345 transactions) attempts $7,2...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_6b3e9150",
+            "quality": 0.5,
+            "semantic": 0.613254485595376,
+            "thompson": 0.9808520182833581,
+            "combined": 0.6026602147564036,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6026602147564036
+          },
+          {
+            "bullet_id": "fraud_detection_33ae9a99",
+            "quality": 0.5,
+            "semantic": 0.6367991059131862,
+            "thompson": 0.9263066138934484,
+            "combined": 0.6005468138367897,
+            "diversity_bonus": 0.03056609726280686,
+            "final_score": 0.6311129110995966
+          },
+          {
+            "bullet_id": "fraud_detection_5321025a",
+            "quality": 0.5,
+            "semantic": 0.6198941617985606,
+            "thompson": 0.895801447799449,
+            "combined": 0.5873358480245398,
+            "diversity_bonus": 0.04974813226651851,
+            "final_score": 0.6370839802910583
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'mia_davis' (age: 50 years, 58,789 transactions) attempts $1 purchase at ...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_66108d09",
+            "quality": 0.5,
+            "semantic": 0.6827398279833901,
+            "thompson": 0.8946139332556031,
+            "combined": 0.6103412198550731,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6103412198550731
+          },
+          {
+            "bullet_id": "fraud_detection_1984fa7f",
+            "quality": 0.5,
+            "semantic": 0.620844781366413,
+            "thompson": 0.9760656667095877,
+            "combined": 0.6026312850527702,
+            "diversity_bonus": 0.04620292810725915,
+            "final_score": 0.6488342131600293
+          },
+          {
+            "bullet_id": "fraud_detection_c5b6c2ce",
+            "quality": 0.5,
+            "semantic": 0.6134689722906324,
+            "thompson": 0.9096335731494216,
+            "combined": 0.5857765317319787,
+            "diversity_bonus": 0.0391486453683895,
+            "final_score": 0.6249251771003682
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'suspicious_user_456' (age: 5 days, 7 transactions) attempts $1,200 purch...",
+        "predicted": "DECLINE",
+        "ground_truth": "DECLINE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_328d419b",
+            "quality": 0.5,
+            "semantic": 0.699591741226411,
+            "thompson": 0.9642667777956301,
+            "combined": 0.6296523466855155,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6296523466855155
+          },
+          {
+            "bullet_id": "fraud_detection_8aa9200d",
+            "quality": 0.5,
+            "semantic": 0.7124876871830894,
+            "thompson": 0.891879070162013,
+            "combined": 0.619810522634583,
+            "diversity_bonus": 0.03669455080536618,
+            "final_score": 0.6565050734399492
+          },
+          {
+            "bullet_id": "fraud_detection_f1214ba5",
+            "quality": 0.5,
+            "semantic": 0.6859649452700501,
+            "thompson": 0.8496788432520955,
+            "combined": 0.6004566822231574,
+            "diversity_bonus": 0.04226378864845191,
+            "final_score": 0.6427204708716093
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'nicole_garcia' (age: 8 months, 156 transactions) attempts $95 purchase a...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_9cdc9043",
+            "quality": 0.5,
+            "semantic": 0.6879927459619589,
+            "thompson": 0.9628098257504296,
+            "combined": 0.6227256436571411,
+            "diversity_bonus": 0.0,
+            "final_score": 0.6227256436571411
+          },
+          {
+            "bullet_id": "fraud_detection_a24e08af",
+            "quality": 0.5,
+            "semantic": 0.6603512629741578,
+            "thompson": 0.9233090201591811,
+            "combined": 0.6035651274890242,
+            "diversity_bonus": 0.04537820113929107,
+            "final_score": 0.6489433286283153
+          },
+          {
+            "bullet_id": "fraud_detection_8d6482c3",
+            "quality": 0.5,
+            "semantic": 0.6412059660328113,
+            "thompson": 0.9538206160877485,
+            "combined": 0.602166719609194,
+            "diversity_bonus": 0.03101694970232813,
+            "final_score": 0.6331836693115221
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'robert_martinez' (age: 3 years, 512 transactions) attempts $5,200 purcha...",
+        "predicted": "DECLINE",
+        "ground_truth": "APPROVE",
+        "correct": false,
+        "confidence": 0.0,
+        "reason": "Does not match ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_a24e08af",
+            "quality": 0.5,
+            "semantic": 0.6714827090811655,
+            "thompson": 0.9519229863735666,
+            "combined": 0.61194488420758,
+            "diversity_bonus": 0.0,
+            "final_score": 0.61194488420758
+          },
+          {
+            "bullet_id": "fraud_detection_8aa9200d",
+            "quality": 0.5,
+            "semantic": 0.6761309931209498,
+            "thompson": 0.941184345127779,
+            "combined": 0.6116229965600247,
+            "diversity_bonus": 0.050520838334541913,
+            "final_score": 0.6621438348945666
+          },
+          {
+            "bullet_id": "fraud_detection_9df4d576",
+            "quality": 0.5,
+            "semantic": 0.6549761345028986,
+            "thompson": 0.9228545382847081,
+            "combined": 0.5994379565934068,
+            "diversity_bonus": 0.04315139092780418,
+            "final_score": 0.642589347521211
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'merchant_test_016' (age: 1 day, 1 transaction) attempts $0.01 purchase a...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_328d419b",
+            "quality": 0.5,
+            "semantic": 0.6470654339498386,
+            "thompson": 0.9037977159411097,
+            "combined": 0.5905762915469005,
+            "diversity_bonus": 0.0,
+            "final_score": 0.5905762915469005
+          },
+          {
+            "bullet_id": "fraud_detection_f1214ba5",
+            "quality": 0.5,
+            "semantic": 0.5999399086535789,
+            "thompson": 0.9548897092977,
+            "combined": 0.5820004776300494,
+            "diversity_bonus": 0.04380957183007789,
+            "final_score": 0.6258100494601273
+          },
+          {
+            "bullet_id": "fraud_detection_92dca416",
+            "quality": 0.5,
+            "semantic": 0.7429079158693609,
+            "thompson": 0.597966329675763,
+            "combined": 0.5674118116385503,
+            "diversity_bonus": 0.05767503806426541,
+            "final_score": 0.6250868497028157
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'legitimate_emergency_018' (age: 4 years, 1,789 transactions) attempts $3...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_a24e08af",
+            "quality": 0.5,
+            "semantic": 0.6260334950000581,
+            "thompson": 0.9426831278112935,
+            "combined": 0.5880969660713992,
+            "diversity_bonus": 0.0,
+            "final_score": 0.5880969660713992
+          },
+          {
+            "bullet_id": "fraud_detection_6b3e9150",
+            "quality": 0.5,
+            "semantic": 0.5853701133364992,
+            "thompson": 0.9760143926795193,
+            "combined": 0.5784677040861229,
+            "diversity_bonus": 0.039428652894774416,
+            "final_score": 0.6178963569808973
+          },
+          {
+            "bullet_id": "fraud_detection_6d8ad37b",
+            "quality": 0.5,
+            "semantic": 0.5991317430086176,
+            "thompson": 0.9052669857489289,
+            "combined": 0.5698868956631756,
+            "diversity_bonus": 0.04980533571282996,
+            "final_score": 0.6196922313760056
+          }
+        ]
+      },
+      {
+        "query": "Transaction Analysis: User 'corporate_client_007' (age: 5 years, 1,456 transactions) attempts $5,200...",
+        "predicted": "APPROVE",
+        "ground_truth": "APPROVE",
+        "correct": true,
+        "confidence": 1.0,
+        "reason": "Matches ground truth",
+        "bullets_used": 5,
+        "scores": [
+          {
+            "bullet_id": "fraud_detection_9cdc9043",
+            "quality": 0.5,
+            "semantic": 0.6523501867981513,
+            "thompson": 0.9856036070760564,
+            "combined": 0.605216389407532,
+            "diversity_bonus": 0.0,
+            "final_score": 0.605216389407532
+          },
+          {
+            "bullet_id": "fraud_detection_f036e014",
+            "quality": 0.5,
+            "semantic": 0.5876994886003135,
+            "thompson": 0.9829833357016456,
+            "combined": 0.5788396178363142,
+            "diversity_bonus": 0.04426649367673187,
+            "final_score": 0.6231061115130461
+          },
+          {
+            "bullet_id": "fraud_detection_6b3e9150",
+            "quality": 0.5,
+            "semantic": 0.5909662574943945,
+            "thompson": 0.9404368079367696,
+            "combined": 0.5717598071653212,
+            "diversity_bonus": 0.039141040768119154,
+            "final_score": 0.6109008479334403
+          }
+        ]
+      }
+    ]
+  }
+}
