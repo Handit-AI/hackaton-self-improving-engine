@@ -107,10 +107,11 @@ class Transaction(Base):
     
     # Analysis metadata
     mode = Column(String(50), nullable=False)  # 'vanilla', 'offline_ace', 'online_ace'
+    node = Column(String(50), nullable=True)  # Agent node name (e.g., 'fraud_detection')
     
     # Results
-    predicted_decision = Column(String(20), nullable=False)
-    correct_decision = Column(String(20), nullable=False)
+    predicted_decision = Column(String(2000), nullable=False)  # Increased to accommodate very long outputs
+    correct_decision = Column(String(2000), nullable=False)  # Increased to accommodate very long outputs
     is_correct = Column(Boolean, nullable=False, default=False)
     
     # Links

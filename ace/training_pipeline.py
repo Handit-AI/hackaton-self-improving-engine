@@ -277,15 +277,31 @@ class TrainingPipeline:
                 
                 logger.info(f"  Testing {len(all_bullets_to_test)} NEW bullets (1 new + 4 candidates)")
                 
-                # Step 2c: Test all 5 NEW bullets on transactions
+                # Step 2c: Load test dataset if not already loaded
+                if not self.darwin_evolver.test_dataset:
+                    if self.darwin_evolver.db_session:
+                        self.darwin_evolver.load_test_dataset_from_db(n_samples=4, node=node)  # Reduced to 4 scenarios
+                    else:
+                        logger.warning("No database session for evolution, skipping fitness evaluation")
+                        # Just return the new bullet without evolution
+                        initial_bullet_id = self.curator.merge_bullet(
+                            content=new_bullet_content,
+                            node=node,
+                            playbook=playbook,
+                            source=source,
+                            evaluator=evaluator
+                        )
+                        return initial_bullet_id
+                
+                # Step 2d: Test all 5 NEW bullets on transactions (reduced to 4 scenarios)
                 fitness_scores = await self.darwin_evolver._evaluate_bullets(
                     all_bullets_to_test,
                     node=node,
-                    n_samples=5,
+                    n_samples=4,  # Reduced from 5 to 4
                     evaluator=evaluator
                 )
                 
-                # Step 2d: Sort by fitness and keep top 2 of the NEW bullets
+                # Step 2e: Sort by fitness and keep ONLY top 1 bullet
                 sorted_bullets = sorted(
                     zip(all_bullets_to_test, fitness_scores),
                     key=lambda x: x[1],
@@ -296,14 +312,14 @@ class TrainingPipeline:
                 for i, (bullet, score) in enumerate(sorted_bullets):
                     logger.info(f"    {i+1}. Score: {score:.2%} - {bullet[:60]}...")
                 
-                top_2_bullets = [bullet for bullet, score in sorted_bullets[:2]]
+                top_bullet = sorted_bullets[0] if sorted_bullets else None
                 
-                logger.info(f"  ✓ Keeping top 2 bullets (out of {len(all_bullets_to_test)} newly generated)")
-                
-                # Step 2e: Add the top 2 bullets (skip duplicates)
-                for bullet_content in top_2_bullets:
+                if top_bullet:
+                    logger.info(f"  ✓ Keeping best bullet (score: {top_bullet[1]:.2%})")
+                    
+                    # Step 2f: Add the best bullet (skip duplicates)
                     bullet_id = self.curator.merge_bullet(
-                        content=bullet_content,
+                        content=top_bullet[0],
                         node=node,
                         playbook=playbook,
                         source="evolution",
@@ -312,9 +328,9 @@ class TrainingPipeline:
                     
                     if bullet_id:
                         logger.info(f"    ✓ Added evolved bullet: {bullet_id[:50]}...")
+                        return bullet_id
                 
-                # Return the first bullet ID if any were added
-                return top_2_bullets[0] if top_2_bullets else None
+                return None
             else:
                 # Not enough bullets for evolution, just add the new bullet
                 logger.info(f"Not enough bullets for evolution ({len(recent_bullets)} < 2), adding new bullet directly")

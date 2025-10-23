@@ -54,8 +54,8 @@ Failure → Reflector → New Bullet → Curator → Playbook
 2. `Darwin-Gödel Evolution` triggers (if 2+ bullets exist):
    - Use last 6 bullets as parents (NOT tested)
    - Generate 4 candidates via crossover
-   - Test ONLY the 5 newly generated bullets (new + 4 candidates) on transactions
-   - Keep only top 2 bullets
+   - Test ONLY the 5 newly generated bullets (new + 4 candidates) on 4 transactions
+   - Keep only the best bullet
 3. `Curator` checks for duplicates (semantic similarity > 0.85)
 4. If not duplicate, bullet is added to `Playbook`
 5. Bullet is associated with evaluator and saved to database
@@ -65,9 +65,9 @@ Failure → Reflector → New Bullet → Curator → Playbook
 ```
 New Bullet → Crossover Parents (last 6 bullets) → Generate 4 Candidates
                                                     ↓
-                                          Test 5 NEW Bullets Only
+                                          Test 5 NEW Bullets on 4 Scenarios
                                                     ↓
-                                           Keep Top 2 Only
+                                           Keep Only Best Bullet
 ```
 
 **Old bullets are NOT re-tested - only used as parents for crossover**
@@ -92,10 +92,10 @@ New Bullet → Crossover Parents (last 6 bullets) → Generate 4 Candidates
 2. **Testing Phase** (Fitness Evaluation):
    - Take all 5 newly generated bullets (1 new + 4 candidates)
    - For each bullet:
-     - Test on 5 random transactions from database
+     - Test on 4 random transactions from database
      - LLM Judge evaluates: "Would this bullet help with this transaction?"
      - Count how many transactions it would help with
-     - Calculate fitness score (accuracy = helpful_count / 5)
+     - Calculate fitness score (accuracy = helpful_count / 4)
    
    Example:
    ```
@@ -110,24 +110,25 @@ New Bullet → Crossover Parents (last 6 bullets) → Generate 4 Candidates
    Transaction 3: "New user + VPN + crypto, $2000"
    → Judge: "YES, helpful" ✓
    
-   ... (2 more transactions)
+   Transaction 4: "VPN + crypto transaction"
+   → Judge: "YES, helpful" ✓
    
-   Fitness Score: 3/5 = 60%
+   Fitness Score: 3/4 = 75%
    ```
 
 3. **Selection Phase** (Survival of the Fittest):
    - Sort all 5 bullets by fitness score
-   - Keep only top 2 bullets
-   - Add them to playbook (if not duplicates)
+   - Keep ONLY the best bullet
+   - Add it to playbook (if not duplicate)
    
    Example:
    ```
    Results:
    1. Bullet A: 80% fitness → Keep ✓
-   2. Bullet B: 60% fitness → Keep ✓
+   2. Bullet B: 60% fitness → Discard
    3. Bullet C: 40% fitness → Discard
    4. Bullet D: 20% fitness → Discard
-   5. Bullet E: 20% fitness → Discard
+   5. Bullet E: 20% fitness → Discarded
    ```
 
 **Evolution triggers:**
@@ -240,10 +241,10 @@ Each evaluator evolves independently!
 │  (Survival of the Fittest)                                       │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                  │
-│  Sort by fitness → Keep top 2 only → Add to Playbook            │
+│  Sort by fitness → Keep only best bullet → Add to Playbook      │
 │                                                                  │
 │  ✓ Bullet A (80% fitness) → Added                                │
-│  ✓ Bullet B (60% fitness) → Added                                │
+│  ✗ Bullet B (60% fitness) → Discarded                           │
 │  ✗ Bullet C (40% fitness) → Discarded                            │
 │  ✗ Bullet D (20% fitness) → Discarded                            │
 │  ✗ Bullet E (20% fitness) → Discarded                            │
@@ -255,18 +256,18 @@ Each evaluator evolves independently!
 1. Generate new bullet from reflection
 2. Get last 6 bullets from playbook (used ONLY as parents for crossover, NOT tested)
 3. Generate 4 candidate bullets via crossover from those parents
-4. Test ONLY the 5 newly generated bullets (new bullet + 4 candidates) on 5 random transactions from database
+4. Test ONLY the 5 newly generated bullets (new bullet + 4 candidates) on 4 random transactions from database
 5. LLM Judge evaluates if each bullet would help with each transaction
-6. Select top 2 bullets based on fitness scores
-7. Add only the top 2 bullets to playbook
+6. Select top 1 bullet based on fitness scores
+7. Add only the best bullet to playbook
 
 **Important:** Old bullets from the playbook are NOT re-tested. Evolution only tests newly generated bullets.
 
 **Evolution parameters:**
-- `n_samples`: 5 transactions
+- `n_samples`: 4 scenarios (reduced for speed)
 - `min_bullets_for_crossover`: 2
 - `candidates_generated`: 4
-- `bullets_kept`: 2
+- `bullets_kept`: 1 (only the best)
 - `evaluator`: Uses LLM judge domain field for context
 
 ## Bullet Selection Algorithm (HybridSelector)
@@ -443,10 +444,10 @@ Each evaluator can have up to 10 bullets in the prompt.
 
 ### 1. Fast Evolution
 - **Crossover**: 4 candidates generated via LLM crossover (4 API calls)
-- **Testing**: 5 bullets × 5 transactions = 25 LLM judge calls
-- **Selection**: Keep top 2 bullets only
-- **Total**: ~29 API calls per evolution cycle
-- Reduced from 60+ to ~29 API calls with same quality
+- **Testing**: 5 bullets × 4 scenarios = 20 LLM judge calls
+- **Selection**: Keep best 1 bullet only
+- **Total**: ~24 API calls per evolution cycle
+- Reduced from 60+ to ~24 API calls with same quality
 
 ### 2. Embedding Caching
 - Pre-calculated embeddings in database

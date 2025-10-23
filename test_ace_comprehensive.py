@@ -197,6 +197,7 @@ def run_vanilla_mode(test_set: List[Dict[str, Any]], judge) -> TestResult:
             txn = Transaction(
                 transaction_data=transaction_data,
                 mode="vanilla",
+                node="fraud_detection",
                 predicted_decision=predicted,
                 correct_decision=ground_truth,
                 is_correct=is_correct
@@ -237,13 +238,13 @@ async def run_offline_online_mode(
     test_set: List[Dict[str, Any]],
     judge: SimpleJudge
 ) -> TestResult:
-    """Test offline + online mode."""
+    """Test offline + online mode with LLM Judge."""
     logger.info("=" * 60)
-    logger.info("Testing OFFLINE + ONLINE mode")
+    logger.info("Testing OFFLINE + ONLINE mode with LLM Judge")
     logger.info("=" * 60)
     
     # Step 1: Offline training
-    logger.info("\n--- Step 1: Offline Training ---")
+    logger.info("\n--- Step 1: Offline Training (with LLM Judge) ---")
     
     from ace.training_pipeline import TrainingPipeline
     from ace.bullet_playbook import BulletPlaybook
@@ -347,8 +348,10 @@ async def run_offline_online_mode(
         predicted = result['decision']
         ground_truth = item['answer']
         
-        # STEP 2: Check if correct or incorrect
-        is_correct = predicted == ground_truth
+        # STEP 2: Use LLM Judge to evaluate (like online mode)
+        is_correct, confidence, reason = judge.judge(item['query'], predicted, ground_truth)
+        
+        logger.info(f"    Predicted: {predicted} | Ground Truth: {ground_truth} | Judge: {is_correct}")
         
         # STEP 3: Generate bullet only if:
         # 1. Output was incorrect (wrong prediction), OR
@@ -358,7 +361,7 @@ async def run_offline_online_mode(
         if not is_correct:
             # Wrong prediction - always generate bullet
             should_generate = True
-            logger.info(f"    Wrong prediction: {predicted} != {ground_truth} - Generating bullet")
+            logger.info(f"    Judge says incorrect - Generating bullet")
         elif bullets_used < 5:
             # Correct but not enough bullets used - generate bullet for coverage
             should_generate = True
@@ -375,7 +378,8 @@ async def run_offline_online_mode(
                 agent_reasoning=result.get('reasoning', ''),
                 playbook=playbook,
                 source="offline",
-                evaluator=evaluator
+                evaluator=evaluator,
+                judge_reasoning=reason  # Pass judge reasoning to bullet generation
             )
             
             if bullet_id:
@@ -399,7 +403,7 @@ async def run_offline_online_mode(
     # Note: Darwin-Gödel evolution is now integrated into bullet generation via TrainingPipeline
     
     # Step 2: Test with offline bullets
-    logger.info("\n--- Step 2: Testing with Offline Bullets ---")
+    logger.info("\n--- Step 2: Testing with Offline Bullets (Online Learning with LLM Judge) ---")
     
     # Use HybridSelector to intelligently select bullets for each transaction
     selector = HybridSelector()
@@ -477,13 +481,33 @@ async def run_offline_online_mode(
         predicted = result['decision']
         ground_truth = item['answer']
         
-        # Compare with ground truth directly (no LLM judge - we have labels)
-        is_correct = predicted == ground_truth
-        confidence = 1.0 if is_correct else 0.0
-        reason = "Matches ground truth" if is_correct else "Does not match ground truth"
+        # Compare with ground truth using LLM Judge (like offline training)
+        is_correct, confidence, reason = judge.judge(item['query'], predicted, ground_truth)
+        
+        logger.info(f"  Predicted: {predicted} | Ground Truth: {ground_truth} | Judge: {is_correct}")
         
         if is_correct:
             correct += 1
+        
+        # Online learning: Generate bullet if incorrect or low coverage
+        if not is_correct or len(all_selected_bullets) < 5:
+            # Get evaluator for bullet generation
+            evaluator = evaluator_names[0] if evaluator_names else "fraud_detection"
+            
+            bullet_id = await training_pipeline.add_bullet_from_reflection(
+                query=item['query'],
+                predicted=predicted,
+                correct=ground_truth,
+                node="fraud_detection",
+                agent_reasoning=result.get('reasoning', ''),
+                playbook=playbook,
+                source="online",
+                evaluator=evaluator,
+                judge_reasoning=reason  # Pass judge reasoning to bullet generation
+            )
+            
+            if bullet_id:
+                logger.info(f"  ✓ Generated online bullet: {bullet_id}")
         
         # Save transaction to database
         try:
@@ -500,6 +524,7 @@ async def run_offline_online_mode(
             txn = Transaction(
                 transaction_data=transaction_data,
                 mode="offline_online",
+                node="fraud_detection",
                 predicted_decision=predicted,
                 correct_decision=ground_truth,
                 is_correct=is_correct,
@@ -690,11 +715,11 @@ def main():
     vanilla_result = run_vanilla_mode(test_set, vanilla_judge)
     results.append(vanilla_result)
     
-    # 2. Offline + Online mode - Risk-focused judge (not used, just ground truth)
+    # 2. Offline + Online mode - Risk-focused judge (USES LLM JUDGE!)
     logger.info("\n" + "="*60)
-    logger.info("OFFLINE + ONLINE MODE - Ground Truth Comparison")
+    logger.info("OFFLINE + ONLINE MODE - Using LLM Judge")
     logger.info("="*60)
-    offline_online_judge = judge_instances['risk_focused']  # Not used, just for compatibility
+    offline_online_judge = judge_instances['risk_focused']  # USES LLM JUDGE
     import asyncio
     offline_online_result = asyncio.run(run_offline_online_mode(train_set, test_set, offline_online_judge))
     results.append(offline_online_result)

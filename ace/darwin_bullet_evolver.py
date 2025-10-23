@@ -37,7 +37,7 @@ class DarwinBulletEvolver:
         self.db_session = db_session
         self.test_dataset = None  # Will be loaded from saved transactions
     
-    def load_test_dataset_from_db(self, n_samples: int = 10):
+    def load_test_dataset_from_db(self, n_samples: int = 10, node: str = None):
         """Load transactions from database for fitness evaluation."""
         if not self.db_session:
             logger.warning("No database session provided, falling back to file")
@@ -46,8 +46,13 @@ class DarwinBulletEvolver:
         try:
             from models import Transaction
             
-            # Get recent transactions
-            transactions = self.db_session.query(Transaction).order_by(
+            # Get recent transactions, optionally filtered by node
+            query = self.db_session.query(Transaction)
+            
+            if node:
+                query = query.filter(Transaction.node == node)
+            
+            transactions = query.order_by(
                 Transaction.analyzed_at.desc()
             ).limit(n_samples).all()
             
@@ -59,7 +64,7 @@ class DarwinBulletEvolver:
                     'predicted': txn.predicted_decision
                 })
             
-            logger.info(f"Loaded {len(self.test_dataset)} transactions from database for fitness evaluation")
+            logger.info(f"Loaded {len(self.test_dataset)} transactions from database for fitness evaluation (node: {node})")
             
         except Exception as e:
             logger.error(f"Error loading transactions from DB: {e}")
@@ -107,7 +112,7 @@ class DarwinBulletEvolver:
         # Load test dataset from database
         if not self.test_dataset:
             if self.db_session:
-                self.load_test_dataset_from_db(n_samples=max_transactions)
+                self.load_test_dataset_from_db(n_samples=max_transactions, node=node)
             else:
                 logger.warning("No database session, skipping evolution")
                 return initial_bullets[:2]
