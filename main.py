@@ -524,94 +524,16 @@ async def trace_and_learn(request: TraceRequest, db: Session = Depends(get_db)):
         )
         logger.info(f"Pattern classified: pattern_id={pattern_id}, confidence={confidence:.2f}")
         
-        # Step 3: Evaluate with LLM judge (always use judge to track performance)
-        judge_evaluation_result = None
-        judge_reasoning = None
-        judge_confidence = None
-        judge_is_correct = None
+        # Step 3: Determine correctness (will be evaluated in Step 6)
+        is_correct = False
+        correct_decision = request.output
         
-        # Always get a judge for the node
-        judge = db.query(LLMJudge).filter(
-            LLMJudge.node == request.node,
-            LLMJudge.is_active == True
-        ).first()
-        
-        if judge:
-            logger.info(f"Evaluating with LLM judge: {judge.node}")
-            client = OpenAI()
-            
-            # Build evaluation prompt
-            if request.ground_truth:
-                evaluation_prompt = f"""{judge.system_prompt}
-
-Input: {request.input_text}
-
-Output: {request.output}
-
-Ground Truth: {request.ground_truth}
-
-Evaluate the output based on these criteria:
-{json.dumps(judge.evaluation_criteria, indent=2) if judge.evaluation_criteria else "Use your best judgment"}
-
-Respond in JSON format:
-{{
-    "is_correct": true/false,
-    "confidence": 0.0-1.0,
-    "reasoning": "brief explanation"
-}}"""
-            else:
-                evaluation_prompt = f"""{judge.system_prompt}
-
-Input: {request.input_text}
-
-Output: {request.output}
-
-Evaluate the output based on these criteria:
-{json.dumps(judge.evaluation_criteria, indent=2) if judge.evaluation_criteria else "Use your best judgment"}
-
-Respond in JSON format:
-{{
-    "is_correct": true/false,
-    "confidence": 0.0-1.0,
-    "reasoning": "brief explanation"
-}}"""
-            
-            response = client.chat.completions.create(
-                model=judge.model,
-                messages=[
-                    {"role": "system", "content": judge.system_prompt},
-                    {"role": "user", "content": evaluation_prompt}
-                ],
-                response_format={"type": "json_object"},
-                temperature=judge.temperature
-            )
-            
-            result = json.loads(response.choices[0].message.content)
-            judge_is_correct = result.get("is_correct", False)
-            judge_reasoning = result.get("reasoning", "")
-            judge_confidence = result.get("confidence", 0.5)
-            
-            # Determine final is_correct
-            if request.ground_truth:
-                # Use ground truth if available
-                is_correct = (request.output == request.ground_truth)
-                correct_decision = request.ground_truth
-            else:
-                # Use judge's decision if no ground truth
-                is_correct = judge_is_correct
-                correct_decision = request.output
-            
-            judge_evaluation_result = (judge.id, judge_reasoning, judge_confidence, judge_is_correct)
-            logger.info(f"LLM judge evaluation: is_correct={is_correct}, confidence={judge_confidence}")
+        if request.ground_truth:
+            is_correct = (request.output == request.ground_truth)
+            correct_decision = request.ground_truth
         else:
-            logger.warning(f"No LLM judge found for node '{request.node}'")
-            # Fallback: use ground truth if available
-            if request.ground_truth:
-                is_correct = (request.output == request.ground_truth)
-                correct_decision = request.ground_truth
-            else:
-                is_correct = False
-                correct_decision = request.output
+            # Will be determined based on evaluator consensus in Step 6
+            is_correct = False
         
         # Step 4: Save transaction
         transaction_data = {
@@ -636,33 +558,6 @@ Respond in JSON format:
         db.commit()
         db.flush()
         
-        # Step 4.5: Save judge evaluation if LLM judge was used
-        if judge_evaluation_result:
-            from models import JudgeEvaluation
-            judge_id, judge_reasoning, judge_confidence, judge_is_correct = judge_evaluation_result
-            
-            # Determine if judge was correct (only if ground_truth was available)
-            judge_was_correct = None
-            if request.ground_truth:
-                # Compare judge's decision with actual ground truth
-                actual_correct = (request.output == request.ground_truth)
-                judge_was_correct = (judge_is_correct == actual_correct)
-            
-            judge_eval = JudgeEvaluation(
-                judge_id=judge_id,
-                transaction_id=txn.id,
-                input_text=request.input_text,
-                output_text=request.output,
-                ground_truth=request.ground_truth,
-                is_correct=judge_is_correct,  # Save judge's decision, not actual correctness
-                confidence=judge_confidence,
-                reasoning=judge_reasoning,
-                judge_was_correct=judge_was_correct
-            )
-            db.add(judge_eval)
-            db.commit()
-            logger.info(f"Saved judge evaluation for transaction {txn.id} (judge decision: {judge_is_correct}, judge_was_correct: {judge_was_correct})")
-        
         # Step 5: Get evaluators for this node from LLM judges table
         from models import LLMJudge
         evaluators = db.query(LLMJudge.evaluator).filter(
@@ -684,7 +579,6 @@ Respond in JSON format:
                 "generated_bullets": [],
                 "message": "Transaction saved, but no LLM judges found for this node"
             }
-        
         # Process improvement (bullet generation) for nodes with evaluators
         logger.info(f"Processing with evaluators: {evaluator_names}")
         
@@ -706,10 +600,12 @@ Respond in JSON format:
         training_pipeline = TrainingPipeline(DummyAgent(), selector, reflector, curator, darwin_evolver=darwin_evolver)
         playbook = BulletPlaybook(db_session=db)
         
-        # Step 6: Online learning - Generate bullet for EACH evaluator
+        # Step 6: Evaluate with all evaluators (for ALL modes including vanilla)
         generated_bullets = []
+        evaluator_results = {}  # Cache evaluator results for reuse in Step 8
+        
         for evaluator_name in evaluator_names:
-            # Get the specific judge for this evaluator to get its reasoning
+            # Get the specific judge for this evaluator
             evaluator_judge = db.query(LLMJudge).filter(
                 LLMJudge.node == request.node,
                 LLMJudge.evaluator == evaluator_name,
@@ -718,6 +614,7 @@ Respond in JSON format:
             
             # Get judge reasoning for this specific evaluator
             evaluator_judge_reasoning = ""
+            evaluator_is_correct = False
             if evaluator_judge:
                 client = OpenAI()
                 
@@ -768,68 +665,116 @@ Respond in JSON format:
                 
                 result = json.loads(response.choices[0].message.content)
                 evaluator_judge_reasoning = result.get("reasoning", "")
-            
-            bullet_id = await training_pipeline.add_bullet_from_reflection(
-                query=request.input_text,
-                predicted=request.output,
-                correct=request.ground_truth or request.output,
-                node=request.node,
-                agent_reasoning=request.agent_reasoning or "",
-                playbook=playbook,
-                source="online",
-                evaluator=evaluator_name,
-                judge_reasoning=evaluator_judge_reasoning
-            )
-            
-            if bullet_id:
-                logger.info(f"Generated bullet for evaluator {evaluator_name}: {bullet_id}")
-                generated_bullets.append(bullet_id)
+                evaluator_is_correct = result.get("is_correct", False)
+                evaluator_confidence = result.get("confidence", 0.5)
+                
+                # Cache the result for reuse in Step 8
+                evaluator_results[evaluator_name] = evaluator_is_correct
+                
+                # Save judge evaluation for this evaluator
+                from models import JudgeEvaluation
+                judge_was_correct = None
+                if request.ground_truth:
+                    actual_correct = (request.output == request.ground_truth)
+                    judge_was_correct = (evaluator_is_correct == actual_correct)
+                
+                judge_eval = JudgeEvaluation(
+                    judge_id=evaluator_judge.id,
+                    transaction_id=txn.id,
+                    input_text=request.input_text,
+                    output_text=request.output,
+                    ground_truth=request.ground_truth,
+                    is_correct=evaluator_is_correct,
+                    confidence=evaluator_confidence,
+                    reasoning=evaluator_judge_reasoning,
+                    judge_was_correct=judge_was_correct
+                )
+                db.add(judge_eval)
+                logger.info(f"Saved judge evaluation for {evaluator_name} (decision: {evaluator_is_correct}, was_correct: {judge_was_correct})")
+            elif request.ground_truth:
+                # If no judge but ground truth exists, compare
+                evaluator_is_correct = (request.output == request.ground_truth)
+                evaluator_results[evaluator_name] = evaluator_is_correct
             else:
-                logger.info(f"No bullet generated for evaluator {evaluator_name} (likely duplicate)")
-        
-        logger.info(f"Generated {len(generated_bullets)} bullets out of {len(evaluator_names)} evaluators")
-        
-        # Step 7: Record bullet effectiveness
-        if request.bullet_ids and pattern_id:
-            if "full" in request.bullet_ids:
-                for bullet_id_used in request.bullet_ids["full"]:
-                    pattern_manager.record_bullet_effectiveness(
-                        pattern_id=pattern_id,
-                        bullet_id=bullet_id_used,
-                        node=request.node,
-                        is_helpful=is_correct
-                    )
+                # If no judge and no ground truth, default to True
+                evaluator_is_correct = True
+                evaluator_results[evaluator_name] = evaluator_is_correct
             
-            if "online" in request.bullet_ids:
-                for bullet_id_used in request.bullet_ids["online"]:
-                    pattern_manager.record_bullet_effectiveness(
-                        pattern_id=pattern_id,
-                        bullet_id=bullet_id_used,
-                        node=request.node,
-                        is_helpful=is_correct
-                    )
+            # Step 6b: Generate bullet ONLY if not vanilla mode
+            if mode != "vanilla":
+                bullet_id = await training_pipeline.add_bullet_from_reflection(
+                    query=request.input_text,
+                    predicted=request.output,
+                    correct=request.ground_truth or request.output,
+                    node=request.node,
+                    agent_reasoning=request.agent_reasoning or "",
+                    playbook=playbook,
+                    source="online",
+                    evaluator=evaluator_name,
+                    judge_reasoning=evaluator_judge_reasoning
+                )
+                
+                if bullet_id:
+                    logger.info(f"Generated bullet for evaluator {evaluator_name}: {bullet_id}")
+                    generated_bullets.append(bullet_id)
+                else:
+                    logger.info(f"No bullet generated for evaluator {evaluator_name} (likely duplicate)")
         
+        # Commit all judge evaluations
+        db.commit()
+        
+        # Update is_correct based on evaluator consensus if no ground truth
+        if not request.ground_truth and evaluator_results:
+            # Use majority consensus from evaluators
+            correct_count = sum(1 for v in evaluator_results.values() if v)
+            is_correct = correct_count > len(evaluator_results) / 2
+            logger.info(f"Updated is_correct based on evaluator consensus: {correct_count}/{len(evaluator_results)} evaluators say correct")
+        
+        if mode != "vanilla":
+            logger.info(f"Generated {len(generated_bullets)} bullets out of {len(evaluator_names)} evaluators")
+            
+            # Step 7: Record bullet effectiveness
+            if request.bullet_ids and pattern_id:
+                if "full" in request.bullet_ids:
+                    for bullet_id_used in request.bullet_ids["full"]:
+                        pattern_manager.record_bullet_effectiveness(
+                            pattern_id=pattern_id,
+                            bullet_id=bullet_id_used,
+                            node=request.node,
+                            is_helpful=is_correct
+                        )
+                
+                if "online" in request.bullet_ids:
+                    for bullet_id_used in request.bullet_ids["online"]:
+                        pattern_manager.record_bullet_effectiveness(
+                            pattern_id=pattern_id,
+                            bullet_id=bullet_id_used,
+                            node=request.node,
+                            is_helpful=is_correct
+                        )
+            
         # Step 8: Update session run metrics (only if session_id and run_id provided)
         if request.session_id and request.run_id:
             from models import SessionRunMetrics
             
             # Track metrics for each evaluator
             for evaluator_name in evaluator_names:
-                # Get the specific judge for this evaluator
-                evaluator_judge = db.query(LLMJudge).filter(
-                    LLMJudge.node == request.node,
-                    LLMJudge.evaluator == evaluator_name,
-                    LLMJudge.is_active == True
-                ).first()
+                # Use cached result from Step 6 if available, otherwise evaluate
+                evaluator_is_correct = evaluator_results.get(evaluator_name)
                 
-                # Determine if this evaluator was correct
-                evaluator_is_correct = False
-                if evaluator_judge:
-                    # Evaluate with THIS specific evaluator's judge
-                    client = OpenAI()
+                if evaluator_is_correct is None:
+                    # Fallback: evaluate if not cached (shouldn't happen in normal flow)
+                    evaluator_judge = db.query(LLMJudge).filter(
+                        LLMJudge.node == request.node,
+                        LLMJudge.evaluator == evaluator_name,
+                        LLMJudge.is_active == True
+                    ).first()
                     
-                    if request.ground_truth:
-                        evaluation_prompt = f"""{evaluator_judge.system_prompt}
+                    if evaluator_judge:
+                        client = OpenAI()
+                        
+                        if request.ground_truth:
+                            evaluation_prompt = f"""{evaluator_judge.system_prompt}
 
 Input: {request.input_text}
 
@@ -846,8 +791,8 @@ Respond in JSON format:
     "confidence": 0.0-1.0,
     "reasoning": "brief explanation"
 }}"""
-                    else:
-                        evaluation_prompt = f"""{evaluator_judge.system_prompt}
+                        else:
+                            evaluation_prompt = f"""{evaluator_judge.system_prompt}
 
 Input: {request.input_text}
 
@@ -862,26 +807,28 @@ Respond in JSON format:
     "confidence": 0.0-1.0,
     "reasoning": "brief explanation"
 }}"""
-                    
-                    response = client.chat.completions.create(
-                        model=evaluator_judge.model,
-                        messages=[
-                            {"role": "system", "content": evaluator_judge.system_prompt},
-                            {"role": "user", "content": evaluation_prompt}
-                        ],
-                        response_format={"type": "json_object"},
-                        temperature=evaluator_judge.temperature
-                    )
-                    
-                    result = json.loads(response.choices[0].message.content)
-                    evaluator_is_correct = result.get("is_correct", False)
-                    logger.info(f"Evaluator {evaluator_name} judge decision: {evaluator_is_correct}")
-                elif request.ground_truth:
-                    # If no judge for this evaluator but ground truth exists, compare
-                    evaluator_is_correct = (request.output == request.ground_truth)
+                        
+                        response = client.chat.completions.create(
+                            model=evaluator_judge.model,
+                            messages=[
+                                {"role": "system", "content": evaluator_judge.system_prompt},
+                                {"role": "user", "content": evaluation_prompt}
+                            ],
+                            response_format={"type": "json_object"},
+                            temperature=evaluator_judge.temperature
+                        )
+                        
+                        result = json.loads(response.choices[0].message.content)
+                        evaluator_is_correct = result.get("is_correct", False)
+                        logger.info(f"Evaluator {evaluator_name} judge decision: {evaluator_is_correct}")
+                    elif request.ground_truth:
+                        # If no judge for this evaluator but ground truth exists, compare
+                        evaluator_is_correct = (request.output == request.ground_truth)
+                    else:
+                        # If no judge and no ground truth, default to True
+                        evaluator_is_correct = True
                 else:
-                    # If no judge and no ground truth, default to True
-                    evaluator_is_correct = True
+                    logger.info(f"Using cached evaluator result for {evaluator_name}: {evaluator_is_correct}")
                 
                 metrics = db.query(SessionRunMetrics).filter(
                     SessionRunMetrics.session_id == request.session_id,
