@@ -83,19 +83,23 @@ class DarwinBulletEvolver:
         self,
         initial_bullets: List[str],
         node: str,
-        n_samples: int = 10,
-        min_transactions: int = 5,
-        max_transactions: int = 20
+        n_samples: int = 5,
+        min_transactions: int = 3,
+        max_transactions: int = 5,
+        evaluator: Optional[str] = None
     ) -> List[str]:
         """
-        Evolve bullets through Darwin-Gödel process.
+        Evolve bullets through Darwin-Gödel process (FAST MODE).
+        
+        Generate 4 bullets, test on 5 random transactions, keep top 2.
         
         Args:
             initial_bullets: List of bullet content strings to evolve
             node: Agent node name
-            n_samples: Number of transactions to test on
+            n_samples: Number of transactions to test on (default: 5)
             min_transactions: Minimum transactions needed to start evolution
             max_transactions: Maximum transactions to use for evaluation
+            evaluator: Evaluator/perspective name (optional)
         
         Returns:
             List of top 2 evolved bullet contents
@@ -114,77 +118,93 @@ class DarwinBulletEvolver:
             return initial_bullets[:2]
         
         logger.info(f"\n{'='*60}")
-        logger.info(f"Darwin-Gödel Evolution for {node}")
+        logger.info(f"Darwin-Gödel Evolution for {node} (evaluator: {evaluator})")
         logger.info(f"Using {len(self.test_dataset)} transactions from database")
         logger.info(f"{'='*60}")
         
         # Use limited number of samples
         actual_samples = min(n_samples, len(self.test_dataset))
         
-        # Step 1: Test initial bullets on transactions
-        logger.info(f"\nStep 1: Testing {len(initial_bullets)} initial bullets on {actual_samples} transactions")
-        fitness_scores = await self._evaluate_bullets(initial_bullets, node, actual_samples)
+        # Step 1: Generate 4 candidate bullets via crossover
+        logger.info(f"\nStep 1: Generating 4 candidate bullets")
+        candidate_bullets = await self._generate_candidates(initial_bullets[:6], node, n_candidates=4)
+        
+        if not candidate_bullets:
+            logger.warning("No candidates generated")
+            return initial_bullets[:2]
+        
+        logger.info(f"Generated {len(candidate_bullets)} candidates")
+        
+        # Step 2: Test candidates on random transactions
+        logger.info(f"\nStep 2: Testing {len(candidate_bullets)} candidates on {actual_samples} transactions")
+        fitness_scores = await self._evaluate_bullets(candidate_bullets, node, actual_samples, evaluator)
         
         # Sort by fitness
-        sorted_bullets = sorted(zip(initial_bullets, fitness_scores), key=lambda x: x[1], reverse=True)
+        sorted_bullets = sorted(zip(candidate_bullets, fitness_scores), key=lambda x: x[1], reverse=True)
         
         logger.info(f"Fitness scores:")
         for i, (bullet, score) in enumerate(sorted_bullets):
             logger.info(f"  {i+1}. Score: {score:.2%} - {bullet[:60]}...")
         
-        # Step 2: Select top 3
-        top_3_bullets = [bullet for bullet, score in sorted_bullets[:3]]
-        logger.info(f"\nStep 2: Selected top 3 bullets for crossover")
-        
-        # Step 3: Crossover top 3 to create 3 children
-        logger.info(f"\nStep 3: Crossover to create children")
-        children = await self._crossover_top_3(top_3_bullets, node)
-        
-        if not children:
-            logger.warning("No children generated, returning top 2 initial bullets")
-            return [bullet for bullet, _ in sorted_bullets[:2]]
-        
-        logger.info(f"Generated {len(children)} children:")
-        for i, child in enumerate(children):
-            logger.info(f"  Child {i+1}: {child[:60]}...")
-        
-        # Step 4: Test children
-        logger.info(f"\nStep 4: Testing children on transactions")
-        child_fitness = await self._evaluate_bullets(children, node, actual_samples)
-        
-        # Sort children by fitness
-        sorted_children = sorted(zip(children, child_fitness), key=lambda x: x[1], reverse=True)
-        
-        logger.info(f"Child fitness scores:")
-        for i, (child, score) in enumerate(sorted_children):
-            logger.info(f"  Child {i+1}: Score: {score:.2%} - {child[:60]}...")
-        
-        # Step 5: Keep top 2 children
-        top_2 = [child for child, score in sorted_children[:2]]
+        # Step 3: Keep top 2 bullets
+        top_2 = [bullet for bullet, score in sorted_bullets[:2]]
         
         logger.info(f"\n{'='*60}")
         logger.info(f"Evolution Complete!")
         logger.info(f"  Input: {len(initial_bullets)} bullets")
-        logger.info(f"  Top 3 selected: {[b[:40] + '...' for b in top_3_bullets]}")
-        logger.info(f"  Children generated: {len(children)}")
+        logger.info(f"  Candidates generated: {len(candidate_bullets)}")
         logger.info(f"  Top 2 evolved bullets: {[b[:40] + '...' for b in top_2]}")
         logger.info(f"{'='*60}\n")
         
         return top_2
     
+    async def _generate_candidates(self, bullets: List[str], node: str, n_candidates: int = 4) -> List[str]:
+        """Generate candidate bullets via crossover."""
+        candidates = []
+        
+        if len(bullets) < 2:
+            return candidates
+        
+        # Generate n_candidates via crossover
+        for i in range(n_candidates):
+            # Select two random parents
+            parent1, parent2 = random.sample(bullets, 2)
+            
+            # Crossover
+            child = await self._crossover_two_bullets(parent1, parent2, node)
+            if child:
+                candidates.append(child)
+        
+        return candidates
+    
     async def _evaluate_bullets(
         self,
         bullets: List[str],
         node: str,
-        n_samples: int
+        n_samples: int,
+        evaluator: Optional[str] = None
     ) -> List[float]:
         """
         Evaluate bullets using LLM judges on saved transactions.
         
         Returns fitness scores (accuracy) for each bullet.
+        
+        Args:
+            evaluator: Evaluator/perspective name (uses LLM judge domain if available)
         """
         # Sample transactions
         test_samples = random.sample(self.test_dataset, min(n_samples, len(self.test_dataset)))
+        
+        # Get evaluator context from LLM judges
+        evaluator_context = evaluator
+        if self.db_session:
+            from models import LLMJudge
+            judge = self.db_session.query(LLMJudge).filter(
+                LLMJudge.node == node
+            ).first()
+            
+            if judge and judge.domain:
+                evaluator_context = judge.domain
         
         fitness_scores = []
         
@@ -198,7 +218,8 @@ class DarwinBulletEvolver:
                     bullet=bullet,
                     transaction_query=sample['query'],
                     ground_truth=sample.get('answer', 'DECLINE'),
-                    node=node
+                    node=node,
+                    evaluator_context=evaluator_context
                 )
                 
                 if evaluation['is_helpful']:
@@ -216,7 +237,8 @@ class DarwinBulletEvolver:
         bullet: str,
         transaction_query: str,
         ground_truth: str,
-        node: str
+        node: str,
+        evaluator_context: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Use LLM judge to evaluate if bullet would be helpful for this transaction.
@@ -224,6 +246,9 @@ class DarwinBulletEvolver:
         Returns dict with is_helpful boolean and reasoning.
         """
         try:
+            # Use evaluator context if provided
+            context_text = f" (Context: {evaluator_context})" if evaluator_context else ""
+            
             prompt = f"""You are an LLM judge evaluating if a fraud detection heuristic would be helpful for a transaction.
 
 HEURISTIC (Bullet):
@@ -234,7 +259,7 @@ TRANSACTION:
 
 CORRECT DECISION: {ground_truth}
 
-Node: {node}
+Node: {node}{context_text}
 
 TASK: Determine if this heuristic would help correctly identify this transaction as fraudulent or legitimate.
 

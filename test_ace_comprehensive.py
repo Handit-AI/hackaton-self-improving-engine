@@ -89,14 +89,16 @@ class SimpleFraudAgent:
         self.client = OpenAI(api_key=api_key or os.getenv("OPENAI_API_KEY"))
         self.model = "gpt-3.5-turbo"  # Use 3.5-turbo for fast agent responses
         self.bullets = bullets or []
+        self.bullets_context = ""  # Context with bullets organized by evaluator
         self.max_bullets = max_bullets  # Limit bullets to prevent context rot
     
     def analyze(self, transaction: str) -> Dict[str, Any]:
         """Analyze transaction and return decision."""
         try:
-            bullets_context = ""
-            if self.bullets:
-                # Limit bullets to prevent context rot
+            # Use bullets_context if provided (organized by evaluator), otherwise use simple bullets
+            bullets_context = self.bullets_context
+            if not bullets_context and self.bullets:
+                # Fallback to simple bullet list
                 limited_bullets = self.bullets[:self.max_bullets]
                 bullets_context = "\n\nGuidelines:\n" + "\n".join(f"- {b}" for b in limited_bullets)
             
@@ -262,12 +264,37 @@ async def run_offline_online_mode(
     selector = HybridSelector(db_session=db_session, pattern_manager=pattern_manager)
     reflector = Reflector()
     curator = Curator()
-    training_pipeline = TrainingPipeline(agent, selector, reflector, curator)
+    
+    # Initialize Darwin evolver for integrated evolution
+    from ace.darwin_bullet_evolver import DarwinBulletEvolver
+    darwin_evolver = DarwinBulletEvolver(db_session=db_session)
+    
+    training_pipeline = TrainingPipeline(agent, selector, reflector, curator, darwin_evolver=darwin_evolver)
     playbook = BulletPlaybook(db_session=db_session)
     
-    # Limit training to max 20 inputs
-    training_inputs = train_set[:20]
-    logger.info(f"Using {len(training_inputs)} inputs for training (limited to 20)")
+    # Select diverse, harder training inputs (max 10)
+    # Strategy: Sample from different parts of the dataset for variety
+    max_training = min(10, len(train_set))
+    
+    # Get indices for diverse sampling
+    import random
+    random.seed(42)  # For reproducibility
+    
+    # Sample indices from different parts of the dataset
+    indices = []
+    if len(train_set) >= max_training:
+        # Take samples from beginning, middle, and end for variety
+        step = len(train_set) // max_training
+        indices = [i * step + (i % 2) * (step // 2) for i in range(max_training)]
+        indices = [min(i, len(train_set) - 1) for i in indices]  # Ensure valid indices
+    else:
+        indices = list(range(len(train_set)))
+    
+    # Select diverse training inputs
+    training_inputs = [train_set[i] for i in indices]
+    
+    logger.info(f"Selected {len(training_inputs)} diverse inputs for training")
+    logger.info(f"Sampled from indices: {indices}")
     
     # Use the same set for testing
     offline_train_set = training_inputs
@@ -338,6 +365,8 @@ async def run_offline_online_mode(
             logger.info(f"    Correct prediction but only {bullets_used} bullets used (< 5) - Generating bullet")
         
         if should_generate:
+            # Generate bullet with evaluator context
+            evaluator = "fraud_detection"  # Default evaluator
             bullet_id = await training_pipeline.add_bullet_from_reflection(
                 query=item['query'],
                 predicted=predicted,
@@ -345,7 +374,8 @@ async def run_offline_online_mode(
                 node="fraud_detection",
                 agent_reasoning=result.get('reasoning', ''),
                 playbook=playbook,
-                source="offline"
+                source="offline",
+                evaluator=evaluator
             )
             
             if bullet_id:
@@ -366,40 +396,7 @@ async def run_offline_online_mode(
     logger.info(f"  Unique bullets: {len(set(bullet_texts))}")
     logger.info(f"  Deduplication rate: {(1 - len(set(bullet_texts)) / len(bullet_texts)) * 100:.1f}%")
     
-    # Darwin-Gödel Evolution Phase
-    logger.info(f"\n{'='*60}")
-    logger.info("DARWIN-GÖDEL EVOLUTION PHASE")
-    logger.info(f"{'='*60}")
-    
-    if len(bullet_texts) >= 6:
-        logger.info(f"Starting evolution with {len(bullet_texts)} bullets")
-        
-        from ace.darwin_bullet_evolver import DarwinBulletEvolver
-        
-        evolver = DarwinBulletEvolver(db_session=db_session)
-        
-        # Evolve bullets
-        evolved_bullets = await evolver.evolve_bullets(
-            initial_bullets=bullet_texts[:6],  # Use first 6 bullets
-            node="fraud_detection",
-            n_samples=10,  # Test on 10 transactions
-            min_transactions=5,  # Need at least 5 transactions
-            max_transactions=20  # Use max 20 transactions
-        )
-        
-        # Replace old bullets with evolved ones
-        logger.info(f"\nAdding {len(evolved_bullets)} evolved bullets to playbook")
-        for evolved_bullet in evolved_bullets:
-            # Add evolved bullet to playbook
-            playbook.add_bullet(
-                content=evolved_bullet,
-                node="fraud_detection",
-                source="evolution"
-            )
-        
-        logger.info(f"✓ Evolution complete! Added {len(evolved_bullets)} evolved bullets")
-    else:
-        logger.info(f"Not enough bullets for evolution ({len(bullet_texts)} < 6), skipping")
+    # Note: Darwin-Gödel evolution is now integrated into bullet generation via TrainingPipeline
     
     # Step 2: Test with offline bullets
     logger.info("\n--- Step 2: Testing with Offline Bullets ---")
@@ -421,26 +418,60 @@ async def run_offline_online_mode(
             node="fraud_detection"
         )
         
-        # Intelligently select bullets for this specific transaction
-        selected_bullets, scores = selector.select_bullets(
-            query=item['query'],
-            node="fraud_detection",
-            playbook=playbook,
-            n_bullets=max_bullets,
-            iteration=idx,
-            pattern_id=pattern_id
-        )
+        # Get all evaluators from database
+        from models import Bullet as BulletModel
+        all_evaluators = db_session.query(BulletModel.evaluator).filter(
+            BulletModel.node == "fraud_detection",
+            BulletModel.evaluator.isnot(None)
+        ).distinct().all()
         
-        # Extract bullet texts for agent
-        bullet_texts = [b.content for b in selected_bullets]
-        agent.bullets = bullet_texts
+        evaluator_names = [e[0] for e in all_evaluators]
+        
+        # Get bullets for each evaluator and build prompt
+        bullets_context = ""
+        all_selected_bullets = []
+        all_selected_bullet_objects = []  # Track bullet objects for effectiveness recording
+        all_scores = []  # Track scores from all evaluators
+        
+        for evaluator_name in evaluator_names:
+            # Get bullets for this evaluator
+            evaluator_bullets = playbook.get_bullets_for_node("fraud_detection", evaluator=evaluator_name)
+            
+            # Select top bullets for this evaluator using intelligent selection
+            if evaluator_bullets:
+                # Temporarily create a filtered playbook for this evaluator
+                temp_bullets = [b for b in evaluator_bullets]
+                temp_playbook = BulletPlaybook()
+                temp_playbook.bullets = temp_bullets
+                temp_playbook._node_index["fraud_detection"] = temp_bullets
+                
+                selected, scores = selector.select_bullets(
+                    query=item['query'],
+                    node="fraud_detection",
+                    playbook=temp_playbook,
+                    n_bullets=min(10, len(temp_bullets)),  # Max 10 per evaluator
+                    iteration=idx,
+                    pattern_id=pattern_id
+                )
+                
+                # Add to context
+                if selected:
+                    bullets_context += f"\n\n{evaluator_name.upper()} Rules:\n"
+                    for bullet in selected[:10]:  # Limit to 10 per evaluator
+                        bullets_context += f"- {bullet.content}\n"
+                        all_selected_bullets.append(bullet.content)
+                        all_selected_bullet_objects.append(bullet)
+                    # Add scores from this evaluator
+                    if scores:
+                        all_scores.extend(scores)
+        
+        agent.bullets = all_selected_bullets
+        agent.bullets_context = bullets_context
         
         # Log metrics
         logger.info(f"  Pattern ID: {pattern_id} (confidence: {confidence:.2f})")
-        logger.info(f"  Selected {len(selected_bullets)} bullets from {len(playbook.get_bullets_for_node('fraud_detection'))} total")
-        if scores:
-            top_scores = [f'{s.get("final_score", 0):.3f}' for s in scores[:3]]
-            logger.info(f"  Top bullet scores: {top_scores}")
+        logger.info(f"  Evaluators: {evaluator_names}")
+        logger.info(f"  Selected {len(all_selected_bullets)} bullets total from {len(playbook.get_bullets_for_node('fraud_detection'))} total")
         
         result = agent.analyze(item['query'])
         predicted = result['decision']
@@ -460,7 +491,7 @@ async def run_offline_online_mode(
             
             # Construct transaction data with system and user prompts
             transaction_data = {
-                "systemprompt": f"You are a fraud detection expert analyzing transactions. Use these rules:\n{chr(10).join(f'- {b}' for b in bullet_texts)}",
+                "systemprompt": f"You are a fraud detection expert analyzing transactions.{bullets_context}",
                 "userprompt": item['query'],
                 "output": predicted,
                 "reasoning": result.get('reasoning', '')
@@ -483,7 +514,7 @@ async def run_offline_online_mode(
         
         # Record bullet effectiveness for this pattern
         if pattern_id:
-            for bullet in selected_bullets:
+            for bullet in all_selected_bullet_objects:
                 pattern_manager.record_bullet_effectiveness(
                     pattern_id=pattern_id,
                     bullet_id=bullet.id,
@@ -503,8 +534,8 @@ async def run_offline_online_mode(
             "correct": is_correct,
             "confidence": confidence,
             "reason": reason,
-            "bullets_used": len(bullet_texts),
-            "scores": scores[:3] if scores else []
+            "bullets_used": len(all_selected_bullets),
+            "scores": all_scores[:3] if all_scores else []
         })
         
         logger.info(f"Query: {item['query'][:80]}...")

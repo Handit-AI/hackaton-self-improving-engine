@@ -218,6 +218,12 @@ class TrainingPipeline:
         """
         Add a new bullet from reflection with Darwin-Gödel evolution.
         
+        Evolution happens EVERY time a bullet is generated:
+        1. Generate bullet from reflection
+        2. Generate 4 candidates via crossover
+        3. Test all 5 bullets on transactions
+        4. Keep only top 2 bullets
+        
         Args:
             query: Input query
             predicted: Predicted decision
@@ -245,50 +251,89 @@ class TrainingPipeline:
         if not reflection or not reflection.get('new_bullet'):
             return None
         
-        # Add initial bullet
-        initial_bullet_id = self.curator.merge_bullet(
-            content=reflection['new_bullet'],
-            node=node,
-            playbook=playbook,
-            source=source,
-            evaluator=evaluator
-        )
+        new_bullet_content = reflection['new_bullet']
         
-        if not initial_bullet_id:
-            return None
-        
-        # Step 2: Darwin-Gödel Evolution (if enabled and we have enough bullets)
+        # Step 2: Darwin-Gödel Evolution (if enabled)
         if self.darwin_evolver:
-            # Get recent bullets for this node and evaluator
+            # Get recent bullets for crossover (NOT for testing - only used as parents)
             recent_bullets = playbook.get_bullets_for_node(node, evaluator=evaluator)
             
-            if len(recent_bullets) >= 6:
-                logger.info(f"🧬 Darwin-Gödel Evolution: Evolving bullets for {node} (evaluator: {evaluator})")
+            if len(recent_bullets) >= 2:
+                logger.info(f"🧬 Darwin-Gödel Evolution: Testing new bullet for {node} (evaluator: {evaluator})")
                 
-                # Get bullet texts
-                bullet_texts = [b.content for b in recent_bullets[-6:]]  # Use last 6 bullets
+                # Get last 6 bullets for crossover (these are NOT tested, only used as parents)
+                bullet_texts = [b.content for b in recent_bullets[-6:]]
                 
-                # Evolve bullets
-                evolved_bullets = await self.darwin_evolver.evolve_bullets(
-                    initial_bullets=bullet_texts,
-                    node=node,
-                    n_samples=10,
-                    min_transactions=5,
-                    max_transactions=20
+                # Step 2a: Generate 4 candidates via crossover
+                candidate_bullets = await self.darwin_evolver._generate_candidates(
+                    bullet_texts, 
+                    node, 
+                    n_candidates=4
                 )
                 
-                # Add evolved bullets
-                for evolved_bullet in evolved_bullets:
-                    evolved_id = self.curator.merge_bullet(
-                        content=evolved_bullet,
+                # Step 2b: Create test set: ONLY newly generated bullets (1 new + 4 candidates = 5 total)
+                # IMPORTANT: We are NOT testing old bullets from playbook, only these new ones
+                all_bullets_to_test = [new_bullet_content] + candidate_bullets
+                
+                logger.info(f"  Testing {len(all_bullets_to_test)} NEW bullets (1 new + 4 candidates)")
+                
+                # Step 2c: Test all 5 NEW bullets on transactions
+                fitness_scores = await self.darwin_evolver._evaluate_bullets(
+                    all_bullets_to_test,
+                    node=node,
+                    n_samples=5,
+                    evaluator=evaluator
+                )
+                
+                # Step 2d: Sort by fitness and keep top 2 of the NEW bullets
+                sorted_bullets = sorted(
+                    zip(all_bullets_to_test, fitness_scores),
+                    key=lambda x: x[1],
+                    reverse=True
+                )
+                
+                logger.info(f"  Fitness scores:")
+                for i, (bullet, score) in enumerate(sorted_bullets):
+                    logger.info(f"    {i+1}. Score: {score:.2%} - {bullet[:60]}...")
+                
+                top_2_bullets = [bullet for bullet, score in sorted_bullets[:2]]
+                
+                logger.info(f"  ✓ Keeping top 2 bullets (out of {len(all_bullets_to_test)} newly generated)")
+                
+                # Step 2e: Add the top 2 bullets (skip duplicates)
+                for bullet_content in top_2_bullets:
+                    bullet_id = self.curator.merge_bullet(
+                        content=bullet_content,
                         node=node,
                         playbook=playbook,
                         source="evolution",
                         evaluator=evaluator
                     )
                     
-                    if evolved_id:
-                        logger.info(f"  ✓ Added evolved bullet: {evolved_id[:50]}...")
-        
-        return initial_bullet_id
+                    if bullet_id:
+                        logger.info(f"    ✓ Added evolved bullet: {bullet_id[:50]}...")
+                
+                # Return the first bullet ID if any were added
+                return top_2_bullets[0] if top_2_bullets else None
+            else:
+                # Not enough bullets for evolution, just add the new bullet
+                logger.info(f"Not enough bullets for evolution ({len(recent_bullets)} < 2), adding new bullet directly")
+                initial_bullet_id = self.curator.merge_bullet(
+                    content=new_bullet_content,
+                    node=node,
+                    playbook=playbook,
+                    source=source,
+                    evaluator=evaluator
+                )
+                return initial_bullet_id
+        else:
+            # No evolution, just add the bullet
+            initial_bullet_id = self.curator.merge_bullet(
+                content=new_bullet_content,
+                node=node,
+                playbook=playbook,
+                source=source,
+                evaluator=evaluator
+            )
+            return initial_bullet_id
 
