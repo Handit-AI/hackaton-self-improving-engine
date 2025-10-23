@@ -28,8 +28,6 @@ steps:
       - 'DEBUG=False'
       - '--set-env-vars'
       - 'LOG_LEVEL=INFO'
-      - '--set-env-vars'
-      - 'PORT=8080'
       - '--network=default'
       - '--subnet=default'
       - '--platform=managed'
