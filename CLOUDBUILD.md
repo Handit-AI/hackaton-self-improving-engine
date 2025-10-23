@@ -32,13 +32,13 @@ gcloud artifacts repositories create cloud-run-source-deploy \
 
 ```bash
 echo -n "postgresql://user:password@host:5432/dbname" | \
-  gcloud secrets create DATABASE_URL --data-file=-
+  gcloud secrets create HACKATON_DATABASE_URL --data-file=-
 ```
 
 Grant Cloud Run access to the secret:
 ```bash
 PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
-gcloud secrets add-iam-policy-binding DATABASE_URL \
+gcloud secrets add-iam-policy-binding HACKATON_DATABASE_URL \
   --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 ```
@@ -89,13 +89,12 @@ To adjust these values, modify the `args` section in the `Deploy` step.
 The build config sets:
 - `DEBUG=False` - Production mode
 - `LOG_LEVEL=INFO` - Logging level
-- `PORT=8080` - Application port
 
 ### Secrets
 
-The `DATABASE_URL` is pulled from Secret Manager. To update it:
+The `DATABASE_URL` environment variable is populated from the `HACKATON_DATABASE_URL` secret in Secret Manager. To update it:
 ```bash
-echo -n "new-database-url" | gcloud secrets versions add DATABASE_URL --data-file=-
+echo -n "new-database-url" | gcloud secrets versions add HACKATON_DATABASE_URL --data-file=-
 ```
 
 ## Monitoring
@@ -134,7 +133,7 @@ gcloud run services describe self-improving-engine-api --region us-central1
 
 2. Verify secrets are accessible:
    ```bash
-   gcloud secrets versions access latest --secret=DATABASE_URL
+   gcloud secrets versions access latest --secret=HACKATON_DATABASE_URL
    ```
 
 ### Database Connection Issues

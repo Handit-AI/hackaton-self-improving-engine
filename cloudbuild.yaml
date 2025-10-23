@@ -23,7 +23,7 @@ steps:
       - update
       - $_SERVICE_NAME
       - '--set-secrets'
-      - 'DATABASE_URL=DATABASE_URL:latest'
+      - 'DATABASE_URL=HACKATON_DATABASE_URL:latest'
       - '--set-env-vars'
       - 'DEBUG=False'
       - '--set-env-vars'
