@@ -24,6 +24,8 @@ steps:
       - $_SERVICE_NAME
       - '--set-secrets'
       - 'DATABASE_URL=HACKATON_DATABASE_URL:latest'
+      - '--set-secrets'
+      - 'OPENAI_API_KEY=OPENAI_API_KEY_HACKATON:latest'
       - '--set-env-vars'
       - 'DEBUG=False'
       - '--set-env-vars'
