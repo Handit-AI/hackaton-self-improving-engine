@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     openai_api_key: Optional[str] = None
     
     # ACE System
-    enable_darwin_evolution: bool = False  # Enable Darwin-Gödel evolution
+    enable_darwin_evolution: bool = True  # Enable Darwin-Gödel evolution
     
     # Application
     debug: bool = False

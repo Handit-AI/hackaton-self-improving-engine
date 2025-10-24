@@ -78,9 +78,9 @@ class HybridSelector:
         query: str,
         node: str,
         playbook: 'BulletPlaybook',
-        n_bullets: int = 5,
+        n_bullets: int = 10,
         iteration: int = 0,
-        source: Optional[str] = None,  # 'offline', 'online', or None for all
+        source: Optional[str] = None,  # 'offline', 'online' (includes 'evolution'), or None for all
         pattern_id: Optional[int] = None  # Pattern ID for pattern-based selection
     ) -> Tuple[List['Bullet'], List[Dict]]:
         """
@@ -92,7 +92,7 @@ class HybridSelector:
             playbook: BulletPlaybook instance
             n_bullets: Number of bullets to select
             iteration: Current iteration (for exploration decay)
-            source: Filter by source ('offline', 'online', or None for all)
+            source: Filter by source ('offline', 'online' (includes 'evolution'), or None for all)
             pattern_id: Pattern ID for pattern-based effectiveness boost
         
         Returns:
@@ -109,28 +109,22 @@ class HybridSelector:
         query_embedding = self._get_embedding(query)
         
         # Stage 1: Contextual Filter (already done by get_bullets_for_node)
-        logger.debug(f"Stage 1: Found {len(bullets)} bullets for node {node}")
+        print(f"Stage 1: Found {len(bullets)} bullets for node {node}")
         
         # Stage 2: Quality Filter
         stage2_bullets = self._quality_filter(bullets, n_bullets)
-        logger.debug(f"Stage 2: Quality filter: {len(stage2_bullets)} bullets")
-        
-        # Stage 3: Semantic Filter
-        stage3_bullets, semantic_scores = self._semantic_filter(
-            stage2_bullets, query_embedding, n_bullets
-        )
-        logger.debug(f"Stage 3: Semantic filter: {len(stage3_bullets)} bullets")
+        print(f"Stage 2: Quality filter: {len(stage2_bullets)} bullets")
         
         # Stage 4: Hybrid Scoring (with pattern boost)
         scored_bullets = self._hybrid_scoring(
-            stage3_bullets, semantic_scores, iteration, pattern_id
+            stage2_bullets, iteration, pattern_id
         )
         
         # Stage 5: Diversity Promotion
         selected_bullets, final_scores = self._diversity_promotion(
             scored_bullets, n_bullets
         )
-        logger.debug(f"Stage 5: Selected {len(selected_bullets)} bullets")
+        print(f"Stage 5: Selected {len(selected_bullets)} bullets")
         
         # Fallback: If no bullets selected by score, return last 5 bullets
         if not selected_bullets and bullets:
@@ -184,46 +178,9 @@ class HybridSelector:
         
         return filtered if len(filtered) >= n_bullets else bullets
     
-    def _semantic_filter(
-        self, 
-        bullets: List['Bullet'], 
-        query_embedding: List[float],
-        n_bullets: int
-    ) -> Tuple[List['Bullet'], Dict[str, float]]:
-        """Stage 3: Filter bullets by semantic similarity."""
-        # Ensure bullets have embeddings
-        for bullet in bullets:
-            if bullet.embedding is None:
-                # Generate embedding and cache it
-                bullet.embedding = self._get_embedding(bullet.content)
-                # Note: Embedding will be saved to DB when bullet is updated
-        
-        # Calculate semantic scores
-        semantic_scores = {}
-        for bullet in bullets:
-            similarity = self._cosine_similarity(query_embedding, bullet.embedding)
-            semantic_scores[bullet.id] = similarity
-        
-        # Filter by threshold
-        filtered = [
-            b for b in bullets 
-            if semantic_scores[b.id] >= self.semantic_threshold
-        ]
-        
-        # Relax threshold if not enough bullets
-        if len(filtered) < n_bullets:
-            relaxed_threshold = self.semantic_threshold * 0.8
-            filtered = [
-                b for b in bullets 
-                if semantic_scores[b.id] >= relaxed_threshold
-            ]
-        
-        return (filtered if len(filtered) >= n_bullets else bullets), semantic_scores
-    
     def _hybrid_scoring(
         self, 
         bullets: List['Bullet'], 
-        semantic_scores: Dict[str, float],
         iteration: int,
         pattern_id: Optional[int] = None
     ) -> List[Tuple['Bullet', float, Dict[str, float]]]:
@@ -236,7 +193,6 @@ class HybridSelector:
         for bullet in bullets:
             # Component scores
             quality_score = bullet.get_success_rate()
-            semantic_score = semantic_scores.get(bullet.id, 0.5)
             thompson_score = self._thompson_sample(bullet)
             
             # Pattern-based effectiveness boost
@@ -247,14 +203,12 @@ class HybridSelector:
             # Combined score
             combined = (
                 self.weights['quality'] * quality_score +
-                self.weights['semantic'] * semantic_score +
                 exploration_weight * thompson_score +
                 pattern_boost  # Boost for pattern-specific effectiveness
             )
             
             breakdown = {
                 'quality': quality_score,
-                'semantic': semantic_score,
                 'thompson': thompson_score,
                 'pattern_boost': pattern_boost,
                 'combined': combined

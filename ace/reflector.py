@@ -62,7 +62,6 @@ This is the MAIN problem to address. Generate a bullet that specifically fixes T
 
 Agent ({node}) Analysis:
 Predicted: {predicted}
-Correct: {correct}
 Agent Reasoning: {agent_reasoning}
 
 Input Context (for reference only):

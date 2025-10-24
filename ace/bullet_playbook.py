@@ -241,7 +241,7 @@ class BulletPlaybook:
         
         Args:
             node: Agent node name
-            source: 'offline', 'online', or None for all
+            source: 'offline', 'online' (includes 'evolution'), or None for all
             evaluator: Evaluator/perspective name, or None for all
         
         Returns:
@@ -250,7 +250,11 @@ class BulletPlaybook:
         bullets = self._node_index.get(node, [])
         
         if source:
-            bullets = [b for b in bullets if b.source == source]
+            # When filtering by "online", include both "online" and "evolution" sources
+            if source == "online":
+                bullets = [b for b in bullets if b.source in ("online", "evolution")]
+            else:
+                bullets = [b for b in bullets if b.source == source]
         
         if evaluator:
             bullets = [b for b in bullets if b.evaluator == evaluator]

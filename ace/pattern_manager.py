@@ -55,7 +55,7 @@ class PatternManager:
         """
         try:
             response = self.client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="gpt-4o",
                 messages=[
                     {
                         "role": "system",
@@ -114,7 +114,7 @@ Be general and focus on semantic characteristics, not specific values."""
         """
         try:
             response = self.client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="gpt-4o",
                 messages=[
                     {
                         "role": "system",
@@ -162,62 +162,6 @@ Are these similar patterns?"""
             similarity = self.cosine_similarity(embedding1, embedding2)
             return similarity >= self.similarity_threshold, similarity
     
-    def create_input_summary(self, input_data: Any, node: str) -> str:
-        """
-        Create a text summary of input data for a specific node.
-        
-        This handles different input formats (JSON, text, etc.) and creates
-        a node-specific summary that can be used for classification.
-        
-        Args:
-            input_data: Input data (can be dict, string, etc.)
-            node: Agent node name
-        
-        Returns:
-            Text summary of the input
-        """
-        try:
-            # Convert input to text if needed
-            if isinstance(input_data, dict):
-                input_text = str(input_data)
-            else:
-                input_text = str(input_data)
-            
-            response = self.client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": f"""You are an input summarizer for {node}. Create a concise summary of the input data.
-
-Focus on:
-- Key characteristics relevant to {node}
-- Important patterns or features
-- Context that matters for decision-making
-
-Return a JSON object:
-{{
-    "summary": "Brief text summary of the input",
-    "category": "Primary category for this input",
-    "key_features": ["feature1", "feature2"]
-}}"""
-                    },
-                    {
-                        "role": "user",
-                        "content": f"Input data: {input_text}\n\nCreate a summary for {node}."
-                    }
-                ],
-                response_format={"type": "json_object"},
-                temperature=0.1
-            )
-            
-            import json
-            result = json.loads(response.choices[0].message.content)
-            return result.get("summary", input_text)
-            
-        except Exception as e:
-            logger.error(f"Error creating input summary: {e}")
-            return str(input_data)
     
     def classify_input_to_category(self, input_summary: str, node: str) -> Tuple[str, float]:
         """
@@ -362,51 +306,6 @@ Return a JSON object:
             logger.error(f"Error in find_or_create_pattern: {e}")
             return None
     
-    def get_effective_bullets_for_pattern(
-        self, 
-        pattern_id: int, 
-        node: str,
-        n_bullets: int = 5
-    ) -> List[str]:
-        """
-        Get bullets that have been effective for this pattern.
-        
-        Args:
-            pattern_id: Pattern ID
-            node: Agent node name
-            n_bullets: Number of bullets to return
-        
-        Returns:
-            List of bullet IDs ranked by effectiveness
-        """
-        if not self.db_session:
-            return []
-        
-        try:
-            from models import BulletInputEffectiveness, Bullet
-            
-            # Get bullets with effectiveness data for this pattern
-            effectiveness_records = self.db_session.query(BulletInputEffectiveness).filter(
-                BulletInputEffectiveness.input_pattern_id == pattern_id,
-                BulletInputEffectiveness.node == node
-            ).all()
-            
-            # Calculate success rate for each bullet
-            scored_bullets = []
-            for record in effectiveness_records:
-                total = record.helpful_count + record.harmful_count
-                if total > 0:
-                    success_rate = record.helpful_count / total
-                    scored_bullets.append((record.bullet_id, success_rate, total))
-            
-            # Sort by success rate and return top N
-            scored_bullets.sort(key=lambda x: x[1], reverse=True)
-            
-            return [bullet_id for bullet_id, _, _ in scored_bullets[:n_bullets]]
-            
-        except Exception as e:
-            logger.error(f"Error getting effective bullets: {e}")
-            return []
     
     def record_bullet_effectiveness(
         self,

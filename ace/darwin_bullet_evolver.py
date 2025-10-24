@@ -39,10 +39,6 @@ class DarwinBulletEvolver:
     
     def load_test_dataset_from_db(self, n_samples: int = 10, node: str = None):
         """Load transactions from database for fitness evaluation."""
-        if not self.db_session:
-            logger.warning("No database session provided, falling back to file")
-            return self.load_test_dataset_from_file()
-        
         try:
             from models import Transaction
             
@@ -68,20 +64,6 @@ class DarwinBulletEvolver:
             
         except Exception as e:
             logger.error(f"Error loading transactions from DB: {e}")
-            self.test_dataset = []
-    
-    def load_test_dataset_from_file(self, dataset_path: str = "agents/ultra_hard_subset.json"):
-        """Load from file as fallback (DEPRECATED - only for testing)."""
-        # This method is kept for backward compatibility but should not be used
-        # in production. Darwin evolver should only use database transactions.
-        logger.warning("Using file fallback - Darwin evolver should use database transactions")
-        try:
-            with open(dataset_path, 'r') as f:
-                data = json.load(f)
-                self.test_dataset = data if isinstance(data, list) else data.get('problems', [])
-                logger.info(f"Loaded {len(self.test_dataset)} ultra-hard problems from file")
-        except Exception as e:
-            logger.error(f"Error loading test dataset: {e}")
             self.test_dataset = []
     
     async def evolve_bullets(

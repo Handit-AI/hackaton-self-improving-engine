@@ -14,6 +14,7 @@ from pydantic import BaseModel
 from typing import Dict, Any, Optional
 import asyncio
 
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -161,10 +162,12 @@ class TrainRequest(BaseModel):
 
 class TraceRequest(BaseModel):
     """Request model for tracing (online learning)."""
+    model_config = {"protected_namespaces": ()}
+    
     input_text: str
     node: str
     output: str
-    model_type: Optional[str] = None  # Model type identifier
+    model_type: Optional[str] = None
     session_id: Optional[str] = None
     run_id: Optional[str] = None
     ground_truth: Optional[str] = None
@@ -273,212 +276,6 @@ async def train_offline(request: TrainRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-async def process_trace_background(
-    request: TraceRequest,
-    transaction_id: int,
-    is_correct: Optional[bool]
-):
-    """
-    Background task to process trace logic (bullet generation and effectiveness tracking).
-    
-    This runs asynchronously after the API response is returned.
-    Pattern classification and LLM judge evaluation happen here.
-    If ground_truth is not provided, uses LLM judge for evaluation.
-    """
-    from dotenv import load_dotenv
-    load_dotenv()  # Ensure environment variables are loaded
-    
-    from database import SessionLocal
-    from ace.training_pipeline import TrainingPipeline
-    from ace.bullet_playbook import BulletPlaybook
-    from ace.hybrid_selector import HybridSelector
-    from ace.reflector import Reflector
-    from ace.curator import Curator
-    from ace.pattern_manager import PatternManager
-    from ace.darwin_bullet_evolver import DarwinBulletEvolver
-    from models import Transaction, LLMJudge
-    from openai import OpenAI
-    import json
-    import os
-    
-    # Create a new database session for background task
-    db = SessionLocal()
-    
-    try:
-        # Debug: Verify environment is loaded
-        logger.debug(f"OPENAI_API_KEY loaded: {bool(os.getenv('OPENAI_API_KEY'))}")
-        
-        # Step 1: Pattern classification (does LLM call for embedding)
-        pattern_manager = PatternManager(db_session=db)
-        pattern_id, confidence = pattern_manager.classify_input_to_category(
-            input_summary=request.input_text,
-            node=request.node
-        )
-        
-        # Update transaction with pattern_id
-        txn = db.query(Transaction).filter(Transaction.id == transaction_id).first()
-        if txn:
-            txn.input_pattern_id = pattern_id
-            db.commit()
-        
-        # Step 2: Evaluate with LLM judge if ground_truth not provided
-        if is_correct is None:
-            # Get LLM judge for this node
-            judge = db.query(LLMJudge).filter(
-                LLMJudge.node == request.node,
-                LLMJudge.is_active == True
-            ).first()
-            
-            if judge:
-                logger.info(f"Evaluating transaction {transaction_id} with LLM judge: {judge.node}")
-                
-                # Debug: Check if API key is loaded
-                api_key = os.getenv("OPENAI_API_KEY")
-                if not api_key:
-                    logger.error("OPENAI_API_KEY not found in environment variables!")
-                    raise ValueError("OPENAI_API_KEY is not set")
-                
-                client = OpenAI()  # Automatically reads OPENAI_API_KEY from environment
-                
-                # Use judge's system prompt and evaluation criteria
-                evaluation_prompt = f"""{judge.system_prompt}
-
-Input: {request.input_text}
-
-Output: {request.output}
-
-Evaluate the output based on these criteria:
-{json.dumps(judge.evaluation_criteria, indent=2) if judge.evaluation_criteria else "Use your best judgment"}
-
-Respond in JSON format:
-{{
-    "is_correct": true/false,
-    "confidence": 0.0-1.0,
-    "reasoning": "brief explanation"
-}}"""
-                
-                response = client.chat.completions.create(
-                    model=judge.model,
-                    messages=[
-                        {"role": "system", "content": f"You are an LLM judge for {request.node}."},
-                        {"role": "user", "content": evaluation_prompt}
-                    ],
-                    response_format={"type": "json_object"},
-                    temperature=judge.temperature
-                )
-                
-                result = json.loads(response.choices[0].message.content)
-                is_correct = result.get("is_correct", False)
-                judge_reasoning = result.get("reasoning", "")
-                
-                # Update transaction with judge evaluation
-                txn = db.query(Transaction).filter(Transaction.id == transaction_id).first()
-                if txn:
-                    txn.is_correct = is_correct
-                    db.commit()
-                
-                logger.info(f"LLM judge evaluation for {request.node}: is_correct={is_correct}")
-            else:
-                # No judge available, default to False and log warning
-                is_correct = False
-                logger.warning(f"No LLM judge found for node '{request.node}' in database. Please create an LLM judge for this node.")
-        
-        # Initialize components with database (pattern_manager already initialized above)
-        selector = HybridSelector(db_session=db, pattern_manager=pattern_manager)
-        reflector = Reflector()
-        curator = Curator()
-        
-        # Initialize Darwin-Gödel evolution if enabled
-        darwin_evolver = None
-        enable_evolution = os.getenv("ENABLE_DARWIN_EVOLUTION", "false").lower() == "true"
-        if enable_evolution:
-            darwin_evolver = DarwinBulletEvolver(db_session=db)
-            logger.info("Darwin-Gödel evolution enabled")
-        else:
-            logger.info("Darwin-Gödel evolution disabled")
-        
-        # Create dummy agent (we don't actually use it in trace)
-        class DummyAgent:
-            pass
-        
-        training_pipeline = TrainingPipeline(DummyAgent(), selector, reflector, curator, darwin_evolver=darwin_evolver)
-        playbook = BulletPlaybook(db_session=db)
-        
-        # Online learning: Generate bullet
-        bullet_id = await training_pipeline.add_bullet_from_reflection(
-            query=request.input_text,
-            predicted=request.output,
-            correct=request.ground_truth or request.output,
-            node=request.node,
-            agent_reasoning=request.agent_reasoning or "",
-            playbook=playbook,
-            source="online",
-            evaluator=request.node
-        )
-        
-        # Record bullet effectiveness for bullets that were used
-        if request.bullet_ids and pattern_id:
-            # Record effectiveness for full context bullets (offline + online)
-            if "full" in request.bullet_ids:
-                for bullet_id_used in request.bullet_ids["full"]:
-                    pattern_manager.record_bullet_effectiveness(
-                        pattern_id=pattern_id,
-                        bullet_id=bullet_id_used,
-                        node=request.node,
-                        is_helpful=is_correct
-                    )
-            
-            # Record effectiveness for online-only bullets
-            if "online" in request.bullet_ids:
-                for bullet_id_used in request.bullet_ids["online"]:
-                    pattern_manager.record_bullet_effectiveness(
-                        pattern_id=pattern_id,
-                        bullet_id=bullet_id_used,
-                        node=request.node,
-                        is_helpful=is_correct
-                    )
-        
-        # Update session run metrics if session_id and run_id are provided
-        if request.session_id and request.run_id:
-            from models import SessionRunMetrics
-            
-            # Get or create metrics record for this session/run/evaluator combination
-            metrics = db.query(SessionRunMetrics).filter(
-                SessionRunMetrics.session_id == request.session_id,
-                SessionRunMetrics.run_id == request.run_id,
-                SessionRunMetrics.node == request.node,
-                SessionRunMetrics.evaluator == request.node
-            ).first()
-            
-            if not metrics:
-                # Create new metrics record
-                metrics = SessionRunMetrics(
-                    session_id=request.session_id,
-                    run_id=request.run_id,
-                    node=request.node,
-                    evaluator=request.node,
-                    correct_count=0,
-                    total_count=0,
-                    accuracy=0.0
-                )
-                db.add(metrics)
-            
-            # Update metrics
-            metrics.total_count += 1
-            if is_correct:
-                metrics.correct_count += 1
-            metrics.accuracy = metrics.correct_count / metrics.total_count if metrics.total_count > 0 else 0.0
-            
-            db.commit()
-            logger.info(f"Updated metrics for session={request.session_id}, run={request.run_id}, evaluator={request.node}: accuracy={metrics.accuracy:.2%}")
-        
-        logger.info(f"Background trace processing completed for transaction {transaction_id}")
-        
-    except Exception as e:
-        logger.error(f"Error in background trace processing: {e}")
-    finally:
-        db.close()
-
 
 @app.post("/api/v1/trace")
 async def trace_and_learn(request: TraceRequest, db: Session = Depends(get_db)):
@@ -516,7 +313,7 @@ async def trace_and_learn(request: TraceRequest, db: Session = Depends(get_db)):
         if mode == "full":
             mode = "offline_online"
         
-        # Step 2: Pattern classification (does LLM call for embedding)
+        # Step 2: Pattern classification
         pattern_manager = PatternManager(db_session=db)
         pattern_id, confidence = pattern_manager.classify_input_to_category(
             input_summary=request.input_text,
@@ -536,9 +333,11 @@ async def trace_and_learn(request: TraceRequest, db: Session = Depends(get_db)):
             is_correct = False
         
         # Step 4: Save transaction
+        system_prompt = request.input_text.split("System Prompt:")[1].strip().split("User Prompt:")[0].strip()
+        user_prompt = request.input_text.split("User Prompt:")[1].strip()
         transaction_data = {
-            "systemprompt": "You are a fraud detection expert analyzing transactions.",
-            "userprompt": request.input_text,
+            "systemprompt": system_prompt,
+            "userprompt": user_prompt,
             "output": request.output,
             "reasoning": request.agent_reasoning or ""
         }
@@ -589,7 +388,7 @@ async def trace_and_learn(request: TraceRequest, db: Session = Depends(get_db)):
         
         # Initialize Darwin-Gödel evolution if enabled
         darwin_evolver = None
-        enable_evolution = os.getenv("ENABLE_DARWIN_EVOLUTION", "false").lower() == "true"
+        enable_evolution = os.getenv("ENABLE_DARWIN_EVOLUTION", "true").lower() == "true"
         if enable_evolution:
             darwin_evolver = DarwinBulletEvolver(db_session=db)
             logger.info("Darwin-Gödel evolution enabled")
@@ -612,8 +411,7 @@ async def trace_and_learn(request: TraceRequest, db: Session = Depends(get_db)):
                 LLMJudge.is_active == True
             ).first()
 
-            input_text = request.input_text
-            user_prompt = input_text.split("User Prompt:")[1].strip()
+            input_text = txn.transaction_data["userprompt"]
             
             # Get judge reasoning for this specific evaluator
             evaluator_judge_reasoning = ""
@@ -624,7 +422,7 @@ async def trace_and_learn(request: TraceRequest, db: Session = Depends(get_db)):
                 if request.ground_truth:
                     evaluation_prompt = f"""{evaluator_judge.system_prompt}
 
-Input: {user_prompt}
+Input: {input_text}
 
 Output: {request.output}
 
@@ -642,7 +440,7 @@ Respond in JSON format:
                 else:
                     evaluation_prompt = f"""{evaluator_judge.system_prompt}
 
-Input: {user_prompt}
+Input: {input_text}
 
 Output: {request.output}
 
@@ -663,7 +461,6 @@ Respond in JSON format:
                         {"role": "user", "content": evaluation_prompt}
                     ],
                     response_format={"type": "json_object"},
-                    temperature=evaluator_judge.temperature
                 )
                 
                 result = json.loads(response.choices[0].message.content)
@@ -676,11 +473,7 @@ Respond in JSON format:
                 # If no judge but ground truth exists, compare
                 evaluator_is_correct = (request.output == request.ground_truth)
                 evaluator_results[evaluator_name] = evaluator_is_correct
-            else:
-                # If no judge and no ground truth, default to True
-                evaluator_is_correct = True
-                evaluator_results[evaluator_name] = evaluator_is_correct
-            
+
             # Step 6b: Generate bullet ONLY if not vanilla mode
             if mode != "vanilla":
                 bullet_id = await training_pipeline.add_bullet_from_reflection(
@@ -734,74 +527,8 @@ Respond in JSON format:
                 evaluator_is_correct = evaluator_results.get(evaluator_name)
                 
                 if evaluator_is_correct is None:
-                    # Fallback: evaluate if not cached (shouldn't happen in normal flow)
-                    evaluator_judge = db.query(LLMJudge).filter(
-                        LLMJudge.node == request.node,
-                        LLMJudge.evaluator == evaluator_name,
-                        LLMJudge.is_active == True
-                    ).first()
-                    
-                    if evaluator_judge:
-                        client = OpenAI()
-                        user_prompt = input_text.split("User Prompt:")[1].strip()
-                        if request.ground_truth:
-                            evaluation_prompt = f"""{evaluator_judge.system_prompt}
+                    continue
 
-Input: {user_prompt}
-
-Output: {request.output}
-
-Ground Truth: {request.ground_truth}
-
-Evaluate the output based on these criteria:
-{json.dumps(evaluator_judge.evaluation_criteria, indent=2) if evaluator_judge.evaluation_criteria else "Use your best judgment"}
-
-Respond in JSON format:
-{{
-    "is_correct": true/false,
-    "confidence": 0.0-1.0,
-    "reasoning": "brief explanation"
-}}"""
-                        else:
-                            user_prompt = input_text.split("User Prompt:")[1].strip()
-                            evaluation_prompt = f"""{evaluator_judge.system_prompt}
-
-Input: {user_prompt}
-
-Output: {request.output}
-
-Evaluate the output based on these criteria:
-{json.dumps(evaluator_judge.evaluation_criteria, indent=2) if evaluator_judge.evaluation_criteria else "Use your best judgment"}
-
-Respond in JSON format:
-{{
-    "is_correct": true/false,
-    "confidence": 0.0-1.0,
-    "reasoning": "brief explanation"
-}}"""
-                        
-                        response = client.chat.completions.create(
-                            model=evaluator_judge.model,
-                            messages=[
-                                {"role": "system", "content": evaluator_judge.system_prompt},
-                                {"role": "user", "content": evaluation_prompt}
-                            ],
-                            response_format={"type": "json_object"},
-                            temperature=evaluator_judge.temperature
-                        )
-                        
-                        result = json.loads(response.choices[0].message.content)
-                        evaluator_is_correct = result.get("is_correct", False)
-                        logger.info(f"Evaluator {evaluator_name} judge decision: {evaluator_is_correct}")
-                    elif request.ground_truth:
-                        # If no judge for this evaluator but ground truth exists, compare
-                        evaluator_is_correct = (request.output == request.ground_truth)
-                    else:
-                        # If no judge and no ground truth, default to True
-                        evaluator_is_correct = True
-                else:
-                    logger.info(f"Using cached evaluator result for {evaluator_name}: {evaluator_is_correct}")
-                
                 metrics = db.query(SessionRunMetrics).filter(
                     SessionRunMetrics.session_id == request.session_id,
                     SessionRunMetrics.run_id == request.run_id,
@@ -862,65 +589,6 @@ Respond in JSON format:
     except Exception as e:
         logger.error(f"Error in trace: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.get("/api/v1/judge-evaluations/{transaction_id}")
-async def get_judge_evaluations(transaction_id: int, db: Session = Depends(get_db)):
-    """
-    Get judge evaluations for a specific transaction.
-    
-    Args:
-        transaction_id: Transaction identifier
-        db: Database session
-    
-    Returns:
-        dict: Judge evaluations for the transaction
-    """
-    try:
-        from models import JudgeEvaluation, LLMJudge
-        
-        # Get all judge evaluations for this transaction
-        evaluations = db.query(JudgeEvaluation).filter(
-            JudgeEvaluation.transaction_id == transaction_id
-        ).all()
-        
-        if not evaluations:
-            return {
-                "status": "success",
-                "transaction_id": transaction_id,
-                "message": "No judge evaluations found for this transaction",
-                "evaluations": []
-            }
-        
-        # Get judge details for each evaluation
-        result = []
-        for eval in evaluations:
-            judge = db.query(LLMJudge).filter(LLMJudge.id == eval.judge_id).first()
-            
-            result.append({
-                "judge_id": eval.judge_id,
-                "judge_node": judge.node if judge else None,
-                "judge_evaluator": judge.evaluator if judge else None,
-                "input_text": eval.input_text,
-                "output_text": eval.output_text,
-                "ground_truth": eval.ground_truth,
-                "is_correct": eval.is_correct,
-                "confidence": eval.confidence,
-                "reasoning": eval.reasoning,
-                "judge_was_correct": eval.judge_was_correct,
-                "evaluated_at": eval.evaluated_at.isoformat() if eval.evaluated_at else None
-            })
-        
-        return {
-            "status": "success",
-            "transaction_id": transaction_id,
-            "evaluations": result
-        }
-    
-    except Exception as e:
-        logger.error(f"Error getting judge evaluations: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
 
 @app.post("/api/v1/context")
 async def get_context(request: ContextRequest, db: Session = Depends(get_db)):
@@ -1003,7 +671,7 @@ async def get_context(request: ContextRequest, db: Session = Depends(get_db)):
                     query=request.input_text,
                     node=request.node,
                     playbook=temp_playbook,
-                    n_bullets=min(request.max_bullets_per_evaluator, len(temp_bullets)),
+                    n_bullets=min(request.max_bullets_per_evaluator, len(temp_bullets), 10),
                     iteration=0,
                     pattern_id=pattern_id
                 )
@@ -1015,8 +683,8 @@ async def get_context(request: ContextRequest, db: Session = Depends(get_db)):
                         full_context += f"- {bullet.content}\n"
                         full_bullet_ids.append(bullet.id)  # Track bullet IDs for full context
                     
-                    # Add only online bullets to online context
-                    online_bullets = [b for b in selected if b.source == "online"]
+                    # Add online and evolved bullets to online context
+                    online_bullets = [b for b in selected if b.source in ("online", "evolution")]
                     if online_bullets:
                         online_context += f"\n\n{evaluator_name.upper()} Rules:\n"
                         for bullet in online_bullets[:request.max_bullets_per_evaluator]:
@@ -1115,197 +783,4 @@ async def get_session_metrics(session_id: str, db: Session = Depends(get_db)):
     except Exception as e:
         logger.error(f"Error getting metrics: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/api/v1/analyze")
-async def analyze_transaction(request: AnalyzeRequest):
-    """Analyze transaction with specified mode."""
-    init_ace_components()
-    
-    try:
-        if request.mode == "vanilla":
-            result = await fraud_agent.analyze(request.transaction)
-            return {"mode": "vanilla", **result}
-        
-        elif request.mode == "offline_online":
-            result = await fraud_agent.analyze(request.transaction)
-            return {"mode": "offline_online", **result}
-        
-        elif request.mode == "online_only":
-            result = await fraud_agent.analyze(request.transaction)
-            return {"mode": "online_only", **result}
-        
-        else:
-            raise HTTPException(status_code=400, detail=f"Invalid mode: {request.mode}")
-    
-    except Exception as e:
-        logger.error(f"Error in analyze: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/api/v1/evaluate")
-async def evaluate_and_generate_bullets(request: EvaluateRequest):
-    """Evaluate agent output and generate bullets using LLM as judge."""
-    init_ace_components()
-    
-    try:
-        is_correct = await judge_correctness(request.input_text, request.output, request.ground_truth)
-        
-        bullet_id = await training_pipeline.add_bullet_from_reflection(
-            query=request.input_text,
-            predicted=request.output,
-            correct=request.ground_truth or request.output,
-            node=request.node,
-            agent_reasoning=request.output,
-            playbook=playbook,
-            source="online"
-        )
-        
-        return {
-            "node": request.node,
-            "is_correct": is_correct,
-            "bullet_id": bullet_id,
-            "bullet_added": bullet_id is not None
-        }
-    
-    except Exception as e:
-        logger.error(f"Error in evaluate: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/api/v1/get-bullets")
-async def get_bullets(request: GetBulletsRequest):
-    """Get bullets for a query and node based on mode."""
-    init_ace_components()
-    
-    try:
-        if request.mode == "vanilla":
-            return {"mode": "vanilla", "bullets": []}
-        
-        elif request.mode == "offline_online":
-            bullets_offline, _ = selector.select_bullets(
-                query=request.query, node=request.node, playbook=playbook,
-                n_bullets=5, iteration=0, source="offline"
-            )
-            bullets_online, _ = selector.select_bullets(
-                query=request.query, node=request.node, playbook=playbook,
-                n_bullets=5, iteration=0, source="online"
-            )
-            
-            return {"mode": "offline_online", "bullets": {"offline": bullets_offline, "online": bullets_online}}
-        
-        elif request.mode == "online_only":
-            bullets, _ = selector.select_bullets(
-                query=request.query, node=request.node, playbook=playbook,
-                n_bullets=5, iteration=0, source="online"
-            )
-            return {"mode": "online_only", "bullets": bullets}
-        
-        else:
-            raise HTTPException(status_code=400, detail=f"Invalid mode: {request.mode}")
-    
-    except Exception as e:
-        logger.error(f"Error in get-bullets: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.get("/api/v1/playbook/stats")
-async def get_playbook_stats():
-    """Get statistics for the playbook."""
-    init_ace_components()
-    stats = playbook.get_stats()
-    return {"stats": stats, "total_bullets": stats["total_bullets"]}
-
-
-@app.get("/api/v1/playbook/{node}")
-async def get_node_playbook(node: str, limit: int = 10, query: Optional[str] = None):
-    """
-    Get bullets for a specific node.
-    
-    If query is provided, uses intelligent selection to return top bullets.
-    Otherwise, returns all bullets up to limit.
-    
-    Args:
-        node: Agent node name
-        limit: Maximum number of bullets to return (default: 10)
-        query: Optional query text for intelligent bullet selection
-    """
-    init_ace_components()
-    
-    if query:
-        # Use intelligent selection
-        bullets, _ = selector.select_bullets(
-            query=query,
-            node=node,
-            playbook=playbook,
-            n_bullets=limit,
-            iteration=0
-        )
-        return {"node": node, "bullets": bullets, "selection_method": "intelligent"}
-    else:
-        # Return all bullets up to limit
-        bullets = playbook.get_bullets_for_node(node)[:limit]
-        return {"node": node, "bullets": bullets, "selection_method": "all"}
-
-
-@app.post("/api/v1/test/comprehensive")
-async def run_comprehensive_test():
-    """
-    Run comprehensive test suite comparing all 3 modes.
-    
-    This endpoint triggers the full test suite and returns results.
-    Note: This is a long-running operation and may take several minutes.
-    """
-    import subprocess
-    import asyncio
-    
-    try:
-        # Run the test script asynchronously
-        process = await asyncio.create_subprocess_exec(
-            "python",
-            "test_ace_comprehensive.py",
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-            env=os.environ
-        )
-        
-        stdout, stderr = await process.communicate()
-        
-        if process.returncode != 0:
-            logger.error(f"Test failed: {stderr.decode()}")
-            raise HTTPException(
-                status_code=500,
-                detail=f"Test execution failed: {stderr.decode()}"
-            )
-        
-        return {
-            "status": "completed",
-            "output": stdout.decode(),
-            "message": "Comprehensive test completed successfully. Check logs for detailed results."
-        }
-    
-    except Exception as e:
-        logger.error(f"Error running comprehensive test: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-async def judge_correctness(input_text: str, output: str, ground_truth: Optional[str] = None) -> bool:
-    """Use LLM to judge if output is correct."""
-    from ace.llm_judge import get_judge
-    
-    judge = get_judge()
-    is_correct, confidence = await judge.judge(input_text, output, ground_truth)
-    
-    return is_correct
-
-
-if __name__ == "__main__":
-    import uvicorn
-    
-    uvicorn.run(
-        "main:app",
-        host=settings.host,
-        port=settings.port,
-        reload=settings.debug,
-    )
 
