@@ -611,6 +611,9 @@ async def trace_and_learn(request: TraceRequest, db: Session = Depends(get_db)):
                 LLMJudge.evaluator == evaluator_name,
                 LLMJudge.is_active == True
             ).first()
+
+            input_text = request.input_text
+            user_prompt = input_text.split("User Prompt:")[1].strip()
             
             # Get judge reasoning for this specific evaluator
             evaluator_judge_reasoning = ""
@@ -621,7 +624,7 @@ async def trace_and_learn(request: TraceRequest, db: Session = Depends(get_db)):
                 if request.ground_truth:
                     evaluation_prompt = f"""{evaluator_judge.system_prompt}
 
-Input: {request.input_text}
+Input: {user_prompt}
 
 Output: {request.output}
 
@@ -639,7 +642,7 @@ Respond in JSON format:
                 else:
                     evaluation_prompt = f"""{evaluator_judge.system_prompt}
 
-Input: {request.input_text}
+Input: {user_prompt}
 
 Output: {request.output}
 
@@ -740,11 +743,11 @@ Respond in JSON format:
                     
                     if evaluator_judge:
                         client = OpenAI()
-                        
+                        user_prompt = input_text.split("User Prompt:")[1].strip()
                         if request.ground_truth:
                             evaluation_prompt = f"""{evaluator_judge.system_prompt}
 
-Input: {request.input_text}
+Input: {user_prompt}
 
 Output: {request.output}
 
@@ -760,9 +763,10 @@ Respond in JSON format:
     "reasoning": "brief explanation"
 }}"""
                         else:
+                            user_prompt = input_text.split("User Prompt:")[1].strip()
                             evaluation_prompt = f"""{evaluator_judge.system_prompt}
 
-Input: {request.input_text}
+Input: {user_prompt}
 
 Output: {request.output}
 
